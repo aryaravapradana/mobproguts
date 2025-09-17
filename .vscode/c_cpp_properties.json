@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/windows/flutter/ephemeral/**",
+                "${workspaceFolder}/windows/flutter/ephemeral/cpp_client_wrapper/include/**",
+                "${workspaceFolder}/build/windows/flutter/generated_plugins/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ]
+        }
+    ],
+    "version": 4
+}

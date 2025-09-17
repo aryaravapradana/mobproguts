@@ -42,14 +42,14 @@ class AccountPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Jerrico Natanael',
+                              'Prabowo Unyu',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
-                              '089516119207',
+                              '081234567890',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey,
