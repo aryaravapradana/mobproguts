@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'auth/login_page.dart';
 import 'screens/dashboard_page.dart';
+import 'screens/home_page.dart'; // ✅ Tambahkan import
 
 void main() {
   runApp(const LoyaltyApp());
@@ -15,12 +16,14 @@ class LoyaltyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Loyalty Points Mall',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
         useMaterial3: true,
       ),
+      // ✅ Halaman pertama tetap LoginPage (biar alur login jalan)
       home: const LoginPage(),
       routes: {
         '/dashboard': (context) => const DashboardPage(),
+        '/home': (context) => const HomePage(), // ✅ Tambahin route ke HomePage
       },
     );
   }

@@ -16,18 +16,57 @@ class LoginPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(controller: emailController, decoration: const InputDecoration(labelText: 'Email')),
-            TextField(controller: passwordController, decoration: const InputDecoration(labelText: 'Password'), obscureText: true),
+            TextField(
+              controller: emailController,
+              decoration: const InputDecoration(labelText: 'Email'),
+            ),
+            TextField(
+              controller: passwordController,
+              decoration: const InputDecoration(labelText: 'Password'),
+              obscureText: true,
+            ),
             const SizedBox(height: 20),
+
+            // ✅ Login ke Dashboard
             ElevatedButton(
               onPressed: () {
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const DashboardPage()));
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const DashboardPage(),
+                  ),
+                );
               },
-              child: const Text('Login'),
+              child: const Text('Login to Dashboard'),
             ),
+
+            const SizedBox(height: 12),
+
+            // ✅ Login ke Home (UI dari Figma)
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/home');
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+              ),
+              child: const Text(
+                'Login to Home',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            // ✅ Register
             TextButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const RegisterPage()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const RegisterPage(),
+                  ),
+                );
               },
               child: const Text("Create Account"),
             )
