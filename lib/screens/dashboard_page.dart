@@ -1,3 +1,4 @@
+// dashboard
 import 'package:flutter/material.dart';
 import 'voucher_page.dart';
 import 'poin_page.dart';
@@ -6,6 +7,7 @@ import 'saldo_page.dart';
 import 'transaksi_page.dart';
 import 'payment_page.dart';
 import '../auth/login_page.dart';
+import 'account_page.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -19,6 +21,7 @@ class DashboardPage extends StatelessWidget {
       {'title': 'Saldo', 'page': const SaldoPage()},
       {'title': 'Riwayat Transaksi', 'page': const TransaksiPage()},
       {'title': 'Payment', 'page': const PaymentPage()},
+      {'title': 'Akun', 'page': const AccountPage()},
     ];
 
     return Scaffold(

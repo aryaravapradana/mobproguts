@@ -1,8 +1,61 @@
+// home page 
 import 'package:flutter/material.dart';
-import '../widgets/points_card.dart'; // ✅ import widget
+import '../widgets/points_card.dart';
+import 'account_page.dart'; // ✅ Import halaman Akun
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0; // Index untuk mengontrol halaman yang ditampilkan
+
+  // Daftar halaman yang akan ditampilkan oleh BottomNavigationBar
+  final List<Widget> _pages = [
+    const HomePageContent(), // Konten Home yang asli
+    const Center(child: Text('Contacts Page')), // Halaman Contacts
+    const Center(child: Text('Browse Page')), // Halaman Browse
+    const Center(child: Text('Checkout Page')), // Halaman Checkout
+    const AccountPage(), // ✅ Halaman Akun Anda
+  ];
+
+  // Fungsi untuk mengubah halaman saat item navigasi ditekan
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _pages[_selectedIndex], // Menampilkan halaman yang dipilih
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.orange,
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.contacts), label: "Contacts"),
+          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: "Browse"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart), label: "Checkout"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person), label: "Akun"), // ✅ Tambahkan item Akun
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+}
+
+// ✅ Pindahkan semua konten HomePage yang lama ke dalam class terpisah
+class HomePageContent extends StatelessWidget {
+  const HomePageContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +84,6 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ✅ Card Available Points
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: PointsCard(
@@ -41,8 +93,6 @@ class HomePage extends StatelessWidget {
                 progress: 0.9,
               ),
             ),
-
-            // ✅ Brand Loyalty Section
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
@@ -63,8 +113,6 @@ class HomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-
-            // Loyalty cards horizontal
             SizedBox(
               height: 120,
               child: ListView.builder(
@@ -80,7 +128,7 @@ class HomePage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.05),
+                          color: Colors.black.withOpacity(0.05),
                           blurRadius: 4,
                           offset: const Offset(2, 4),
                         )
@@ -102,8 +150,6 @@ class HomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-
-            // ✅ Conversion Recommendation
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
@@ -115,7 +161,6 @@ class HomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: const [
@@ -124,10 +169,7 @@ class HomePage extends StatelessWidget {
                 Icon(Icons.build, size: 50),
               ],
             ),
-
             const SizedBox(height: 20),
-
-            // ✅ Transfer Info
             Container(
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.all(16),
@@ -146,20 +188,6 @@ class HomePage extends StatelessWidget {
             ),
           ],
         ),
-      ),
-
-      // ✅ Bottom Navigation
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.orange,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.contacts), label: "Contacts"),
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: "Browse"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart), label: "Checkout"),
-        ],
       ),
     );
   }
