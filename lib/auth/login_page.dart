@@ -15,7 +15,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  // ✅ Dummy users (bisa tambah banyak)
   final Map<String, String> dummyUsers = {
     "user@example.com": "123456",
     "arya@mail.com": "password123",
@@ -34,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (dummyUsers.containsKey(email)) {
       if (dummyUsers[email] == password) {
-        // ✅ Login berhasil
+        
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const HomePage()),
