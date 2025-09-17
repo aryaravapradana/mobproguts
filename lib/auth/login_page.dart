@@ -56,7 +56,7 @@ class LoginPage extends StatelessWidget {
                     shadowColor: AppColors.gold.withOpacity(0.5),
                   ),
                   onPressed: () {
-                    
+                    // TODO: Navigate to dashboard
                   },
                   child: Text(
                     "Login",
