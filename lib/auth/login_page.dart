@@ -1,76 +1,126 @@
 import 'package:flutter/material.dart';
-import '../screens/dashboard_page.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'register_page.dart';
+import '../colors.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-            ),
-            TextField(
-              controller: passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
+      backgroundColor: AppColors.black,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.stars, color: AppColors.gold, size: 80),
 
-            // ✅ Login ke Dashboard
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const DashboardPage(),
+                const SizedBox(height: 16),
+                Text(
+                  "Welcome Back",
+                  style: GoogleFonts.poppins(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.white,
                   ),
-                );
-              },
-              child: const Text('Login to Dashboard'),
-            ),
-
-            const SizedBox(height: 12),
-
-            // ✅ Login ke Home (UI dari Figma)
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/home');
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-              ),
-              child: const Text(
-                'Login to Home',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            // ✅ Register
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const RegisterPage(),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "Login to your account",
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    color: AppColors.white.withOpacity(0.6),
                   ),
-                );
-              },
-              child: const Text("Create Account"),
-            )
-          ],
+                ),
+                const SizedBox(height: 32),
+
+                _buildTextField(Icons.email, "Email"),
+                const SizedBox(height: 16),
+                _buildTextField(Icons.lock, "Password", isPassword: true),
+
+                const SizedBox(height: 24),
+
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.gold,
+                    foregroundColor: AppColors.black,
+                    minimumSize: const Size(double.infinity, 55),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    elevation: 8,
+                    shadowColor: AppColors.gold.withOpacity(0.5),
+                  ),
+                  onPressed: () {
+                    // TODO: Navigate to dashboard
+                  },
+                  child: Text(
+                    "Login",
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Don't have an account?",
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        color: AppColors.white.withOpacity(0.6),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const RegisterPage(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Register",
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.gold,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(IconData icon, String hint,
+      {bool isPassword = false}) {
+    return TextField(
+      obscureText: isPassword,
+      style: const TextStyle(color: AppColors.white),
+      decoration: InputDecoration(
+        prefixIcon: Icon(icon, color: AppColors.gold),
+        hintText: hint,
+        hintStyle: TextStyle(color: AppColors.white.withOpacity(0.4)),
+        filled: true,
+        fillColor: const Color(0xFF1E1E1E),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide.none,
         ),
       ),
     );
