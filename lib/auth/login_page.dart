@@ -2,9 +2,59 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'register_page.dart';
 import '../colors.dart';
+import '../screens/home_page.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  final Map<String, String> dummyUsers = {
+    "user@example.com": "123456",
+    "arya@mail.com": "password123",
+  };
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  void _handleLogin() {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+
+    if (dummyUsers.containsKey(email)) {
+      if (dummyUsers[email] == password) {
+        
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomePage()),
+        );
+      } else {
+        _showError("Password salah. Coba lagi.");
+      }
+    } else {
+      _showError("Email tidak ditemukan.");
+    }
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red[700],
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +88,10 @@ class LoginPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
 
-                _buildTextField(Icons.email, "Email"),
+                _buildTextField(Icons.email, "Email", controller: emailController),
                 const SizedBox(height: 16),
-                _buildTextField(Icons.lock, "Password", isPassword: true),
+                _buildTextField(Icons.lock, "Password",
+                    controller: passwordController, isPassword: true),
 
                 const SizedBox(height: 24),
 
@@ -55,9 +106,7 @@ class LoginPage extends StatelessWidget {
                     elevation: 8,
                     shadowColor: AppColors.gold.withOpacity(0.5),
                   ),
-                  onPressed: () {
-                    // TODO: Navigate to dashboard
-                  },
+                  onPressed: _handleLogin,
                   child: Text(
                     "Login",
                     style: GoogleFonts.poppins(
@@ -107,9 +156,14 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(IconData icon, String hint,
-      {bool isPassword = false}) {
+  Widget _buildTextField(
+    IconData icon,
+    String hint, {
+    bool isPassword = false,
+    required TextEditingController controller,
+  }) {
     return TextField(
+      controller: controller,
       obscureText: isPassword,
       style: const TextStyle(color: AppColors.white),
       decoration: InputDecoration(
