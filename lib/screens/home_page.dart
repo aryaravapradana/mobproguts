@@ -1,7 +1,8 @@
-// home page 
+// home_page.dart
 import 'package:flutter/material.dart';
 import '../widgets/points_card.dart';
-import 'account_page.dart'; // ✅ Import halaman Akun
+import 'account_page.dart';
+import 'scan_qr_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,49 +12,78 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0; // Index untuk mengontrol halaman yang ditampilkan
+  int _selectedIndex = 0;
 
-  // Daftar halaman yang akan ditampilkan oleh BottomNavigationBar
-  final List<Widget> _pages = [
-    const HomePageContent(), // Konten Home yang asli
-    const Center(child: Text('Contacts Page')), // Halaman Contacts
-    const Center(child: Text('Browse Page')), // Halaman Browse
-    const Center(child: Text('Checkout Page')), // Halaman Checkout
-    const AccountPage(), // ✅ Halaman Akun Anda
-  ];
+  final List<Widget> _pages = [const HomePageContent(), const AccountPage()];
 
-  // Fungsi untuk mengubah halaman saat item navigasi ditekan
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
+  // scanner QR
+  void _openScanner() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ScanQrPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_selectedIndex], // Menampilkan halaman yang dipilih
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.orange,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.contacts), label: "Contacts"),
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: "Browse"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart), label: "Checkout"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person), label: "Akun"), // ✅ Tambahkan item Akun
+      body: _pages[_selectedIndex],
+
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.orange,
+        onPressed: _openScanner,
+        child: const Icon(Icons.qr_code_scanner, color: Colors.white),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 6,
+        child: SizedBox(
+          height: 60,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              // Home
+              _buildNavItem(Icons.home, "Home", 0),
+              const SizedBox(width: 40),
+              // Akun
+              _buildNavItem(Icons.person, "Akun", 1),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem(IconData icon, String label, int index) {
+    final isSelected = _selectedIndex == index;
+    return InkWell(
+      onTap: () => _onItemTapped(index),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: isSelected ? Colors.orange : Colors.grey),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: isSelected ? Colors.orange : Colors.grey,
+            ),
+          ),
         ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
       ),
     );
   }
 }
 
-// ✅ Pindahkan semua konten HomePage yang lama ke dalam class terpisah
 class HomePageContent extends StatelessWidget {
   const HomePageContent({super.key});
 
@@ -66,10 +96,7 @@ class HomePageContent extends StatelessWidget {
         elevation: 0,
         title: const Text(
           "FOR YOU",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         centerTitle: true,
         leading: const Icon(Icons.person, color: Colors.white),
@@ -84,6 +111,7 @@ class HomePageContent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // card poin
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: PointsCard(
@@ -93,6 +121,7 @@ class HomePageContent extends StatelessWidget {
                 progress: 0.9,
               ),
             ),
+            // loyalty section
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
@@ -100,15 +129,9 @@ class HomePageContent extends StatelessWidget {
                 children: const [
                   Text(
                     "My Brand Loyalty",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    "View All",
-                    style: TextStyle(color: Colors.orange),
-                  ),
+                  Text("View All", style: TextStyle(color: Colors.orange)),
                 ],
               ),
             ),
@@ -131,15 +154,19 @@ class HomePageContent extends StatelessWidget {
                           color: Colors.black.withOpacity(0.05),
                           blurRadius: 4,
                           offset: const Offset(2, 4),
-                        )
+                        ),
                       ],
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
-                        Text("21,948 pts",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 12)),
+                        Text(
+                          "21,948 pts",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
                         SizedBox(height: 4),
                         Icon(Icons.star, color: Colors.orange, size: 20),
                         Text("4.8", style: TextStyle(fontSize: 12)),
@@ -150,14 +177,12 @@ class HomePageContent extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+            // conversion section
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
                 "Conversion Recommendation",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 12),
@@ -170,6 +195,7 @@ class HomePageContent extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
+            // info box
             Container(
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.all(16),

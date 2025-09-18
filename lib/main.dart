@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'auth/login_page.dart';
 import 'screens/dashboard_page.dart';
 import 'screens/home_page.dart'; // ✅ Tambahkan import
+import 'package:intl/intl.dart';
+import 'screens/payment_page.dart';
 
 void main() {
   runApp(const LoyaltyApp());
@@ -24,6 +26,7 @@ class LoyaltyApp extends StatelessWidget {
       routes: {
         '/dashboard': (context) => const DashboardPage(),
         '/home': (context) => const HomePage(), // ✅ Tambahin route ke HomePage
+        '/payment': (context) => const PaymentPage(),
       },
     );
   }
