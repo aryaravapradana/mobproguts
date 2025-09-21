@@ -1,7 +1,7 @@
 // home page 
 import 'package:flutter/material.dart';
 import '../widgets/points_card.dart';
-import 'account_page.dart'; 
+import 'account_page.dart'; // ✅ Import halaman Akun
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,16 +11,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0; 
+  int _selectedIndex = 0; // Index untuk mengontrol halaman yang ditampilkan
 
+  // Daftar halaman yang akan ditampilkan oleh BottomNavigationBar
   final List<Widget> _pages = [
-    const HomePageContent(), 
-    const Center(child: Text('Contacts Page')), 
-    const Center(child: Text('Browse Page')), 
-    const Center(child: Text('Checkout Page')), 
-    const AccountPage(), 
+    const HomePageContent(), // Konten Home yang asli
+    const Center(child: Text('Contacts Page')), // Halaman Contacts
+    const Center(child: Text('Browse Page')), // Halaman Browse
+    const Center(child: Text('Checkout Page')), // Halaman Checkout
+    const AccountPage(), // ✅ Halaman Akun Anda
   ];
 
+  // Fungsi untuk mengubah halaman saat item navigasi ditekan
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -30,7 +32,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_selectedIndex], 
+      body: _pages[_selectedIndex], // Menampilkan halaman yang dipilih
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.orange,
@@ -42,7 +44,7 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
               icon: Icon(Icons.shopping_cart), label: "Checkout"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.person), label: "Akun"), 
+              icon: Icon(Icons.person), label: "Akun"), // ✅ Tambahkan item Akun
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
@@ -51,6 +53,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+// ✅ Pindahkan semua konten HomePage yang lama ke dalam class terpisah
 class HomePageContent extends StatelessWidget {
   const HomePageContent({super.key});
 
