@@ -1,0 +1,311 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+
+import '../models/user.dart'; 
+import '../models/membership_tier.dart'; 
+
+class MembershipDetailPage extends StatefulWidget {
+  const MembershipDetailPage({super.key});
+
+  @override
+  State<MembershipDetailPage> createState() => _MembershipDetailPageState();
+}
+
+class _MembershipDetailPageState extends State<MembershipDetailPage> {
+  final int _currentUserXp = currentUser.spending;
+
+  final List<MembershipTier> tiers = [
+    MembershipTier(
+      name: 'Bronze',
+      minXp: 0,
+      icon: Icons.shield_outlined,
+      color: const Color(0xFFCD7F32),
+      perks: [
+        Perk(name: "Poin Reguler", icon: Icons.monetization_on),
+      ],
+    ),
+    MembershipTier(
+      name: 'Silver',
+      minXp: 3000,
+      icon: Icons.star_border,
+      color: const Color(0xFFC0C0C0),
+      perks: [
+        Perk(name: "Poin Reguler", icon: Icons.monetization_on),
+        Perk(name: "Promo Personal", icon: Icons.local_offer),
+      ],
+    ),
+    MembershipTier(
+      name: 'Gold',
+      minXp: 8000,
+      icon: Icons.star,
+      color: const Color(0xFFFFD700),
+      perks: [
+        Perk(name: "Poin Reguler", icon: Icons.monetization_on),
+        Perk(name: "Promo Personal", icon: Icons.local_offer),
+        Perk(name: "Promo Merchant", icon: Icons.storefront),
+      ],
+    ),
+    MembershipTier(
+      name: 'Platinum',
+      minXp: 11000,
+      icon: Icons.verified_outlined,
+      color: const Color(0xFFE5E4E2),
+      perks: [
+        Perk(name: "Poin Reguler", icon: Icons.monetization_on),
+        Perk(name: "Promo Personal", icon: Icons.local_offer),
+        Perk(name: "Promo Merchant", icon: Icons.storefront),
+      ],
+    ),
+    MembershipTier(
+      name: 'Diamond',
+      minXp: 15000,
+      icon: Icons.diamond_outlined,
+      color: const Color(0xFFB9F2FF),
+      perks: [
+        Perk(name: "Poin Reguler", icon: Icons.monetization_on),
+        Perk(name: "Promo Personal", icon: Icons.local_offer),
+        Perk(name: "Promo Merchant", icon: Icons.storefront),
+      ],
+    ),
+  ];
+
+  late MembershipTier _currentTier;
+  MembershipTier? _nextTier;
+  double _progress = 0.0;
+  int _xpNeeded = 0;
+
+  final NumberFormat f = NumberFormat.decimalPattern('id');
+
+  @override
+  void initState() {
+    super.initState();
+    _calculateTierProgress();
+  }
+
+  void _calculateTierProgress() {
+    _currentTier =
+        tiers.lastWhere((tier) => _currentUserXp >= tier.minXp, orElse: () => tiers.first);
+
+    int currentTierIndex = tiers.indexOf(_currentTier);
+
+    if (currentTierIndex < tiers.length - 1) {
+      _nextTier = tiers[currentTierIndex + 1];
+      int xpForNextTier = _nextTier!.minXp - _currentTier.minXp;
+      int xpInCurrentTier = _currentUserXp - _currentTier.minXp;
+      _progress = (xpForNextTier > 0) ? (xpInCurrentTier / xpForNextTier) : 1.0;
+      _xpNeeded = _nextTier!.minXp - _currentUserXp;
+    } else {
+      _nextTier = null;
+      _progress = 1.0;
+      _xpNeeded = 0;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF3F4F6),
+      appBar: AppBar(
+        title: const Text('Membership Detail'),
+        backgroundColor: Colors.white,
+        elevation: 1,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildHeader(),
+            const SizedBox(height: 24),
+            _buildTierCards(),
+            const SizedBox(height: 24),
+            _buildPerksSection(),
+            const SizedBox(height: 16),
+            _buildTermsSection(),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: const Color(0xFF6A5ACD), 
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        children: [
+          Icon(_currentTier.icon, color: _currentTier.color, size: 50),
+          const SizedBox(height: 8),
+          Text(
+            _currentTier.name,
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Total XP 3 bulan terakhir: ${f.format(_currentUserXp)} XP',
+            style: GoogleFonts.poppins(color: Colors.white.withOpacity(0.8)),
+          ),
+          const SizedBox(height: 20),
+          _buildProgressBar(),
+        ],
+      ),
+    );
+  }
+
+  // Widget untuk Progress Bar
+  Widget _buildProgressBar() {
+    return Column(
+      children: [
+        if (_nextTier != null)
+          Text(
+            'Tambah ${f.format(_xpNeeded)} XP lagi jadi ${_nextTier!.name}',
+            style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w600),
+          )
+        else
+          Text(
+            'Kamu berada di level tertinggi!',
+            style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w600),
+          ),
+        const SizedBox(height: 8),
+        Stack(
+          children: [
+            Container(
+              height: 12,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            FractionallySizedBox(
+              widthFactor: _progress,
+              child: Container(
+                height: 12,
+                decoration: BoxDecoration(
+                  color: _currentTier.color,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTierCards() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: tiers.map((tier) {
+        bool isCurrent = tier.name == _currentTier.name;
+        return Expanded(child: _TierCard(tier: tier, isCurrent: isCurrent));
+      }).toList(),
+    );
+  }
+  
+  Widget _buildPerksSection() {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Keuntungan Grade Ini',
+              style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: _currentTier.perks.map((perk) {
+                return Column(
+                  children: [
+                    Icon(perk.icon, color: Colors.deepPurple, size: 30),
+                    const SizedBox(height: 8),
+                    Text(perk.name, textAlign: TextAlign.center),
+                  ],
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTermsSection() {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: ListTile(
+        title: Text('Baca Syarat & Ketentuan', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+        subtitle: const Text('Ketahui metode perhitungan XP & cara naik/turun Grade.'),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        onTap: () {
+        },
+      ),
+    );
+  }
+}
+
+class _TierCard extends StatelessWidget {
+  final MembershipTier tier;
+  final bool isCurrent;
+
+  const _TierCard({required this.tier, required this.isCurrent});
+
+  @override
+  Widget build(BuildContext context) {
+    final f = NumberFormat.decimalPattern('id');
+    return Column(
+      children: [
+        Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: isCurrent ? tier.color.withOpacity(0.2) : Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: isCurrent ? tier.color : Colors.grey.shade300,
+                  width: 2,
+                ),
+              ),
+              child: Icon(tier.icon, color: tier.color, size: 30),
+            ),
+            if (isCurrent)
+              Positioned(
+                top: -10,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: Colors.deepPurple,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Text('Grade kamu', style: TextStyle(color: Colors.white, fontSize: 8)),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Text(tier.name, style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.bold)),
+        Text(
+          '${f.format(tier.minXp)} XP',
+          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+        ),
+      ],
+    );
+  }
+}
