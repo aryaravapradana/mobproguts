@@ -15,13 +15,11 @@ class _PaymentPageState extends State<PaymentPage> {
   final amountController = TextEditingController();
   final f = NumberFormat.decimalPattern('id');
 
-  // --- helper ambil nominal dari TextField
   int _ambilNominal() {
     final raw = amountController.text.replaceAll(RegExp(r'[^0-9]'), '');
     return int.tryParse(raw) ?? 0;
   }
 
-  // --- transaksi manual (tanpa scan)
   void makePayment() {
     final amount = _ambilNominal();
 
@@ -70,7 +68,6 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
-  // --- transaksi via scan QR
   Future<void> _scanQris() async {
     final result = await Navigator.push(
       context,
@@ -78,14 +75,12 @@ class _PaymentPageState extends State<PaymentPage> {
     );
 
     if (result != null && result is String) {
-      // ambil hanya angka dari QR
       final raw = result.replaceAll(RegExp(r'[^0-9]'), '');
       final amount = int.tryParse(raw) ?? 0;
 
       if (amount > 0) {
         final poinBaru = amount ~/ 1000;
 
-        // tampilkan konfirmasi sebelum proses transaksi
         final confirm = await showDialog<bool>(
           context: context,
           builder: (_) => AlertDialog(
@@ -149,7 +144,6 @@ class _PaymentPageState extends State<PaymentPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // --- kartu info poin
             Card(
               elevation: 1.5,
               shape: RoundedRectangleBorder(
