@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import '../models/user.dart';
 
-//============================================
-// BAGIAN 1: PALET WARNA & MODEL DATA
-//============================================
 
 class AppColors {
   static const Color black = Color(0xFF121212);
   static const Color white = Color(0xFFFFFFFF);
-  static const Color background = Color(0xFFF3F4F6); // Warna abu-abu muda untuk background
-  static const Color primaryPurple = Color(0xFF8A2BE2); // Warna ungu dari screenshot
+  static const Color background = Color(0xFFF3F4F6); 
+  static const Color primaryPurple = Color(0xFF8A2BE2); 
   static const Color bronze = Color(0xFFB87333);
   static const Color silver = Color(0xFFB0B0B0);
   static const Color gold = Color(0xFFE6B800);
@@ -17,7 +14,6 @@ class AppColors {
   static const Color diamond = Color(0xFF9FE8FF);
 }
 
-// Model untuk merepresentasikan setiap tier
 class LoyaltyTier {
   final String name;
   final int minXp;
@@ -32,9 +28,6 @@ class LoyaltyTier {
   });
 }
 
-//============================================
-// BAGIAN 2: HALAMAN UTAMA (LOYALTY SCREEN)
-//============================================
 
 class LoyaltyScreen extends StatefulWidget {
   const LoyaltyScreen({super.key});
@@ -245,9 +238,6 @@ class _LoyaltyScreenState extends State<LoyaltyScreen> {
   }
 }
 
-//============================================
-// BAGIAN 3: WIDGET KARTU TIER
-//============================================
 
 class TierCard extends StatelessWidget {
   final LoyaltyTier tier;

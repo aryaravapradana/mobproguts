@@ -111,7 +111,6 @@ class HomePageContent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // card poin
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: PointsCard(
@@ -121,7 +120,6 @@ class HomePageContent extends StatelessWidget {
                 progress: 0.9,
               ),
             ),
-            // loyalty section
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
@@ -177,7 +175,6 @@ class HomePageContent extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            // conversion section
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
@@ -195,7 +192,6 @@ class HomePageContent extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            // info box
             Container(
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.all(16),
