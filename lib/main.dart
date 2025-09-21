@@ -21,11 +21,10 @@ class LoyaltyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
         useMaterial3: true,
       ),
-      // ✅ Halaman pertama tetap LoginPage (biar alur login jalan)
       home: const LoginPage(),
       routes: {
         '/dashboard': (context) => const DashboardPage(),
-        '/home': (context) => const HomePage(), // ✅ Tambahin route ke HomePage
+        '/home': (context) => const HomePage(),
         '/payment': (context) => const PaymentPage(),
       },
     );
