@@ -31,9 +31,11 @@ class _PaymentPageState extends State<PaymentPage> {
     }
 
     final poinBaru = amount ~/ 1000;
+    final double xpBaru = amount / 10000;
 
     setState(() {
       currentUser.poin += poinBaru;
+      currentUser.xp += xpBaru;
       currentUser.spending += amount;
       dummyTransaksi.insert(
         0,
@@ -58,7 +60,7 @@ class _PaymentPageState extends State<PaymentPage> {
             const SizedBox(width: 10),
             Expanded(
               child: Text(
-                'Transaksi Rp${f.format(amount)} berhasil, +$poinBaru poin!',
+                'Transaksi berhasil! +$poinBaru poin, +${xpBaru.toStringAsFixed(1)} XP',
                 style: const TextStyle(color: Colors.white),
               ),
             ),
@@ -80,13 +82,14 @@ class _PaymentPageState extends State<PaymentPage> {
 
       if (amount > 0) {
         final poinBaru = amount ~/ 1000;
+        final double xpBaru = amount / 10000;
 
         final confirm = await showDialog<bool>(
           context: context,
           builder: (_) => AlertDialog(
             title: const Text("Konfirmasi Pembayaran"),
             content: Text(
-              "Bayar Rp${f.format(amount)} dan dapat $poinBaru poin?",
+              "Bayar Rp${f.format(amount)} dan dapatkan $poinBaru poin & ${xpBaru.toStringAsFixed(1)} XP?",
             ),
             actions: [
               TextButton(
@@ -104,6 +107,7 @@ class _PaymentPageState extends State<PaymentPage> {
         if (confirm == true) {
           setState(() {
             currentUser.poin += poinBaru;
+            currentUser.xp += xpBaru;
             currentUser.spending += amount;
             dummyTransaksi.insert(
               0,
@@ -120,7 +124,7 @@ class _PaymentPageState extends State<PaymentPage> {
               behavior: SnackBarBehavior.floating,
               backgroundColor: Colors.green.shade700,
               content: Text(
-                "Transaksi Rp${f.format(amount)} berhasil (+$poinBaru poin)",
+                "Transaksi berhasil! (+$poinBaru poin, +${xpBaru.toStringAsFixed(1)} XP)",
               ),
             ),
           );
@@ -182,7 +186,6 @@ class _PaymentPageState extends State<PaymentPage> {
               ),
             ),
             const SizedBox(height: 16),
-
             TextField(
               controller: amountController,
               keyboardType: TextInputType.number,
@@ -207,7 +210,6 @@ class _PaymentPageState extends State<PaymentPage> {
               },
             ),
             const SizedBox(height: 20),
-
             SizedBox(
               height: 48,
               child: ElevatedButton(
@@ -217,7 +219,6 @@ class _PaymentPageState extends State<PaymentPage> {
               ),
             ),
             const SizedBox(height: 10),
-
             SizedBox(
               height: 48,
               child: OutlinedButton.icon(
