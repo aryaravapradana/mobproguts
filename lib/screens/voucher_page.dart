@@ -19,9 +19,9 @@ class _VoucherPageState extends State<VoucherPage> {
         SnackBar(content: Text('Berhasil redeem: ${voucher.title}')),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Poin tidak cukup!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Poin tidak cukup!')));
     }
   }
 
