@@ -16,7 +16,6 @@ class AccountPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Card Info Pengguna & Member Card
             Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
@@ -119,7 +118,6 @@ class AccountPage extends StatelessWidget {
 
             const SizedBox(height: 15),
 
-            // Bagian A-Poin, Alfa Star, dst.
             Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
@@ -149,7 +147,6 @@ class AccountPage extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            // Notifikasi Verifikasi Email
             Card(
               color: Colors.lightBlue[50],
               elevation: 0,
@@ -176,7 +173,6 @@ class AccountPage extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            // Shopping Mission
             Card(
               color: Colors.red[50],
               elevation: 0,
