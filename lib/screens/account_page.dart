@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'account_page.dart';
+import 'membership_detail_page.dart'; 
 
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
@@ -25,9 +25,9 @@ class AccountPage extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    Row(
+                    const Row(
                       children: [
-                        const CircleAvatar(
+                        CircleAvatar(
                           radius: 30,
                           backgroundColor: Colors.grey,
                           child: Icon(
@@ -36,8 +36,8 @@ class AccountPage extends StatelessWidget {
                             size: 40,
                           ),
                         ),
-                        const SizedBox(width: 15),
-                        const Column(
+                        SizedBox(width: 15),
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
@@ -56,59 +56,61 @@ class AccountPage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const Spacer(),
-                        IconButton(
-                          icon: const Icon(Icons.chevron_right),
-                          onPressed: () {},
-                        ),
+                        Spacer(),
+                        Icon(Icons.chevron_right),
                       ],
                     ),
                     const SizedBox(height: 10),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 12.0,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.deepPurple[400],
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.card_giftcard,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                          const SizedBox(width: 10),
-                          const Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'BESTIE',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const MembershipDetailPage()),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 12.0,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.deepPurple[400],
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: const Row(
+                          children: [
+                            Icon(
+                              Icons.card_giftcard,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                            SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'BESTIE',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                'Anggota sejak 25 Agu 2024',
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 12,
+                                Text(
+                                  'Anggota sejak 25 Agu 2024',
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 12,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          IconButton(
-                            icon: const Icon(
+                              ],
+                            ),
+                            Spacer(),
+                            Icon(
                               Icons.arrow_forward,
                               color: Colors.white,
                             ),
-                            onPressed: () {},
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -198,7 +200,6 @@ class AccountPage extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            // Bagian Pengaturan Akun
             buildListTile(
               Icons.settings,
               'Pengaturan Akun',
