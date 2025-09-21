@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-import '../models/user.dart'; 
-import '../models/membership_tier.dart'; 
+import '../models/user.dart';
+import '../models/membership_tier.dart';
 
 class MembershipDetailPage extends StatefulWidget {
   const MembershipDetailPage({super.key});
@@ -13,8 +13,10 @@ class MembershipDetailPage extends StatefulWidget {
 }
 
 class _MembershipDetailPageState extends State<MembershipDetailPage> {
+  // Menggunakan data XP dari currentUser yang sudah ada
   final int _currentUserXp = currentUser.spending;
 
+  // Definisi semua tingkatan member
   final List<MembershipTier> tiers = [
     MembershipTier(
       name: 'Bronze',
@@ -69,8 +71,10 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
       ],
     ),
   ];
-
-  late MembershipTier _currentTier;
+  
+  // Variabel state untuk logika UI
+  late MembershipTier _selectedTier; // Tier yang sedang DIPILIH untuk dilihat benefitnya
+  late MembershipTier _currentTier;  // Tier ASLI pengguna saat ini
   MembershipTier? _nextTier;
   double _progress = 0.0;
   int _xpNeeded = 0;
@@ -81,8 +85,18 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
   void initState() {
     super.initState();
     _calculateTierProgress();
+    // Saat halaman dibuka, tier yang dipilih adalah tier pengguna saat ini
+    _selectedTier = _currentTier;
+  }
+  
+  // Fungsi untuk mengubah tier yang sedang dipilih di UI
+  void _selectTier(MembershipTier tier) {
+    setState(() {
+      _selectedTier = tier;
+    });
   }
 
+  // Menghitung progress dan level pengguna
   void _calculateTierProgress() {
     _currentTier =
         tiers.lastWhere((tier) => _currentUserXp >= tier.minXp, orElse: () => tiers.first);
@@ -100,6 +114,50 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
       _progress = 1.0;
       _xpNeeded = 0;
     }
+  }
+
+  // Fungsi untuk menampilkan panel Syarat & Ketentuan dari bawah
+  void _showTermsAndConditions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Syarat & Ketentuan',
+                style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                '1. XP (Experience Points) dihitung dari total akumulasi belanja Anda selama 3 bulan terakhir.\n\n'
+                '2. Setiap pembelanjaan Rp 1.000,- akan mendapatkan 1 XP.\n\n'
+                '3. Kenaikan Grade terjadi secara otomatis ketika XP Anda mencapai ambang batas minimal Grade berikutnya.\n\n'
+                '4. Penurunan Grade akan dievaluasi setiap 3 bulan. Jika total XP Anda tidak memenuhi syarat minimal Grade saat ini, maka Grade Anda akan diturunkan ke level yang sesuai.\n\n'
+                '5. Keuntungan dan promo untuk setiap Grade dapat berubah sewaktu-waktu tanpa pemberitahuan sebelumnya.'
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                    foregroundColor: Colors.white
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Mengerti'),
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -133,7 +191,7 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF6A5ACD), 
+        color: const Color(0xFF6A5ACD), // Warna ungu seperti di gambar
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -160,7 +218,6 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
     );
   }
 
-  // Widget untuk Progress Bar
   Widget _buildProgressBar() {
     return Column(
       children: [
@@ -200,17 +257,26 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
     );
   }
 
+  // Widget untuk menampilkan semua kartu level
   Widget _buildTierCards() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: tiers.map((tier) {
         bool isCurrent = tier.name == _currentTier.name;
-        return Expanded(child: _TierCard(tier: tier, isCurrent: isCurrent));
+        bool isSelected = tier.name == _selectedTier.name;
+        
+        return Expanded(
+          child: GestureDetector(
+            onTap: () => _selectTier(tier),
+            child: _TierCard(tier: tier, isCurrent: isCurrent, isSelected: isSelected),
+          ),
+        );
       }).toList(),
     );
   }
   
+  // Widget untuk bagian "Keuntungan Grade Ini"
   Widget _buildPerksSection() {
     return Card(
       elevation: 2,
@@ -221,13 +287,14 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Keuntungan Grade Ini',
+              'Keuntungan Grade ${_selectedTier.name}', // Judul dinamis
               style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: _currentTier.perks.map((perk) {
+              // Menampilkan keuntungan dari tier yang dipilih
+              children: _selectedTier.perks.map((perk) {
                 return Column(
                   children: [
                     Icon(perk.icon, color: Colors.deepPurple, size: 30),
@@ -243,6 +310,7 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
     );
   }
 
+  // Widget untuk bagian "Syarat & Ketentuan"
   Widget _buildTermsSection() {
     return Card(
       elevation: 2,
@@ -251,18 +319,19 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
         title: Text('Baca Syarat & Ketentuan', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
         subtitle: const Text('Ketahui metode perhitungan XP & cara naik/turun Grade.'),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () {
-        },
+        onTap: () => _showTermsAndConditions(context), // Memanggil fungsi S&K
       ),
     );
   }
 }
 
+// Widget terpisah untuk satu kartu tier (Bronze, Silver, dll)
 class _TierCard extends StatelessWidget {
   final MembershipTier tier;
   final bool isCurrent;
+  final bool isSelected;
 
-  const _TierCard({required this.tier, required this.isCurrent});
+  const _TierCard({required this.tier, required this.isCurrent, required this.isSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -276,15 +345,17 @@ class _TierCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: isCurrent ? tier.color.withOpacity(0.2) : Colors.white,
+                // Efek visual berdasarkan tier yang DIPILIH
+                color: isSelected ? tier.color.withOpacity(0.2) : Colors.white,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isCurrent ? tier.color : Colors.grey.shade300,
+                  color: isSelected ? tier.color : Colors.grey.shade300,
                   width: 2,
                 ),
               ),
               child: Icon(tier.icon, color: tier.color, size: 30),
             ),
+            // Label "Grade kamu" tetap berdasarkan level ASLI pengguna
             if (isCurrent)
               Positioned(
                 top: -10,
