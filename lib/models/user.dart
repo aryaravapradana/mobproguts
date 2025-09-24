@@ -2,8 +2,7 @@ class UserModel {
   String name;
   String email;
   String phone;
-  String address;
-  String password; 
+  String password;
   int saldo;
   int poin;
   int spending;
@@ -13,7 +12,6 @@ class UserModel {
     required this.name,
     required this.email,
     required this.phone,
-    required this.address,
     required this.password,
     required this.saldo,
     required this.poin,
@@ -29,15 +27,3 @@ class UserModel {
     return "Bronze";
   }
 }
-
-UserModel currentUser = UserModel(
-  name: "Arya",
-  email: "arya@mail.com",
-  phone: "081234567890",
-  address: "Jl. Sudirman No. 123, Jakarta",
-  password: "password123",
-  saldo: 500000,
-  poin: 1500,
-  spending: 2500000,
-  xp: 250.0,
-);

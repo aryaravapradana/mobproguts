@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:project_midterms/colors.dart';
+import 'package:project_midterms/data/voucher_data.dart';
 import '../models/voucher.dart';
 import '../models/user.dart';
 
 class VoucherPage extends StatefulWidget {
-  const VoucherPage({super.key});
+  final UserModel user;
+  const VoucherPage({super.key, required this.user});
 
   @override
   State<VoucherPage> createState() => _VoucherPageState();
@@ -11,9 +14,12 @@ class VoucherPage extends StatefulWidget {
 
 class _VoucherPageState extends State<VoucherPage> {
   void redeemVoucher(Voucher voucher) {
-    if (currentUser.poin >= voucher.cost) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Redeeming voucher...')),
+    );
+    if (widget.user.poin >= voucher.cost) {
       setState(() {
-        currentUser.poin -= voucher.cost;
+        widget.user.poin -= voucher.cost;
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Berhasil redeem: ${voucher.title}')),
@@ -34,11 +40,12 @@ class _VoucherPageState extends State<VoucherPage> {
         itemBuilder: (context, index) {
           final voucher = dummyVouchers[index];
           return ListTile(
-            title: Text(voucher.title),
-            subtitle: Text("Harga: ${voucher.cost} poin"),
+            title: Text(voucher.title, style: TextStyle(color: AppColors.white)),
+            subtitle: Text("Harga: ${voucher.cost} poin", style: TextStyle(color: AppColors.white.withAlpha(153))),
             trailing: ElevatedButton(
               onPressed: () => redeemVoucher(voucher),
-              child: const Text("Redeem"),
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.gold),
+              child: const Text("Redeem", style: TextStyle(color: AppColors.black)),
             ),
           );
         },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_midterms/colors.dart';
 
 class PointsCard extends StatelessWidget {
   final int points;
@@ -19,11 +20,11 @@ class PointsCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF5a6e64),
+        color: const Color(0xFF1E1E1E),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1), // ✅ pakai withValues
+            color: Colors.black.withAlpha(25), // ✅ pakai withValues
             blurRadius: 6,
             offset: const Offset(2, 4),
           )
@@ -35,7 +36,7 @@ class PointsCard extends StatelessWidget {
           const Text(
             "Available Points",
             style: TextStyle(
-              color: Colors.white,
+              color: AppColors.white,
               fontSize: 16,
             ),
           ),
@@ -43,26 +44,26 @@ class PointsCard extends StatelessWidget {
           Text(
             points.toString(),
             style: const TextStyle(
-              color: Colors.orange,
+              color: AppColors.gold,
               fontSize: 32,
               fontWeight: FontWeight.bold,
             ),
           ),
           Text(
             "\$$redeemableValue in Redeemable Value",
-            style: const TextStyle(color: Colors.white70),
+            style: TextStyle(color: AppColors.white.withAlpha(178)),
           ),
           const SizedBox(height: 12),
           LinearProgressIndicator(
             value: progress,
-            color: Colors.orange,
-            backgroundColor: Colors.white24,
+            color: AppColors.gold,
+            backgroundColor: AppColors.white.withAlpha(50),
             borderRadius: BorderRadius.circular(8),
           ),
           const SizedBox(height: 6),
           Text(
             "$untilPlatinum until Platinum",
-            style: const TextStyle(color: Colors.white70),
+            style: TextStyle(color: AppColors.white.withAlpha(178)),
           ),
         ],
       ),

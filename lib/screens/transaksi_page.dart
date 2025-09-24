@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/transaksi.dart';
+import 'package:project_midterms/data/transaction_data.dart';
 
 class TransaksiPage extends StatelessWidget {
   const TransaksiPage({super.key});

@@ -1,18 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:project_midterms/colors.dart';
 import '../models/user.dart';
 
 
-class AppColors {
-  static const Color black = Color(0xFF121212);
-  static const Color white = Color(0xFFFFFFFF);
-  static const Color background = Color(0xFFF3F4F6); 
-  static const Color primaryPurple = Color(0xFF8A2BE2); 
-  static const Color bronze = Color(0xFFB87333);
-  static const Color silver = Color(0xFFB0B0B0);
-  static const Color gold = Color(0xFFE6B800);
-  static const Color platinum = Color(0xFFDADADA);
-  static const Color diamond = Color(0xFF9FE8FF);
-}
+
 
 class LoyaltyTier {
   final String name;
@@ -30,14 +21,15 @@ class LoyaltyTier {
 
 
 class LoyaltyScreen extends StatefulWidget {
-  const LoyaltyScreen({super.key});
+  final UserModel user;
+  const LoyaltyScreen({super.key, required this.user});
 
   @override
   State<LoyaltyScreen> createState() => _LoyaltyScreenState();
 }
 
 class _LoyaltyScreenState extends State<LoyaltyScreen> {
-  final int _currentUserXp = currentUser.spending;
+  late int _currentUserXp;
 
   final List<LoyaltyTier> tiers = [
     LoyaltyTier(name: 'Bronze', minXp: 0, color: AppColors.bronze, icon: Icons.shield),
@@ -54,6 +46,7 @@ class _LoyaltyScreenState extends State<LoyaltyScreen> {
   @override
   void initState() {
     super.initState();
+    _currentUserXp = widget.user.spending;
     _determineTierAndProgress();
   }
 
@@ -78,13 +71,13 @@ class _LoyaltyScreenState extends State<LoyaltyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.black,
       appBar: AppBar(
-        title: const Text('Membership Detail', style: TextStyle(color: AppColors.black, fontWeight: FontWeight.bold)),
-        backgroundColor: AppColors.white,
+        title: const Text('Membership Detail', style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold)),
+        backgroundColor: AppColors.black,
         elevation: 1,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.black),
+          icon: const Icon(Icons.arrow_back, color: AppColors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -114,7 +107,7 @@ class _LoyaltyScreenState extends State<LoyaltyScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.primaryPurple,
+        color: const Color(0xFF1E1E1E),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -134,7 +127,7 @@ class _LoyaltyScreenState extends State<LoyaltyScreen> {
           Text(
             'Total Spending: Rp$_currentUserXp',
             style: TextStyle(
-              color: AppColors.white.withOpacity(0.8),
+              color: AppColors.white.withAlpha(204),
               fontSize: 16,
             ),
           ),
@@ -152,7 +145,7 @@ class _LoyaltyScreenState extends State<LoyaltyScreen> {
           child: LinearProgressIndicator(
             value: _progress,
             minHeight: 12,
-            backgroundColor: Colors.grey[300],
+            backgroundColor: const Color(0xFF2C2C2E),
             valueColor: AlwaysStoppedAnimation<Color>(_nextTier?.color ?? _currentTier.color),
           ),
         ),
@@ -160,12 +153,12 @@ class _LoyaltyScreenState extends State<LoyaltyScreen> {
         if (_nextTier != null)
           Text(
             'Tambah Rp$_xpNeeded lagi jadi ${_nextTier!.name}',
-            style: const TextStyle(fontSize: 14, color: AppColors.black),
+            style: const TextStyle(fontSize: 14, color: AppColors.white),
           )
         else
           const Text(
             'Kamu berada di level tertinggi!',
-            style: TextStyle(fontSize: 14, color: AppColors.black, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 14, color: AppColors.white, fontWeight: FontWeight.bold),
           ),
       ],
     );
@@ -185,6 +178,7 @@ class _LoyaltyScreenState extends State<LoyaltyScreen> {
   Widget _buildBenefitsSection() {
     return Card(
       elevation: 2,
+      color: const Color(0xFF1E1E1E),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -193,7 +187,7 @@ class _LoyaltyScreenState extends State<LoyaltyScreen> {
           children: [
             const Text(
               'Keuntungan Grade Ini',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.black),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.white),
             ),
             const SizedBox(height: 20),
             Row(
@@ -213,12 +207,12 @@ class _LoyaltyScreenState extends State<LoyaltyScreen> {
   Widget _buildBenefitItem(IconData icon, String label) {
     return Column(
       children: [
-        Icon(icon, color: AppColors.primaryPurple, size: 30),
+        Icon(icon, color: AppColors.gold, size: 30),
         const SizedBox(height: 8),
         Text(
           label,
           textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 12),
+          style: const TextStyle(fontSize: 12, color: AppColors.white),
         ),
       ],
     );
@@ -227,11 +221,12 @@ class _LoyaltyScreenState extends State<LoyaltyScreen> {
   Widget _buildTermsAndConditions() {
     return Card(
       elevation: 2,
+      color: const Color(0xFF1E1E1E),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
-        title: const Text('Baca Syarat & Ketentuan', style: TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: const Text('Ketahui metode perhitungan XP & cara naik/turun Grade.'),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        title: const Text('Baca Syarat & Ketentuan', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.white)),
+        subtitle: const Text('Ketahui metode perhitungan XP & cara naik/turun Grade.', style: TextStyle(color: AppColors.white)),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.white),
         onTap: () {},
       ),
     );
@@ -256,18 +251,18 @@ class TierCard extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: isActive ? tier.color.withOpacity(0.2) : Colors.transparent,
+            color: isActive ? tier.color.withAlpha(51) : Colors.transparent,
             shape: BoxShape.circle,
             border: Border.all(
-              color: isActive ? tier.color : Colors.grey[300]!,
+              color: isActive ? tier.color : AppColors.white.withAlpha(102),
               width: 2,
             ),
           ),
           child: Icon(tier.icon, color: tier.color, size: 24),
         ),
         const SizedBox(height: 8),
-        Text(tier.name, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-        Text('Rp${tier.minXp}', style: TextStyle(fontSize: 10, color: Colors.grey[600])),
+        Text(tier.name, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.white)),
+        Text('Rp${tier.minXp}', style: TextStyle(fontSize: 10, color: AppColors.white.withAlpha(153))),
       ],
     );
   }

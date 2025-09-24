@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:project_midterms/colors.dart';
 import 'auth/login_page.dart';
-import 'screens/dashboard_page.dart';
-import 'screens/home_page.dart'; 
-// import 'package:intl/intl.dart';
-import 'screens/payment_page.dart';
 
 void main() {
   runApp(const LoyaltyApp());
@@ -18,15 +15,24 @@ class LoyaltyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Loyalty Points Mall',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: AppColors.black,
+        primaryColor: AppColors.gold,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppColors.gold,
+          brightness: Brightness.dark,
+        ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: AppColors.black,
+          foregroundColor: AppColors.white,
+        ),
+        textTheme: Theme.of(context).textTheme.apply(
+              bodyColor: AppColors.white,
+              displayColor: AppColors.white,
+            ),
         useMaterial3: true,
       ),
       home: const LoginPage(),
-      routes: {
-        '/dashboard': (context) => const DashboardPage(),
-        '/home': (context) => const HomePage(),
-        '/payment': (context) => const PaymentPage(),
-      },
     );
   }
 }

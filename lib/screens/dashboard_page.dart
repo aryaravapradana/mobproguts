@@ -1,27 +1,25 @@
-// dashboard
 import 'package:flutter/material.dart';
+import 'package:project_midterms/models/user.dart';
 import 'voucher_page.dart';
-import 'poin_page.dart';
 import 'member_page.dart';
 import 'saldo_page.dart';
 import 'transaksi_page.dart';
 import 'payment_page.dart';
-import '../auth/login_page.dart';
 import 'account_page.dart';
 
 class DashboardPage extends StatelessWidget {
-  const DashboardPage({super.key});
+  final UserModel user;
+  const DashboardPage({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> menu = [
-      {'title': 'Info Poin', 'page': const PoinPage()},
-      {'title': 'Info Voucher', 'page': const VoucherPage()},
-      {'title': 'Info Member', 'page': const MemberPage()},
-      {'title': 'Saldo', 'page': const SaldoPage()},
+      {'title': 'Info Voucher', 'page': VoucherPage(user: user)},
+      {'title': 'Info Member', 'page': MemberPage(user: user)},
+      {'title': 'Saldo', 'page': SaldoPage(user: user)},
       {'title': 'Riwayat Transaksi', 'page': const TransaksiPage()},
-      {'title': 'Payment', 'page': const PaymentPage()},
-      {'title': 'Akun', 'page': const AccountPage()},
+      {'title': 'Payment', 'page': PaymentPage(user: user)},
+      {'title': 'Akun', 'page': AccountPage(user: user)},
     ];
 
     return Scaffold(
@@ -38,12 +36,6 @@ class DashboardPage extends StatelessWidget {
             ),
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginPage()));
-        },
-        child: const Icon(Icons.logout),
       ),
     );
   }
