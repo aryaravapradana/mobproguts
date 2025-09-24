@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:project_midterms/colors.dart';
 import '../models/user.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  final UserModel user;
+  const SettingsPage({super.key, required this.user});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -12,17 +14,15 @@ class _SettingsPageState extends State<SettingsPage> {
   late TextEditingController _nameController;
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
-  late TextEditingController _addressController;
   late TextEditingController _passwordController;
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: currentUser.name);
-    _emailController = TextEditingController(text: currentUser.email);
-    _phoneController = TextEditingController(text: currentUser.phone);
-    _addressController = TextEditingController(text: currentUser.address);
-    _passwordController = TextEditingController(text: currentUser.password);
+    _nameController = TextEditingController(text: widget.user.name);
+    _emailController = TextEditingController(text: widget.user.email);
+    _phoneController = TextEditingController(text: widget.user.phone);
+    _passwordController = TextEditingController(text: widget.user.password);
   }
 
   @override
@@ -30,24 +30,22 @@ class _SettingsPageState extends State<SettingsPage> {
     _nameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
-    _addressController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
   void _saveChanges() {
     setState(() {
-      currentUser.name = _nameController.text;
-      currentUser.email = _emailController.text;
-      currentUser.phone = _phoneController.text;
-      currentUser.address = _addressController.text;
-      currentUser.password = _passwordController.text;
+      widget.user.name = _nameController.text;
+      widget.user.email = _emailController.text;
+      widget.user.phone = _phoneController.text;
+      widget.user.password = _passwordController.text;
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Perubahan berhasil disimpan!'),
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.gold,
       ),
     );
     Navigator.pop(context);
@@ -83,12 +81,6 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             const SizedBox(height: 16),
             _buildTextField(
-              controller: _addressController,
-              label: 'Alamat',
-              icon: Icons.location_on,
-            ),
-            const SizedBox(height: 16),
-            _buildTextField(
               controller: _passwordController,
               label: 'Password',
               icon: Icons.lock,
@@ -99,7 +91,8 @@ class _SettingsPageState extends State<SettingsPage> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: _saveChanges,
-                child: const Text('Simpan Perubahan'),
+                style: ElevatedButton.styleFrom(backgroundColor: AppColors.gold),
+                child: const Text('Simpan Perubahan', style: TextStyle(color: AppColors.black)),
               ),
             ),
           ],
@@ -119,9 +112,17 @@ class _SettingsPageState extends State<SettingsPage> {
       controller: controller,
       obscureText: isObscure,
       keyboardType: keyboardType,
+      style: TextStyle(color: AppColors.white),
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon),
+        labelStyle: TextStyle(color: AppColors.white),
+        prefixIcon: Icon(icon, color: AppColors.white),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.white),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.gold),
+        ),
       ),
     );
   }

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:project_midterms/colors.dart';
+import 'package:project_midterms/data/transaction_data.dart';
 import '../models/user.dart';
 import '../models/transaksi.dart';
 import 'scan_qr_page.dart';
 
 class PaymentPage extends StatefulWidget {
-  const PaymentPage({super.key});
+  final UserModel user;
+  const PaymentPage({super.key, required this.user});
 
   @override
   State<PaymentPage> createState() => _PaymentPageState();
@@ -34,9 +37,9 @@ class _PaymentPageState extends State<PaymentPage> {
     final double xpBaru = amount / 10000;
 
     setState(() {
-      currentUser.poin += poinBaru;
-      currentUser.xp += xpBaru;
-      currentUser.spending += amount;
+      widget.user.poin += poinBaru;
+      widget.user.xp += xpBaru;
+      widget.user.spending += amount;
       dummyTransaksi.insert(
         0,
         Transaksi(
@@ -53,15 +56,15 @@ class _PaymentPageState extends State<PaymentPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.green.shade700,
+        backgroundColor: AppColors.gold,
         content: Row(
           children: [
-            const Icon(Icons.check_circle, color: Colors.white),
+            const Icon(Icons.check_circle, color: AppColors.black),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
                 'Transaksi berhasil! +$poinBaru poin, +${xpBaru.toStringAsFixed(1)} XP',
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: AppColors.black),
               ),
             ),
           ],
@@ -87,18 +90,21 @@ class _PaymentPageState extends State<PaymentPage> {
         final confirm = await showDialog<bool>(
           context: context,
           builder: (_) => AlertDialog(
-            title: const Text("Konfirmasi Pembayaran"),
+            backgroundColor: const Color(0xFF1E1E1E),
+            title: const Text("Konfirmasi Pembayaran", style: TextStyle(color: AppColors.white)),
             content: Text(
               "Bayar Rp${f.format(amount)} dan dapatkan $poinBaru poin & ${xpBaru.toStringAsFixed(1)} XP?",
+              style: TextStyle(color: AppColors.white),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: const Text("Batal"),
+                child: const Text("Batal", style: TextStyle(color: AppColors.white)),
               ),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context, true),
-                child: const Text("Bayar"),
+                style: ElevatedButton.styleFrom(backgroundColor: AppColors.gold),
+                child: const Text("Bayar", style: TextStyle(color: AppColors.black)),
               ),
             ],
           ),
@@ -106,9 +112,9 @@ class _PaymentPageState extends State<PaymentPage> {
 
         if (confirm == true) {
           setState(() {
-            currentUser.poin += poinBaru;
-            currentUser.xp += xpBaru;
-            currentUser.spending += amount;
+            widget.user.poin += poinBaru;
+            widget.user.xp += xpBaru;
+            widget.user.spending += amount;
             dummyTransaksi.insert(
               0,
               Transaksi(
@@ -122,9 +128,10 @@ class _PaymentPageState extends State<PaymentPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               behavior: SnackBarBehavior.floating,
-              backgroundColor: Colors.green.shade700,
+              backgroundColor: AppColors.gold,
               content: Text(
                 "Transaksi berhasil! (+$poinBaru poin, +${xpBaru.toStringAsFixed(1)} XP)",
+                style: TextStyle(color: AppColors.black),
               ),
             ),
           );
@@ -139,8 +146,6 @@ class _PaymentPageState extends State<PaymentPage> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-
     return Scaffold(
       appBar: AppBar(title: const Text('Tambah Transaksi')),
       body: Padding(
@@ -150,6 +155,7 @@ class _PaymentPageState extends State<PaymentPage> {
           children: [
             Card(
               elevation: 1.5,
+              color: const Color(0xFF1E1E1E),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -164,22 +170,23 @@ class _PaymentPageState extends State<PaymentPage> {
                     Text(
                       'Poin Saat Ini',
                       style: TextStyle(
-                        color: cs.primary,
+                        color: AppColors.gold,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${f.format(currentUser.poin)} poin',
+                      '${f.format(widget.user.poin)} poin',
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
+                        color: AppColors.white,
                       ),
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'Level: ${currentUser.level}',
-                      style: TextStyle(color: Colors.grey.shade600),
+                      'Level: ${widget.user.level}',
+                      style: TextStyle(color: AppColors.white.withAlpha(153)),
                     ),
                   ],
                 ),
@@ -189,6 +196,7 @@ class _PaymentPageState extends State<PaymentPage> {
             TextField(
               controller: amountController,
               keyboardType: TextInputType.number,
+              style: TextStyle(color: AppColors.white),
               decoration: const InputDecoration(
                 labelText: 'Nominal Belanja',
                 hintText: 'contoh: 250.000',
@@ -213,17 +221,17 @@ class _PaymentPageState extends State<PaymentPage> {
             SizedBox(
               height: 48,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(shape: const StadiumBorder()),
+                style: ElevatedButton.styleFrom(backgroundColor: AppColors.gold, shape: const StadiumBorder()),
                 onPressed: makePayment,
-                child: const Text('Simpan Transaksi'),
+                child: const Text('Simpan Transaksi', style: TextStyle(color: AppColors.black)),
               ),
             ),
             const SizedBox(height: 10),
             SizedBox(
               height: 48,
               child: OutlinedButton.icon(
-                icon: const Icon(Icons.qr_code_scanner),
-                label: const Text("Scan QR"),
+                icon: const Icon(Icons.qr_code_scanner, color: AppColors.gold),
+                label: const Text("Scan QR", style: TextStyle(color: AppColors.gold)),
                 onPressed: _scanQris,
               ),
             ),

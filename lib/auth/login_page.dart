@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project_midterms/data/user_data.dart';
 import 'register_page.dart';
 import '../colors.dart';
 import '../screens/home_page.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,11 +17,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  final Map<String, String> dummyUsers = {
-    "user@example.com": "123456",
-    "arya@mail.com": "password123",
-  };
-
   @override
   void dispose() {
     emailController.dispose();
@@ -31,27 +28,31 @@ class _LoginPageState extends State<LoginPage> {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
 
-    if (dummyUsers.containsKey(email)) {
-      if (dummyUsers[email] == password) {
-        
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const HomePage()),
-        );
-      } else {
-        _showError("Password salah. Coba lagi.");
-      }
-    } else {
-      _showError("Email tidak ditemukan.");
+    try {
+      final user = dummyUsers.firstWhere(
+        (u) => u.email == email && u.password == password,
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => HomePage(user: user)),
+      );
+    } catch (e) {
+      _showErrorDialog("Invalid email or password.");
     }
   }
 
-  void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Login Error'),
         content: Text(message),
-        backgroundColor: Colors.red[700],
-        behavior: SnackBarBehavior.floating,
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
       ),
     );
   }
@@ -83,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                   "Login to your account",
                   style: GoogleFonts.poppins(
                     fontSize: 14,
-                    color: AppColors.white.withOpacity(0.6),
+                    color: AppColors.white.withAlpha(153),
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -104,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                       borderRadius: BorderRadius.circular(14),
                     ),
                     elevation: 8,
-                    shadowColor: AppColors.gold.withOpacity(0.5),
+                    shadowColor: AppColors.gold.withAlpha(128),
                   ),
                   onPressed: _handleLogin,
                   child: Text(
@@ -125,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                       "Don't have an account?",
                       style: GoogleFonts.poppins(
                         fontSize: 14,
-                        color: AppColors.white.withOpacity(0.6),
+                        color: AppColors.white.withAlpha(153),
                       ),
                     ),
                     TextButton(
@@ -169,7 +170,7 @@ class _LoginPageState extends State<LoginPage> {
       decoration: InputDecoration(
         prefixIcon: Icon(icon, color: AppColors.gold),
         hintText: hint,
-        hintStyle: TextStyle(color: AppColors.white.withOpacity(0.4)),
+        hintStyle: TextStyle(color: AppColors.white.withAlpha(102)),
         filled: true,
         fillColor: const Color(0xFF1E1E1E),
         border: OutlineInputBorder(

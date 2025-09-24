@@ -1,11 +1,17 @@
-// home_page.dart
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:project_midterms/colors.dart';
+import 'package:project_midterms/models/user.dart';
+import 'package:project_midterms/screens/dashboard_page.dart';
+import 'package:project_midterms/screens/loyalty_screen.dart';
+import 'package:project_midterms/screens/voucher_page.dart';
 import '../widgets/points_card.dart';
 import 'account_page.dart';
 import 'scan_qr_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final UserModel user;
+  const HomePage({super.key, required this.user});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -14,7 +20,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [const HomePageContent(), const AccountPage()];
+  late final List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      HomePageContent(user: widget.user),
+      AccountPage(user: widget.user),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -36,15 +51,16 @@ class _HomePageState extends State<HomePage> {
       body: _pages[_selectedIndex],
 
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.orange,
+        backgroundColor: AppColors.gold,
         onPressed: _openScanner,
-        child: const Icon(Icons.qr_code_scanner, color: Colors.white),
+        child: const Icon(Icons.qr_code_scanner, color: AppColors.black),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         notchMargin: 6,
+        color: const Color(0xFF1E1E1E),
         child: SizedBox(
           height: 60,
           child: Row(
@@ -70,12 +86,12 @@ class _HomePageState extends State<HomePage> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: isSelected ? Colors.orange : Colors.grey),
+          Icon(icon, color: isSelected ? AppColors.gold : AppColors.white.withAlpha(153)),
           Text(
             label,
             style: TextStyle(
               fontSize: 12,
-              color: isSelected ? Colors.orange : Colors.grey,
+              color: isSelected ? AppColors.gold : AppColors.white.withAlpha(153),
             ),
           ),
         ],
@@ -85,51 +101,100 @@ class _HomePageState extends State<HomePage> {
 }
 
 class HomePageContent extends StatelessWidget {
-  const HomePageContent({super.key});
+  final UserModel user;
+  const HomePageContent({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFf4f7f6),
+      backgroundColor: AppColors.black,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFd4a373),
+        backgroundColor: AppColors.black,
         elevation: 0,
-        title: const Text(
-          "FOR YOU",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        title: Text(
+          "Hey, ${user.name}!",
+          style: GoogleFonts.roboto(fontWeight: FontWeight.bold, color: AppColors.white),
         ),
         centerTitle: true,
-        leading: const Icon(Icons.person, color: Colors.white),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 16.0),
-            child: Icon(Icons.menu, color: Colors.white),
-          ),
-        ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: const Color(0xFF1E1E1E),
+              ),
+              child: Text('Menu'),
+            ),
+            ListTile(
+              title: const Text('Home'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Dashboard'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DashboardPage(user: user)),
+                );
+              },
+            ),
+            ListTile(
+              title: const Text('Account'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AccountPage(user: user)),
+                );
+              },
+            ),
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: PointsCard(
-                points: 131567,
-                redeemableValue: 968,
-                untilPlatinum: 1543,
-                progress: 0.9,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoyaltyScreen(user: user)),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: PointsCard(
+                  points: user.poin,
+                  redeemableValue: 968, // This seems hardcoded, leaving for now
+                  untilPlatinum: 1543, // This seems hardcoded, leaving for now
+                  progress: user.xp / 1500, // Calculate progress based on xp
+                ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
+                children: [
+                  const Text(
                     "My Brand Loyalty",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.white),
                   ),
-                  Text("View All", style: TextStyle(color: Colors.orange)),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => VoucherPage(user: user)),
+                      );
+                    },
+                    child: const Text("View All", style: TextStyle(color: AppColors.gold)),
+                  ),
                 ],
               ),
             ),
@@ -145,29 +210,23 @@ class HomePageContent extends StatelessWidget {
                     margin: const EdgeInsets.only(left: 16),
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: const Color(0xFF1E1E1E),
                       borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 4,
-                          offset: const Offset(2, 4),
-                        ),
-                      ],
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text(
-                          "21,948 pts",
+                          "${user.poin} pts",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
+                            color: AppColors.white,
                           ),
                         ),
                         SizedBox(height: 4),
-                        Icon(Icons.star, color: Colors.orange, size: 20),
-                        Text("4.8", style: TextStyle(fontSize: 12)),
+                        Icon(Icons.star, color: AppColors.gold, size: 20),
+                        Text("4.8", style: TextStyle(fontSize: 12, color: AppColors.white)), // Hardcoded
                       ],
                     ),
                   );
@@ -179,16 +238,16 @@ class HomePageContent extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
                 "Conversion Recommendation",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.white),
               ),
             ),
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: const [
-                Icon(Icons.account_balance, size: 50),
-                Icon(Icons.person, size: 50),
-                Icon(Icons.build, size: 50),
+                Icon(Icons.account_balance, size: 50, color: AppColors.white),
+                Icon(Icons.person, size: 50, color: AppColors.white),
+                Icon(Icons.build, size: 50, color: AppColors.white),
               ],
             ),
             const SizedBox(height: 20),
@@ -196,15 +255,15 @@ class HomePageContent extends StatelessWidget {
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.grey.shade200,
+                color: const Color(0xFF1E1E1E),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
-                  Text("⏱ Estimated transfer time up to 30 minutes"),
-                  Text("🔄 10000 Membership Rewards = 1000 Aeroplan"),
-                  Text("📌 Minimum transfer amount 1000 points"),
+                  Text("⏱ Estimated transfer time up to 30 minutes", style: TextStyle(color: AppColors.white)),
+                  Text("🔄 10000 Membership Rewards = 1000 Aeroplan", style: TextStyle(color: AppColors.white)),
+                  Text("📌 Minimum transfer amount 1000 points", style: TextStyle(color: AppColors.white)),
                 ],
               ),
             ),

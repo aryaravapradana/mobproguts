@@ -5,5 +5,3 @@ class Transaksi {
 
   Transaksi({required this.title, required this.amount, required this.date});
 }
-
-List<Transaksi> dummyTransaksi = [];
