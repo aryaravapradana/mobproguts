@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_midterms/colors.dart';
+import 'package:project_midterms/data/redeem_history_data.dart';
 import 'package:project_midterms/data/voucher_data.dart';
 import '../models/voucher.dart';
 import '../models/user.dart';
@@ -20,6 +21,7 @@ class _VoucherPageState extends State<VoucherPage> {
     if (widget.user.poin >= voucher.cost) {
       setState(() {
         widget.user.poin -= voucher.cost;
+        redeemedVouchers.add(Voucher(title: voucher.title, cost: voucher.cost, date: DateTime.now()));
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Berhasil redeem: ${voucher.title}')),

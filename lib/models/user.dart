@@ -1,3 +1,5 @@
+import 'package:project_midterms/models/voucher.dart';
+
 class UserModel {
   String name;
   String email;
@@ -7,6 +9,7 @@ class UserModel {
   int poin;
   int spending;
   double xp;
+  List<Voucher> ownedVouchers;
 
   UserModel({
     required this.name,
@@ -17,6 +20,7 @@ class UserModel {
     required this.poin,
     required this.spending,
     required this.xp,
+    this.ownedVouchers = const [],
   });
 
   String get level {
