@@ -1,72 +1,81 @@
 import 'package:flutter/material.dart';
-import 'membership_detail_page.dart'; 
+import 'membership_detail_page.dart';
+import 'settings_page.dart';
+import '../models/user.dart'; // Import data pengguna
+import '../colors.dart';
 
-class AccountPage extends StatelessWidget {
+// 1. Ubah menjadi StatefulWidget
+class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
 
+  @override
+  State<AccountPage> createState() => _AccountPageState();
+}
+
+class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Akun'),
-        backgroundColor: Colors.red,
-        elevation: 0,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              elevation: 4,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    const Row(
+                    Row(
                       children: [
-                        CircleAvatar(
+                        const CircleAvatar(
                           radius: 30,
-                          backgroundColor: Colors.grey,
+                          backgroundColor: Color(0xFF2C2C2E),
                           child: Icon(
                             Icons.person,
-                            color: Colors.white,
+                            color: AppColors.white,
                             size: 40,
                           ),
                         ),
-                        SizedBox(width: 15),
+                        const SizedBox(width: 15),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // 2. Ambil nama dari currentUser, bukan hardcoded
                             Text(
-                              'Prabowo Unyu',
-                              style: TextStyle(
+                              currentUser.name,
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
+                            // 3. Ambil no. telepon dari currentUser
                             Text(
-                              '081234567890',
-                              style: TextStyle(
+                              currentUser.phone,
+                              style: const TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey,
                               ),
                             ),
                           ],
                         ),
-                        Spacer(),
-                        Icon(Icons.chevron_right),
+                        const Spacer(),
+                        Icon(Icons.chevron_right, color: Colors.grey[600]),
                       ],
                     ),
                     const SizedBox(height: 10),
                     InkWell(
-                      onTap: () {
-                        Navigator.push(
+                      onTap: () async {
+                        // Navigasi ke halaman detail member
+                        await Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const MembershipDetailPage()),
+                          MaterialPageRoute(
+                              builder: (context) => const MembershipDetailPage()),
                         );
+                        // Refresh halaman ini saat kembali
+                        setState(() {});
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
@@ -74,14 +83,14 @@ class AccountPage extends StatelessWidget {
                           vertical: 12.0,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.deepPurple[400],
+                          color: const Color(0xFF2C2C2E),
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         child: const Row(
                           children: [
                             Icon(
                               Icons.card_giftcard,
-                              color: Colors.white,
+                              color: AppColors.gold,
                               size: 30,
                             ),
                             SizedBox(width: 10),
@@ -89,9 +98,9 @@ class AccountPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'BESTIE',
+                                  'BESTIE', // Ini bisa diubah jadi currentUser.level jika mau
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: AppColors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -117,14 +126,8 @@ class AccountPage extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 15),
-
             Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              elevation: 4,
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: Row(
@@ -146,65 +149,36 @@ class AccountPage extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 20),
-
-            Card(
-              color: Colors.lightBlue[50],
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              child: ListTile(
-                leading: Icon(Icons.email, color: Colors.blue[600]),
-                title: Text(
-                  'Kamu belum verifikasi email',
-                  style: TextStyle(
-                    color: Colors.blue[800],
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: const Text(
-                  'Yuk, segera verifikasi emailmu',
-                  style: TextStyle(color: Colors.black54),
-                ),
-                trailing: const Icon(Icons.chevron_right, color: Colors.blue),
-                onTap: () {},
-              ),
+            buildInfoCard(
+              icon: Icons.email,
+              title: 'Kamu belum verifikasi email',
+              subtitle: 'Yuk, segera verifikasi emailmu',
+              iconColor: AppColors.gold,
+              onTap: () {},
             ),
-
             const SizedBox(height: 10),
-
-            Card(
-              color: Colors.red[50],
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              child: ListTile(
-                title: Text(
-                  'Misi Bertingkat',
-                  style: TextStyle(
-                    color: Colors.red[800],
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: const Text(
-                  '0/7 misi selesai\nSisa waktu 14 hari',
-                  style: TextStyle(color: Colors.black54),
-                ),
-                trailing: const Icon(Icons.chevron_right, color: Colors.red),
-                onTap: () {},
-              ),
+            buildInfoCard(
+              icon: Icons.flag,
+              title: 'Misi Bertingkat',
+              subtitle: '0/7 misi selesai\nSisa waktu 14 hari',
+              iconColor: Colors.cyan,
+              onTap: () {},
             ),
-
             const SizedBox(height: 20),
-
             buildListTile(
               Icons.settings,
               'Pengaturan Akun',
               'Ganti Password, Ganti PIN & Daftar Alamat',
-              () {},
+              () async {
+                // 4. Pergi ke halaman pengaturan, TUNGGU sampai kembali
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SettingsPage()),
+                );
+                // 5. Setelah kembali, panggil setState untuk refresh halaman
+                setState(() {});
+              },
             ),
             buildListTile(Icons.rate_review, 'Rating & ulasan', '', () {}),
             buildListTile(
@@ -225,7 +199,7 @@ class AccountPage extends StatelessWidget {
         onTap: onTap,
         child: Column(
           children: [
-            Icon(icon, color: Colors.red, size: 30),
+            Icon(icon, color: AppColors.gold, size: 30),
             const SizedBox(height: 5),
             Text(
               text,
@@ -237,6 +211,35 @@ class AccountPage extends StatelessWidget {
     );
   }
 
+  Widget buildInfoCard({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required Color iconColor,
+    required VoidCallback onTap,
+  }) {
+    return Card(
+      elevation: 0,
+      color: const Color(0xFF2C2C2E),
+      child: ListTile(
+        leading: Icon(icon, color: iconColor),
+        title: Text(
+          title,
+          style: const TextStyle(
+            color: AppColors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        subtitle: Text(
+          subtitle,
+          style: const TextStyle(color: Colors.white70),
+        ),
+        trailing: Icon(Icons.chevron_right, color: Colors.grey[600]),
+        onTap: onTap,
+      ),
+    );
+  }
+
   Widget buildListTile(
     IconData icon,
     String title,
@@ -244,16 +247,14 @@ class AccountPage extends StatelessWidget {
     VoidCallback onTap,
   ) {
     return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       margin: const EdgeInsets.only(bottom: 10),
       child: ListTile(
-        leading: Icon(icon, color: Colors.grey[700]),
+        leading: Icon(icon, color: Colors.grey[400]),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
         subtitle: subtitle.isNotEmpty
             ? Text(subtitle, style: const TextStyle(fontSize: 12))
             : null,
-        trailing: const Icon(Icons.chevron_right),
+        trailing: Icon(Icons.chevron_right, color: Colors.grey[600]),
         onTap: onTap,
       ),
     );
