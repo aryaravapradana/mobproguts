@@ -5,7 +5,6 @@ class UserModel {
   String email;
   String phone;
   String password;
-  int saldo;
   int poin;
   int spending;
   double xp;
@@ -16,7 +15,6 @@ class UserModel {
     required this.email,
     required this.phone,
     required this.password,
-    required this.saldo,
     required this.poin,
     required this.spending,
     required this.xp,

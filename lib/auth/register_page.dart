@@ -39,7 +39,6 @@ class _RegisterPageState extends State<RegisterPage> {
         email: email,
         password: password,
         phone: phone,
-        saldo: 0,
         poin: 0,
         spending: 0,
         xp: 0,
