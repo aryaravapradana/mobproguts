@@ -51,4 +51,15 @@ final List<UserModel> dummyUsers = [
     spending: 3000000,
     xp: 300.0,
   ),
+
+    UserModel(
+    name: "Test Account",
+    email: "a",
+    password: "a",
+    phone: "081234567894",
+    saldo: 120000000,
+    poin: 1200,
+    spending: 3000000,
+    xp: 300.0,
+  ),
 ];

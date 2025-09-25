@@ -27,6 +27,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _pages = [
       HomePageContent(user: widget.user),
+      VoucherPage(user: widget.user),
       AccountPage(user: widget.user),
     ];
   }
@@ -64,13 +65,25 @@ class _HomePageState extends State<HomePage> {
         child: SizedBox(
           height: 60,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              // Home
-              _buildNavItem(Icons.home, "Home", 0),
-              const SizedBox(width: 40),
-              // Akun
-              _buildNavItem(Icons.person, "Akun", 1),
+            children: <Widget>[
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    _buildNavItem(Icons.home, "Home", 0),
+                    _buildNavItem(Icons.local_offer, "Voucher", 1),
+                  ],
+                ),
+              ),
+              SizedBox(width: 40),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    _buildNavItem(Icons.person, "Akun", 2),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

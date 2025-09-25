@@ -12,9 +12,10 @@ class TransaksiPage extends StatelessWidget {
         itemCount: dummyTransaksi.length,
         itemBuilder: (context, index) {
           final trx = dummyTransaksi[index];
+          final points = (trx.amount / 1000).floor();
           return ListTile(
             title: Text(trx.title),
-            subtitle: Text("Rp${trx.amount}"),
+            subtitle: Text("Rp${trx.amount} (+${points} pts)"),
             trailing: Text("${trx.date.day}/${trx.date.month}/${trx.date.year}"),
           );
         },
