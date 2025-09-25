@@ -74,6 +74,7 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   Future<void> _scanQris() async {
+    if (!mounted) return;
     final result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const ScanQrPage()),
@@ -87,6 +88,7 @@ class _PaymentPageState extends State<PaymentPage> {
         final poinBaru = amount ~/ 1000;
         final double xpBaru = amount / 10000;
 
+        if (!mounted) return;
         final confirm = await showDialog<bool>(
           context: context,
           builder: (_) => AlertDialog(
@@ -125,6 +127,7 @@ class _PaymentPageState extends State<PaymentPage> {
             );
           });
 
+          if (!mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               behavior: SnackBarBehavior.floating,
@@ -137,6 +140,7 @@ class _PaymentPageState extends State<PaymentPage> {
           );
         }
       } else {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("QR tidak mengandung nominal valid")),
         );

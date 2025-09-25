@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_midterms/data/transaction_data.dart';
+import 'package:intl/intl.dart';
 
 class TransaksiPage extends StatelessWidget {
   const TransaksiPage({super.key});
@@ -15,8 +16,8 @@ class TransaksiPage extends StatelessWidget {
           final points = (trx.amount / 1000).floor();
           return ListTile(
             title: Text(trx.title),
-            subtitle: Text("Rp${trx.amount} (+${points} pts)"),
-            trailing: Text("${trx.date.day}/${trx.date.month}/${trx.date.year}"),
+            subtitle: Text("Rp${trx.amount} (+$points pts)"),
+            trailing: Text(DateFormat('d/M/y').format(trx.date)),
           );
         },
       ),
