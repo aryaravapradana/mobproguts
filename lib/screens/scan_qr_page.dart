@@ -34,27 +34,48 @@ class _ScanQrPageState extends State<ScanQrPage> {
         cameraController.stop(); // Stop scanning after first detection
         int? pointsToAdd = int.tryParse(rawValue);
 
-        if (pointsToAdd != null && pointsToAdd > 0) {
+        if (pointsToAdd != null && pointsToAdd != 0) {
           // Find the actual user in the global dummyUsers list and update their points
           final userIndex = dummyUsers.indexWhere((u) => u.id == widget.user.id);
           if (userIndex != -1) {
+            // Check for sufficient points if redeeming
+            if (pointsToAdd < 0 && dummyUsers[userIndex].poin < pointsToAdd.abs()) {
+              _showSnackBar("Not enough points to redeem!", Colors.red);
+              Navigator.pop(context);
+              break;
+            }
+
             setState(() {
               dummyUsers[userIndex].poin += pointsToAdd;
               // Also update the local widget.user for immediate UI reflection if needed elsewhere
               widget.user.poin = dummyUsers[userIndex].poin;
 
+              String transactionTitle;
+              String snackBarMessage;
+              Color snackBarColor;
+
+              if (pointsToAdd > 0) {
+                transactionTitle = "QR Scan Points Added";
+                snackBarMessage = "Successfully added $pointsToAdd points! Total points: ${dummyUsers[userIndex].poin}";
+                snackBarColor = Colors.green;
+              } else {
+                transactionTitle = "QR Scan Points Redeemed";
+                snackBarMessage = "Successfully redeemed ${pointsToAdd.abs()} points! Total points: ${dummyUsers[userIndex].poin}";
+                snackBarColor = Colors.orange;
+              }
+
               // Add a transaction record
               dummyTransaksi.insert(
                 0,
                 Transaksi(
-                  title: "QR Scan Points",
+                  title: transactionTitle,
                   amount: 0, // No monetary amount for point scan
-                  pointsChange: pointsToAdd, // Points added
+                  pointsChange: pointsToAdd, // Points added or redeemed
                   date: DateTime.now(),
                 ),
               );
+              _showSnackBar(snackBarMessage, snackBarColor);
             });
-            _showSnackBar("Successfully added $pointsToAdd points! Total points: ${dummyUsers[userIndex].poin}", Colors.green);
           } else {
             _showSnackBar("Error: User not found in global list.", Colors.red);
           }
