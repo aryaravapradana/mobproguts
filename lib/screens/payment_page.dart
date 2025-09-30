@@ -45,6 +45,7 @@ class _PaymentPageState extends State<PaymentPage> {
         Transaksi(
           title: "Belanja di Merchant",
           amount: amount,
+          pointsChange: poinBaru,
           date: DateTime.now(),
         ),
       );
@@ -122,6 +123,7 @@ class _PaymentPageState extends State<PaymentPage> {
               Transaksi(
                 title: "Pembayaran via QR",
                 amount: amount,
+                pointsChange: poinBaru,
                 date: DateTime.now(),
               ),
             );

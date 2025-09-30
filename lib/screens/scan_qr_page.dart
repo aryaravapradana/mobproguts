@@ -48,7 +48,8 @@ class _ScanQrPageState extends State<ScanQrPage> {
                 0,
                 Transaksi(
                   title: "QR Scan Points",
-                  amount: pointsToAdd, // Assuming amount here refers to points added
+                  amount: 0, // No monetary amount for point scan
+                  pointsChange: pointsToAdd, // Points added
                   date: DateTime.now(),
                 ),
               );
