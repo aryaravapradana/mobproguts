@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:project_midterms/colors.dart';
 import 'package:project_midterms/models/user.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:project_midterms/screens/voucher_page.dart'; // New import
-import 'package:project_midterms/screens/transaksi_page.dart'; // New import
+import 'package:project_midterms/screens/voucher_page.dart';
+import 'package:project_midterms/screens/transaksi_page.dart';
 import 'package:intl/intl.dart';
 
 class PointPage extends StatelessWidget {
@@ -99,7 +99,9 @@ class PointPage extends StatelessWidget {
                   () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => VoucherPage(user: user)),
+                      MaterialPageRoute(
+                        builder: (context) => VoucherPage(user: user),
+                      ),
                     );
                   },
                 ),
@@ -110,7 +112,7 @@ class PointPage extends StatelessWidget {
                   () {
                     Navigator.push(
                       context,
-                    MaterialPageRoute(builder: (context) => TransaksiPage()),
+                      MaterialPageRoute(builder: (context) => TransaksiPage()),
                     );
                   },
                 ),
@@ -149,7 +151,12 @@ class PointPage extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButton(BuildContext context, IconData icon, String label, VoidCallback onTap) {
+  Widget _buildActionButton(
+    BuildContext context,
+    IconData icon,
+    String label,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Column(
@@ -165,10 +172,7 @@ class PointPage extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             label,
-            style: GoogleFonts.poppins(
-              color: AppColors.white,
-              fontSize: 14,
-            ),
+            style: GoogleFonts.poppins(color: AppColors.white, fontSize: 14),
           ),
         ],
       ),
@@ -213,5 +217,4 @@ class PointPage extends StatelessWidget {
       ),
     );
   }
-
 }
