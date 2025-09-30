@@ -26,74 +26,103 @@ class _ScanQrPageState extends State<ScanQrPage> {
     super.dispose();
   }
 
-  void _onDetect(BarcodeCapture capture) {
+  void _onDetect(BarcodeCapture capture) async { // Made async to await dialog
     final List<Barcode> barcodes = capture.barcodes;
     for (final barcode in barcodes) {
       final String? rawValue = barcode.rawValue;
       if (rawValue != null) {
         cameraController.stop(); // Stop scanning after first detection
-        int? pointsToAdd = int.tryParse(rawValue);
+        int? pointsChange = int.tryParse(rawValue);
 
-        if (pointsToAdd != null && pointsToAdd != 0) {
-          // Find the actual user in the global dummyUsers list and update their points
+        if (pointsChange != null && pointsChange != 0) {
           final userIndex = dummyUsers.indexWhere((u) => u.id == widget.user.id);
           if (userIndex != -1) {
-            // Check for sufficient points if redeeming
-            if (pointsToAdd < 0 && dummyUsers[userIndex].poin < pointsToAdd.abs()) {
-              _showSnackBar("Not enough points to redeem!", Colors.red);
+            if (pointsChange < 0 && dummyUsers[userIndex].poin < pointsChange.abs()) {
+              if (!mounted) return;
+              await _showResultDialog("Not enough points!", "You do not have enough points to redeem ${pointsChange.abs()} points.", Icons.error, Colors.red);
+              if (!mounted) return;
               Navigator.pop(context);
               break;
             }
 
+            String transactionTitle = "";
+            String dialogTitle = "";
+            String dialogMessage = "";
+            IconData dialogIcon = Icons.info;
+            Color dialogColor = Colors.blue;
+
             setState(() {
-              dummyUsers[userIndex].poin += pointsToAdd;
-              // Also update the local widget.user for immediate UI reflection if needed elsewhere
+              dummyUsers[userIndex].poin += pointsChange;
               widget.user.poin = dummyUsers[userIndex].poin;
 
-              String transactionTitle;
-              String snackBarMessage;
-              Color snackBarColor;
-
-              if (pointsToAdd > 0) {
+              if (pointsChange > 0) {
                 transactionTitle = "QR Scan Points Added";
-                snackBarMessage = "Successfully added $pointsToAdd points! Total points: ${dummyUsers[userIndex].poin}";
-                snackBarColor = Colors.green;
+                dialogTitle = "Points Added!";
+                dialogMessage = "Successfully added $pointsChange points! Total points: ${dummyUsers[userIndex].poin}";
+                dialogIcon = Icons.check_circle;
+                dialogColor = Colors.green;
               } else {
                 transactionTitle = "QR Scan Points Redeemed";
-                snackBarMessage = "Successfully redeemed ${pointsToAdd.abs()} points! Total points: ${dummyUsers[userIndex].poin}";
-                snackBarColor = Colors.orange;
+                dialogTitle = "Points Redeemed!";
+                dialogMessage = "Successfully redeemed ${pointsChange.abs()} points! Total points: ${dummyUsers[userIndex].poin}";
+                dialogIcon = Icons.remove_circle;
+                dialogColor = Colors.orange;
               }
 
-              // Add a transaction record
               dummyTransaksi.insert(
                 0,
                 Transaksi(
                   title: transactionTitle,
-                  amount: 0, // No monetary amount for point scan
-                  pointsChange: pointsToAdd, // Points added or redeemed
+                  amount: 0,
+                  pointsChange: pointsChange,
                   date: DateTime.now(),
                 ),
               );
-              _showSnackBar(snackBarMessage, snackBarColor);
             });
+            if (!mounted) return;
+            await _showResultDialog(dialogTitle, dialogMessage, dialogIcon, dialogColor);
           } else {
-            _showSnackBar("Error: User not found in global list.", Colors.red);
+            if (!mounted) return;
+            await _showResultDialog("Error", "User not found in global list.", Icons.error, Colors.red);
           }
         } else {
-          _showSnackBar("Invalid QR code: Could not parse points or points are zero.", Colors.red);
+          if (!mounted) return;
+          await _showResultDialog("Invalid QR Code", "Could not parse points or points are zero.", Icons.warning, Colors.orange);
         }
-        Navigator.pop(context); // Go back to previous screen (HomePage)
+        if (!mounted) return;
+        // Navigator.pop(context); // Go back to previous screen (HomePage) - Removed to prevent double pop
         break;
       }
     }
   }
 
-  void _showSnackBar(String message, Color color) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: color,
-      ),
+  Future<void> _showResultDialog(String title, String message, IconData icon, Color color) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppColors.black,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          title: Row(
+            children: [
+              Icon(icon, color: color, size: 30),
+              const SizedBox(width: 10),
+              Expanded(child: Text(title, style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold))),
+            ],
+          ),
+          content: Text(message, style: TextStyle(color: AppColors.white.withAlpha(200))),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss dialog
+                Navigator.pop(context); // Go back to previous screen (HomePage)
+              },
+              child: Text("OK", style: TextStyle(color: AppColors.gold)),
+            ),
+          ],
+        );
+      },
     );
   }
 
