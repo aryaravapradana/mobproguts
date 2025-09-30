@@ -77,7 +77,7 @@ class _PaymentPageState extends State<PaymentPage> {
     if (!mounted) return;
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const ScanQrPage()),
+      MaterialPageRoute(builder: (_) => ScanQrPage(user: widget.user)),
     );
 
     if (result != null && result is String) {

@@ -5,6 +5,7 @@ import 'package:project_midterms/screens/member_page.dart';
 import 'package:project_midterms/screens/membership_detail_page.dart';
 import 'package:project_midterms/screens/settings_page.dart';
 import 'package:project_midterms/screens/redeem_history_page.dart';
+import 'package:project_midterms/screens/point_page.dart';
 import '../colors.dart';
 
 class AccountPage extends StatefulWidget {
@@ -103,6 +104,17 @@ class _AccountPageState extends State<AccountPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => MemberPage(user: widget.user)),
+                );
+              },
+            ),
+            buildListTile(
+              Icons.star,
+              'My Points',
+              'Lihat poin anda',
+              () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PointPage(user: widget.user)),
                 );
               },
             ),

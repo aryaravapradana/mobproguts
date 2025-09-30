@@ -27,7 +27,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _pages = [
       HomePageContent(user: widget.user),
-      VoucherPage(user: widget.user),
       AccountPage(user: widget.user),
     ];
   }
@@ -42,7 +41,7 @@ class _HomePageState extends State<HomePage> {
   void _openScanner() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const ScanQrPage()),
+      MaterialPageRoute(builder: (_) => ScanQrPage(user: widget.user)),
     );
   }
 
@@ -68,10 +67,9 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               Expanded(
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     _buildNavItem(Icons.home, "Home", 0),
-                    _buildNavItem(Icons.local_offer, "Voucher", 1),
                   ],
                 ),
               ),
@@ -80,7 +78,7 @@ class _HomePageState extends State<HomePage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    _buildNavItem(Icons.person, "Akun", 2),
+                    _buildNavItem(Icons.person, "Akun", 1),
                   ],
                 ),
               ),
