@@ -3,11 +3,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:project_midterms/colors.dart';
 import 'package:project_midterms/models/user.dart';
 import 'package:project_midterms/screens/dashboard_page.dart';
-import 'package:project_midterms/screens/loyalty_screen.dart';
+import 'package:project_midterms/screens/membership_detail_page.dart';
 import 'package:project_midterms/screens/voucher_page.dart';
 import '../widgets/points_card.dart';
 import 'account_page.dart';
 import 'scan_qr_page.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class HomePage extends StatefulWidget {
   final UserModel user;
@@ -124,9 +125,15 @@ class HomePageContent extends StatelessWidget {
         elevation: 0,
         title: Text(
           "Hey, ${user.name}!",
-          style: GoogleFonts.roboto(fontWeight: FontWeight.bold, color: AppColors.white),
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: AppColors.white),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.notifications_none_rounded),
+          ),
+        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -175,15 +182,15 @@ class HomePageContent extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoyaltyScreen(user: user)),
+                  MaterialPageRoute(builder: (context) => MembershipDetailPage(user: user)),
                 );
               },
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: PointsCard(
                   points: user.poin,
-                  redeemableValue: 968, // This seems hardcoded, leaving for now
-                  untilPlatinum: 1543, // This seems hardcoded, leaving for now
+                  redeemableValue: user.poin * 0.1, // Assuming 1 point = $0.1
+                  nextLevel: user.level,
                   progress: user.xp / 1500, // Calculate progress based on xp
                 ),
               ),
@@ -193,9 +200,9 @@ class HomePageContent extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     "My Brand Loyalty",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.white),
+                    style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.white),
                   ),
                   TextButton(
                     onPressed: () {
@@ -211,33 +218,42 @@ class HomePageContent extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             SizedBox(
-              height: 120,
+              height: 140,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: 3,
+                itemCount: 3, // Assuming 3 brands
                 itemBuilder: (context, index) {
                   return Container(
-                    width: 100,
-                    margin: const EdgeInsets.only(left: 16),
-                    padding: const EdgeInsets.all(12),
+                    width: 120,
+                    margin: EdgeInsets.only(left: 16, right: index == 2 ? 16 : 0),
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: const Color(0xFF1E1E1E),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(16),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        const CircleAvatar(
+                          backgroundColor: AppColors.gold,
+                          child: Icon(Icons.store, color: AppColors.black),
+                        ),
+                        const SizedBox(height: 8),
                         Text(
-                          "${user.poin} pts",
-                          style: TextStyle(
+                          "Brand ${index + 1}",
+                          style: GoogleFonts.poppins(
                             fontWeight: FontWeight.bold,
-                            fontSize: 12,
                             color: AppColors.white,
                           ),
                         ),
-                        SizedBox(height: 4),
-                        Icon(Icons.star, color: AppColors.gold, size: 20),
-                        Text("4.8", style: TextStyle(fontSize: 12, color: AppColors.white)), // Hardcoded
+                        const SizedBox(height: 4),
+                        Text(
+                          "${user.poin} pts",
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: AppColors.white.withAlpha(153),
+                          ),
+                        ),
                       ],
                     ),
                   );
@@ -245,41 +261,74 @@ class HomePageContent extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
                 "Conversion Recommendation",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.white),
+                style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.white),
               ),
             ),
             const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [
-                Icon(Icons.account_balance, size: 50, color: AppColors.white),
-                Icon(Icons.person, size: 50, color: AppColors.white),
-                Icon(Icons.build, size: 50, color: AppColors.white),
-              ],
-            ),
-            const SizedBox(height: 20),
             Container(
-              margin: const EdgeInsets.all(16),
+              margin: const EdgeInsets.symmetric(horizontal: 16),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: const Color(0xFF1E1E1E),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text("⏱ Estimated transfer time up to 30 minutes", style: TextStyle(color: AppColors.white)),
-                  Text("🔄 10000 Membership Rewards = 1000 Aeroplan", style: TextStyle(color: AppColors.white)),
-                  Text("📌 Minimum transfer amount 1000 points", style: TextStyle(color: AppColors.white)),
+                children: [
+                  _buildRecommendationRow(Icons.airplane_ticket, "Aeroplan", "10000 -> 1000"),
+                  Divider(color: Colors.white24),
+                  _buildRecommendationRow(Icons.hotel, "Marriott Bonvoy", "10000 -> 1500"),
+                  Divider(color: Colors.white24),
+                  _buildRecommendationRow(Icons.shopping_bag, "Hilton Honors", "10000 -> 2000"),
                 ],
               ),
             ),
           ],
-        ),
+        ).animate().fade(duration: 500.ms),
+      ),
+    );
+  }
+
+  Widget _buildRecommendationRow(IconData icon, String title, String conversion) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        children: [
+          Icon(icon, color: AppColors.gold, size: 30),
+          const SizedBox(width: 16),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.white,
+                ),
+              ),
+              Text(
+                "Membership Rewards",
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: AppColors.white.withAlpha(153),
+                ),
+              ),
+            ],
+          ),
+          const Spacer(),
+          Text(
+            conversion,
+            style: GoogleFonts.poppins(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: AppColors.white,
+            ),
+          ),
+        ],
       ),
     );
   }

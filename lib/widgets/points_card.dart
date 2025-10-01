@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:project_midterms/colors.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class PointsCard extends StatelessWidget {
   final int points;
   final double redeemableValue;
-  final int untilPlatinum;
+  final String nextLevel;
   final double progress;
 
   const PointsCard({
     super.key,
     required this.points,
     required this.redeemableValue,
-    required this.untilPlatinum,
+    required this.nextLevel,
     required this.progress,
   });
 
@@ -20,53 +22,65 @@ class PointsCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
+        gradient: LinearGradient(
+          colors: [AppColors.gold.withAlpha(204), AppColors.gold.withAlpha(128)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(25), // ✅ pakai withValues
-            blurRadius: 6,
-            offset: const Offset(2, 4),
+            color: AppColors.gold.withAlpha(77),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
           )
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "Available Points",
-            style: TextStyle(
+            style: GoogleFonts.poppins(
               color: AppColors.white,
               fontSize: 16,
+              fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             points.toString(),
-            style: const TextStyle(
-              color: AppColors.gold,
-              fontSize: 32,
+            style: GoogleFonts.poppins(
+              color: AppColors.white,
+              fontSize: 40,
               fontWeight: FontWeight.bold,
             ),
           ),
           Text(
-            "\$$redeemableValue in Redeemable Value",
-            style: TextStyle(color: AppColors.white.withAlpha(178)),
+            "\$${redeemableValue.toStringAsFixed(2)} in Redeemable Value",
+            style: GoogleFonts.poppins(
+              color: AppColors.white.withAlpha(204),
+            ),
           ),
-          const SizedBox(height: 12),
-          LinearProgressIndicator(
-            value: progress,
-            color: AppColors.gold,
-            backgroundColor: AppColors.white.withAlpha(50),
-            borderRadius: BorderRadius.circular(8),
+          const SizedBox(height: 20),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: LinearProgressIndicator(
+              value: progress,
+              minHeight: 8,
+              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.white),
+              backgroundColor: AppColors.white.withAlpha(77),
+            ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 8),
           Text(
-            "$untilPlatinum until Platinum",
-            style: TextStyle(color: AppColors.white.withAlpha(178)),
+            "${(progress * 100).toStringAsFixed(0)}% to $nextLevel",
+            style: GoogleFonts.poppins(
+              color: AppColors.white.withAlpha(204),
+            ),
           ),
         ],
       ),
-    );
+    ).animate().fade(duration: 500.ms).scale(delay: 200.ms);
   }
 }

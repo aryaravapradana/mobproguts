@@ -4,6 +4,7 @@ import 'package:project_midterms/data/user_data.dart';
 import 'package:project_midterms/models/user.dart';
 import 'package:project_midterms/screens/home_page.dart';
 import '../colors.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -149,7 +150,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ],
                 ),
               ],
-            ),
+            ).animate().fade(duration: 500.ms).slideY(begin: 0.2, end: 0),
           ),
         ),
       ),

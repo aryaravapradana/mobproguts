@@ -7,6 +7,8 @@ import 'package:project_midterms/screens/settings_page.dart';
 import 'package:project_midterms/screens/redeem_history_page.dart';
 import 'package:project_midterms/screens/point_page.dart';
 import '../colors.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AccountPage extends StatefulWidget {
   final UserModel user;
@@ -27,8 +29,11 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.black,
       appBar: AppBar(
-        title: const Text('Akun'),
+        title: Text('Account', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+        backgroundColor: AppColors.black,
+        elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -49,98 +54,100 @@ class _AccountPageState extends State<AccountPage> {
               },
               child: Card(
                 color: const Color(0xFF1E1E1E),
+                elevation: 4,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Row(
                     children: [
-                      Row(
+                      const CircleAvatar(
+                        radius: 35,
+                        backgroundColor: AppColors.gold,
+                        child: Icon(
+                          Icons.person,
+                          color: AppColors.black,
+                          size: 40,
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const CircleAvatar(
-                            radius: 30,
-                            backgroundColor: Color(0xFF2C2C2E),
-                            child: Icon(
-                              Icons.person,
+                          Text(
+                            widget.user.name,
+                            style: GoogleFonts.poppins(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                               color: AppColors.white,
-                              size: 40,
                             ),
                           ),
-                          const SizedBox(width: 15),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.user.name,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.white,
-                                ),
-                              ),
-                              Text(
-                                widget.user.email,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: AppColors.white.withAlpha(153),
-                                ),
-                              ),
-                            ],
+                          Text(
+                            widget.user.email,
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              color: AppColors.white.withAlpha(153),
+                            ),
                           ),
-                          const Spacer(),
-                          Icon(Icons.chevron_right, color: AppColors.white.withAlpha(153)),
                         ],
                       ),
-                      const SizedBox(height: 10),
+                      const Spacer(),
+                      Icon(Icons.chevron_right, color: AppColors.white.withAlpha(153)),
                     ],
                   ),
                 ),
               ),
-            ),
+            ).animate().fade(duration: 500.ms).slideX(begin: -0.2, end: 0),
             const SizedBox(height: 20),
-            buildListTile(
-              Icons.person,
-              'Info Member',
-              'Lihat info member anda',
-              () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MemberPage(user: widget.user)),
-                );
-              },
-            ),
-            buildListTile(
-              Icons.star,
-              'My Points',
-              'Lihat poin anda',
-              () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PointPage(user: widget.user)),
-                );
-              },
-            ),
-            buildListTile(
-              Icons.receipt_long,
-              'Riwayat Redeem',
-              'Lihat riwayat redeem voucher anda',
-              () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const RedeemHistoryPage()),
-                );
-              },
-            ),
-            buildListTile(
-              Icons.settings,
-              'Pengaturan Akun',
-              'Ganti Password, Ganti PIN & Daftar Alamat',
-              () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SettingsPage(user: widget.user)),
-                );
-              },
-            ),
-            buildListTile(Icons.logout, 'Logout', '', _logout),
+            ...[
+              buildListTile(
+                Icons.person_outline,
+                'Info Member',
+                'Lihat info member anda',
+                () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MemberPage(user: widget.user)),
+                  );
+                },
+              ),
+              buildListTile(
+                Icons.star_outline,
+                'My Points',
+                'Lihat poin anda',
+                () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PointPage(user: widget.user)),
+                  );
+                },
+              ),
+              buildListTile(
+                Icons.receipt_long_outlined,
+                'Riwayat Redeem',
+                'Lihat riwayat redeem voucher anda',
+                () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const RedeemHistoryPage()),
+                  );
+                },
+              ),
+              buildListTile(
+                Icons.settings_outlined,
+                'Pengaturan Akun',
+                'Ganti Password, Ganti PIN & Daftar Alamat',
+                () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SettingsPage(user: widget.user)),
+                  );
+                },
+              ),
+              buildListTile(Icons.logout, 'Logout', '', _logout),
+            ].map((widget) => Animate(
+              effects: [FadeEffect(duration: 500.ms), SlideEffect(begin: const Offset(0, 0.2), end: Offset.zero)],
+              child: widget,
+            )),
           ],
         ),
       ),
@@ -155,12 +162,14 @@ class _AccountPageState extends State<AccountPage> {
   ) {
     return Card(
       color: const Color(0xFF1E1E1E),
-      margin: const EdgeInsets.only(bottom: 10),
+      margin: const EdgeInsets.only(bottom: 12),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
-        leading: Icon(icon, color: AppColors.white.withAlpha(153)),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500, color: AppColors.white)),
+        leading: Icon(icon, color: AppColors.gold),
+        title: Text(title, style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: AppColors.white)),
         subtitle: subtitle.isNotEmpty
-            ? Text(subtitle, style: TextStyle(fontSize: 12, color: AppColors.white.withAlpha(153)))
+            ? Text(subtitle, style: GoogleFonts.poppins(fontSize: 12, color: AppColors.white.withAlpha(153)))
             : null,
         trailing: Icon(Icons.chevron_right, color: AppColors.white.withAlpha(153)),
         onTap: onTap,
