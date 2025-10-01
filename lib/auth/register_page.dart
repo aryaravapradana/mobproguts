@@ -35,6 +35,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     if (name.isNotEmpty && email.isNotEmpty && password.isNotEmpty && phone.isNotEmpty) {
       final newUser = UserModel(
+        id: DateTime.now().millisecondsSinceEpoch.toString(), // Generate a unique ID
         name: name,
         email: email,
         password: password,
@@ -42,6 +43,7 @@ class _RegisterPageState extends State<RegisterPage> {
         poin: 0,
         spending: 0,
         xp: 0,
+        qrCode: "qr_$email", // Generate QR code based on email
       );
       dummyUsers.add(newUser);
       Navigator.pushReplacement(

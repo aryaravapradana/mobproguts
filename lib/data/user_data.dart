@@ -2,6 +2,7 @@ import 'package:project_midterms/models/user.dart';
 
 final List<UserModel> dummyUsers = [
   UserModel(
+    id: "user1",
     name: "Arya",
     email: "arya@gmail.com",
     password: "arya",
@@ -9,8 +10,10 @@ final List<UserModel> dummyUsers = [
     poin: 1500,
     spending: 2500000,
     xp: 250.0,
+    qrCode: "qr_user1",
   ),
   UserModel(
+    id: "user2",
     name: "Zia",
     email: "zia@gmail.com",
     password: "zia",
@@ -18,8 +21,10 @@ final List<UserModel> dummyUsers = [
     poin: 200,
     spending: 500000,
     xp: 50.0,
+    qrCode: "qr_user2",
   ),
   UserModel(
+    id: "user3",
     name: "Akmal",
     email: "akmal@gmail.com",
     password: "akmal",
@@ -27,8 +32,10 @@ final List<UserModel> dummyUsers = [
     poin: 500,
     spending: 1000000,
     xp: 100.0,
+    qrCode: "qr_user3",
   ),
   UserModel(
+    id: "user4",
     name: "Jeri",
     email: "jeri@gmail.com",
     password: "jeri",
@@ -36,8 +43,10 @@ final List<UserModel> dummyUsers = [
     poin: 1000,
     spending: 2000000,
     xp: 200.0,
+    qrCode: "qr_user4",
   ),
   UserModel(
+    id: "user5",
     name: "Frans",
     email: "frans@gmail.com",
     password: "frans",
@@ -45,9 +54,11 @@ final List<UserModel> dummyUsers = [
     poin: 1200,
     spending: 3000000,
     xp: 300.0,
+    qrCode: "qr_user5",
   ),
 
     UserModel(
+    id: "test_user",
     name: "Test Account",
     email: "a",
     password: "a",
@@ -55,5 +66,6 @@ final List<UserModel> dummyUsers = [
     poin: 1200,
     spending: 3000000,
     xp: 300.0,
+    qrCode: "qr_test_user",
   ),
 ];
