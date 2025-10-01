@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_midterms/colors.dart';
+
 import '../models/user.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -95,6 +96,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: const Text('Simpan Perubahan', style: TextStyle(color: AppColors.black)),
               ),
             ),
+            
           ],
         ),
       ),
@@ -112,15 +114,15 @@ class _SettingsPageState extends State<SettingsPage> {
       controller: controller,
       obscureText: isObscure,
       keyboardType: keyboardType,
-      style: TextStyle(color: AppColors.white),
+      style: const TextStyle(color: AppColors.white),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: AppColors.white),
+        labelStyle: const TextStyle(color: AppColors.white),
         prefixIcon: Icon(icon, color: AppColors.white),
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.white),
         ),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.gold),
         ),
       ),

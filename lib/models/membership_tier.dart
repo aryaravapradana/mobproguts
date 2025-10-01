@@ -13,6 +13,7 @@ class MembershipTier {
   final IconData icon;
   final Color color;
   final List<Perk> perks;
+  final String description;
 
   MembershipTier({
     required this.name,
@@ -20,5 +21,6 @@ class MembershipTier {
     required this.icon,
     required this.color,
     required this.perks,
+    required this.description,
   });
 }
