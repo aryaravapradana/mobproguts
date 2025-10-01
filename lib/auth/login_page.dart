@@ -3,7 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:project_midterms/data/user_data.dart';
 import 'register_page.dart';
 import '../colors.dart';
-import '../screens/home_page.dart';
+import 'package:project_midterms/screens/home_page.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -150,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ],
-            ),
+            ).animate().fade(duration: 500.ms).slideY(begin: 0.2, end: 0),
           ),
         ),
       ),
