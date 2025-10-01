@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:project_midterms/colors.dart';
+import 'package:project_midterms/data/membership_data.dart';
+import 'package:project_midterms/screens/tier_info_page.dart';
 
 import '../models/user.dart';
 import '../models/membership_tier.dart';
 
 class MembershipDetailPage extends StatefulWidget {
   final UserModel user;
-  const MembershipDetailPage({super.key, required this.user});
+  final MembershipTier? selectedTier;
+  const MembershipDetailPage({super.key, required this.user, this.selectedTier});
 
   @override
   State<MembershipDetailPage> createState() => _MembershipDetailPageState();
@@ -17,62 +20,6 @@ class MembershipDetailPage extends StatefulWidget {
 class _MembershipDetailPageState extends State<MembershipDetailPage> {
   late double _currentUserXp;
 
-  final List<MembershipTier> tiers = [
-    MembershipTier(
-      name: 'Bronze',
-      minXp: 0,
-      icon: Icons.shield_outlined,
-      color: AppColors.bronze,
-      perks: [
-        Perk(name: "Poin Reguler", icon: Icons.monetization_on),
-      ],
-    ),
-    MembershipTier(
-      name: 'Silver',
-      minXp: 300,
-      icon: Icons.star_border,
-      color: AppColors.silver,
-      perks: [
-        Perk(name: "Poin Reguler", icon: Icons.monetization_on),
-        Perk(name: "Promo Personal", icon: Icons.local_offer),
-      ],
-    ),
-    MembershipTier(
-      name: 'Gold',
-      minXp: 800,
-      icon: Icons.star,
-      color: AppColors.goldTier,
-      perks: [
-        Perk(name: "Poin Reguler", icon: Icons.monetization_on),
-        Perk(name: "Promo Personal", icon: Icons.local_offer),
-        Perk(name: "Promo Merchant", icon: Icons.storefront),
-      ],
-    ),
-    MembershipTier(
-      name: 'Platinum',
-      minXp: 1100,
-      icon: Icons.verified_outlined,
-      color: AppColors.platinum,
-      perks: [
-        Perk(name: "Poin Reguler", icon: Icons.monetization_on),
-        Perk(name: "Promo Personal", icon: Icons.local_offer),
-        Perk(name: "Promo Merchant", icon: Icons.storefront),
-      ],
-    ),
-    MembershipTier(
-      name: 'Diamond',
-      minXp: 1500,
-      icon: Icons.diamond_outlined,
-      color: AppColors.diamond,
-      perks: [
-        Perk(name: "Poin Reguler", icon: Icons.monetization_on),
-        Perk(name: "Promo Personal", icon: Icons.local_offer),
-        Perk(name: "Promo Merchant", icon: Icons.storefront),
-      ],
-    ),
-  ];
-
-  late MembershipTier _selectedTier;
   late MembershipTier _currentTier;
   MembershipTier? _nextTier;
   double _progress = 0.0;
@@ -85,13 +32,6 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
     super.initState();
     _currentUserXp = widget.user.xp;
     _calculateTierProgress();
-    _selectedTier = _currentTier;
-  }
-
-  void _selectTier(MembershipTier tier) {
-    setState(() {
-      _selectedTier = tier;
-    });
   }
 
   void _calculateTierProgress() {
@@ -174,8 +114,6 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
             const SizedBox(height: 24),
             _buildTierCards(),
             const SizedBox(height: 24),
-            _buildPerksSection(),
-            const SizedBox(height: 16),
             _buildTermsSection(),
           ],
         ),
@@ -261,50 +199,22 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: tiers.map((tier) {
         bool isCurrent = tier.name == _currentTier.name;
-        bool isSelected = tier.name == _selectedTier.name;
 
         return Expanded(
           child: GestureDetector(
-            onTap: () => _selectTier(tier),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TierInfoPage(tier: tier),
+                ),
+              );
+            },
             child: _TierCard(
-                tier: tier, isCurrent: isCurrent, isSelected: isSelected),
+                tier: tier, isCurrent: isCurrent, isSelected: false), // isSelected is always false now
           ),
         );
       }).toList(),
-    );
-  }
-
-  Widget _buildPerksSection() {
-    return Card(
-      elevation: 2,
-      color: const Color(0xFF1E1E1E),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Keuntungan Grade ${_selectedTier.name}',
-              style:
-                  GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.white),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: _selectedTier.perks.map((perk) {
-                return Column(
-                  children: [
-                    Icon(perk.icon, color: AppColors.gold, size: 30),
-                    const SizedBox(height: 8),
-                    Text(perk.name, textAlign: TextAlign.center, style: TextStyle(color: AppColors.white)),
-                  ],
-                );
-              }).toList(),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
