@@ -6,7 +6,6 @@ import '../colors.dart';
 import 'package:project_midterms/screens/home_page.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -46,12 +45,13 @@ class _LoginPageState extends State<LoginPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Login Error'),
-        content: Text(message),
+        backgroundColor: AppColors.surface,
+        title: const Text('Login Error', style: TextStyle(color: AppColors.onSurface)),
+        content: Text(message, style: const TextStyle(color: AppColors.onSurface)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
+            child: const Text('OK', style: TextStyle(color: AppColors.primary)),
           ),
         ],
       ),
@@ -61,124 +61,133 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.black,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Icon(Icons.stars, color: AppColors.gold, size: 80),
-
-                const SizedBox(height: 16),
-                Text(
-                  "Welcome Back",
-                  style: GoogleFonts.poppins(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.white,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  "Login to your account",
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: AppColors.white.withAlpha(153),
-                  ),
-                ),
-                const SizedBox(height: 32),
-
-                _buildTextField(Icons.email, "Email", controller: emailController),
-                const SizedBox(height: 16),
-                _buildTextField(Icons.lock, "Password",
-                    controller: passwordController, isPassword: true),
-
+                _buildHeader(),
+                const SizedBox(height: 48),
+                _buildLoginForm(),
                 const SizedBox(height: 24),
-
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.gold,
-                    foregroundColor: AppColors.black,
-                    minimumSize: const Size(double.infinity, 55),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    elevation: 8,
-                    shadowColor: AppColors.gold.withAlpha(128),
-                  ),
-                  onPressed: _handleLogin,
-                  child: Text(
-                    "Login",
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Don't have an account?",
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        color: AppColors.white.withAlpha(153),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const RegisterPage(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        "Register",
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.gold,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                _buildLoginButton(),
+                const SizedBox(height: 24),
+                _buildRegisterPrompt(context),
               ],
-            ).animate().fade(duration: 500.ms).slideY(begin: 0.2, end: 0),
+            ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2, end: 0, curve: Curves.easeOut),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTextField(
-    IconData icon,
-    String hint, {
-    bool isPassword = false,
+  Widget _buildHeader() {
+    return Column(
+      children: [
+        Icon(Icons.star, color: AppColors.primary, size: 60),
+        const SizedBox(height: 24),
+        Text(
+          "Welcome Back",
+          style: GoogleFonts.poppins(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+            color: AppColors.onBackground,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          "Sign in to your loyalty account",
+          textAlign: TextAlign.center,
+          style: GoogleFonts.poppins(
+            fontSize: 16,
+            color: AppColors.onSurface,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLoginForm() {
+    return Column(
+      children: [
+        _buildTextField(
+          controller: emailController,
+          hint: "Email",
+          icon: Icons.email,
+        ),
+        const SizedBox(height: 16),
+        _buildTextField(
+          controller: passwordController,
+          hint: "Password",
+          icon: Icons.lock,
+          isPassword: true,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTextField({
     required TextEditingController controller,
+    required String hint,
+    required IconData icon,
+    bool isPassword = false,
   }) {
     return TextField(
       controller: controller,
       obscureText: isPassword,
-      style: const TextStyle(color: AppColors.white),
       decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: AppColors.gold),
         hintText: hint,
-        hintStyle: TextStyle(color: AppColors.white.withAlpha(102)),
-        filled: true,
-        fillColor: const Color(0xFF1E1E1E),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide.none,
+        prefixIcon: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Icon(icon, size: 20),
+        ),
+        prefixIconConstraints: const BoxConstraints(
+          minHeight: 20,
+          minWidth: 20,
         ),
       ),
+    );
+  }
+
+  Widget _buildLoginButton() {
+    return ElevatedButton(
+      onPressed: _handleLogin,
+      child: const Text("Login"),
+    );
+  }
+
+  Widget _buildRegisterPrompt(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Don't have an account?",
+          style: TextStyle(color: AppColors.onSurface),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) => const RegisterPage(),
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+              ),
+            );
+          },
+          child: Text(
+            "Register Now",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.primary,
+            ),
+          ),
+        )
+      ],
     );
   }
 }

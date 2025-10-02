@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:project_midterms/colors.dart';
 import 'package:project_midterms/models/user.dart';
-import 'package:project_midterms/data/user_data.dart'; // Import dummyUsers
-import 'package:project_midterms/data/transaction_data.dart'; // Import dummyTransaksi
-import 'package:project_midterms/models/transaksi.dart'; // Import Transaksi model
+import 'package:project_midterms/data/user_data.dart';
+import 'package:project_midterms/data/transaction_data.dart';
+import 'package:project_midterms/models/transaksi.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ScanQrPage extends StatefulWidget {
   final UserModel user;
@@ -15,10 +17,7 @@ class ScanQrPage extends StatefulWidget {
 }
 
 class _ScanQrPageState extends State<ScanQrPage> {
-  MobileScannerController cameraController = MobileScannerController(
-    detectionSpeed: DetectionSpeed.normal,
-    facing: CameraFacing.back,
-  );
+  final MobileScannerController cameraController = MobileScannerController();
 
   @override
   void dispose() {
@@ -26,73 +25,42 @@ class _ScanQrPageState extends State<ScanQrPage> {
     super.dispose();
   }
 
-  void _onDetect(BarcodeCapture capture) async { // Made async to await dialog
+  void _onDetect(BarcodeCapture capture) {
     final List<Barcode> barcodes = capture.barcodes;
-    for (final barcode in barcodes) {
-      final String? rawValue = barcode.rawValue;
-      if (rawValue != null) {
-        cameraController.stop(); // Stop scanning after first detection
-        int? pointsChange = int.tryParse(rawValue);
+    if (barcodes.isNotEmpty && barcodes.first.rawValue != null) {
+      cameraController.stop();
+      final String rawValue = barcodes.first.rawValue!;
+      _processQrCode(rawValue);
+    }
+  }
 
-        if (pointsChange != null && pointsChange != 0) {
-          final userIndex = dummyUsers.indexWhere((u) => u.id == widget.user.id);
-          if (userIndex != -1) {
-            if (pointsChange < 0 && dummyUsers[userIndex].poin < pointsChange.abs()) {
-              if (!mounted) return;
-              await _showResultDialog("Not enough points!", "You do not have enough points to redeem ${pointsChange.abs()} points.", Icons.error, Colors.red);
-              if (!mounted) return;
-              Navigator.pop(context);
-              break;
-            }
+  void _processQrCode(String rawValue) {
+    int? pointsChange = int.tryParse(rawValue);
 
-            String transactionTitle = "";
-            String dialogTitle = "";
-            String dialogMessage = "";
-            IconData dialogIcon = Icons.info;
-            Color dialogColor = Colors.blue;
-
-            setState(() {
-              dummyUsers[userIndex].poin += pointsChange;
-              widget.user.poin = dummyUsers[userIndex].poin;
-
-              if (pointsChange > 0) {
-                transactionTitle = "QR Scan Points Added";
-                dialogTitle = "Points Added!";
-                dialogMessage = "Successfully added $pointsChange points! Total points: ${dummyUsers[userIndex].poin}";
-                dialogIcon = Icons.check_circle;
-                dialogColor = Colors.green;
-              } else {
-                transactionTitle = "QR Scan Points Redeemed";
-                dialogTitle = "Points Redeemed!";
-                dialogMessage = "Successfully redeemed ${pointsChange.abs()} points! Total points: ${dummyUsers[userIndex].poin}";
-                dialogIcon = Icons.remove_circle;
-                dialogColor = Colors.orange;
-              }
-
-              dummyTransaksi.insert(
-                0,
-                Transaksi(
-                  title: transactionTitle,
-                  amount: 0,
-                  pointsChange: pointsChange,
-                  date: DateTime.now(),
-                ),
-              );
-            });
-            if (!mounted) return;
-            await _showResultDialog(dialogTitle, dialogMessage, dialogIcon, dialogColor);
-          } else {
-            if (!mounted) return;
-            await _showResultDialog("Error", "User not found in global list.", Icons.error, Colors.red);
-          }
-        } else {
-          if (!mounted) return;
-          await _showResultDialog("Invalid QR Code", "Could not parse points or points are zero.", Icons.warning, Colors.orange);
+    if (pointsChange != null && pointsChange != 0) {
+      final userIndex = dummyUsers.indexWhere((u) => u.id == widget.user.id);
+      if (userIndex != -1) {
+        if (pointsChange < 0 && dummyUsers[userIndex].poin < pointsChange.abs()) {
+          _showResultDialog("Not Enough Points", "You do not have enough points to redeem ${pointsChange.abs()} points.", FontAwesomeIcons.circleExclamation, AppColors.error);
+          return;
         }
-        if (!mounted) return;
-        // Navigator.pop(context); // Go back to previous screen (HomePage) - Removed to prevent double pop
-        break;
+
+        setState(() {
+          dummyUsers[userIndex].poin += pointsChange;
+          widget.user.poin = dummyUsers[userIndex].poin;
+
+          final transactionTitle = pointsChange > 0 ? "Points Added via QR" : "Points Redeemed via QR";
+          dummyTransaksi.insert(0, Transaksi(title: transactionTitle, amount: 0, pointsChange: pointsChange, date: DateTime.now()));
+        });
+
+        final dialogTitle = pointsChange > 0 ? "Points Added!" : "Points Redeemed!";
+        final dialogMessage = "Successfully ${pointsChange > 0 ? 'added' : 'redeemed'} ${pointsChange.abs()} points. Your new balance is ${dummyUsers[userIndex].poin}.";
+        _showResultDialog(dialogTitle, dialogMessage, FontAwesomeIcons.circleCheck, AppColors.success);
+      } else {
+        _showResultDialog("Error", "User not found.", FontAwesomeIcons.triangleExclamation, AppColors.error);
       }
+    } else {
+      _showResultDialog("Invalid QR Code", "The scanned QR code is not a valid point value.", FontAwesomeIcons.qrcode, AppColors.warning);
     }
   }
 
@@ -102,23 +70,19 @@ class _ScanQrPageState extends State<ScanQrPage> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: AppColors.black,
+          backgroundColor: AppColors.surface,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           title: Row(
-            children: [
-              Icon(icon, color: color, size: 30),
-              const SizedBox(width: 10),
-              Expanded(child: Text(title, style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold))),
-            ],
+            children: [Icon(icon, color: color, size: 24), const SizedBox(width: 12), Text(title, style: GoogleFonts.poppins(fontWeight: FontWeight.bold))],
           ),
-          content: Text(message, style: TextStyle(color: AppColors.white.withAlpha(200))),
+          content: Text(message, style: GoogleFonts.poppins()),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Dismiss dialog
-                Navigator.pop(context); // Go back to previous screen (HomePage)
+                Navigator.of(context).pop(); // Go back to previous screen
               },
-              child: Text("OK", style: TextStyle(color: AppColors.gold)),
+              child: Text("OK", style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
             ),
           ],
         );
@@ -129,10 +93,38 @@ class _ScanQrPageState extends State<ScanQrPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Scan QR"), backgroundColor: AppColors.black,),
-      body: MobileScanner(
-        controller: cameraController,
-        onDetect: _onDetect,
+      appBar: AppBar(title: const Text("Scan QR Code")),
+      body: Stack(
+        children: [
+          MobileScanner(
+            controller: cameraController,
+            onDetect: _onDetect,
+          ),
+          _buildScannerOverlay(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildScannerOverlay() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 250,
+            height: 250,
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.primary, width: 4),
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'Point your camera at a QR code',
+            style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, backgroundColor: Colors.black54),
+          ),
+        ],
       ),
     );
   }

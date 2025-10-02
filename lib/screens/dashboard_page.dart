@@ -27,7 +27,7 @@ class DashboardPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Dashboard', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
-        backgroundColor: AppColors.black,
+        backgroundColor: AppColors.background,
         elevation: 0,
       ),
       body: Padding(
@@ -53,7 +53,7 @@ class DashboardPage extends StatelessWidget {
                       menu[index]['title'],
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
-                        color: AppColors.white,
+                        color: AppColors.onBackground,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

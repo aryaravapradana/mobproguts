@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_midterms/colors.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import '../models/user.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -45,8 +45,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Perubahan berhasil disimpan!'),
-        backgroundColor: AppColors.gold,
+        content: Text('Changes saved successfully!'),
+        backgroundColor: AppColors.success,
       ),
     );
     Navigator.pop(context);
@@ -56,7 +56,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pengaturan Akun'),
+        title: Text('Account Settings', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -76,7 +76,7 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 16),
             _buildTextField(
               controller: _phoneController,
-              label: 'No. Telepon',
+              label: 'Phone Number',
               icon: Icons.phone,
               keyboardType: TextInputType.phone,
             ),
@@ -92,11 +92,9 @@ class _SettingsPageState extends State<SettingsPage> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: _saveChanges,
-                style: ElevatedButton.styleFrom(backgroundColor: AppColors.gold),
-                child: const Text('Simpan Perubahan', style: TextStyle(color: AppColors.black)),
+                child: const Text('Save Changes'),
               ),
             ),
-            
           ],
         ),
       ),
@@ -114,17 +112,9 @@ class _SettingsPageState extends State<SettingsPage> {
       controller: controller,
       obscureText: isObscure,
       keyboardType: keyboardType,
-      style: const TextStyle(color: AppColors.white),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: AppColors.white),
-        prefixIcon: Icon(icon, color: AppColors.white),
-        enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.white),
-        ),
-        focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.gold),
-        ),
+        prefixIcon: Icon(icon, size: 20),
       ),
     );
   }

@@ -11,64 +11,77 @@ class TransaksiPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.black,
       appBar: AppBar(
-        title: Text('Riwayat Transaksi', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
-        backgroundColor: AppColors.black,
-        elevation: 0,
+        title: Text('Transaction History', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
       ),
       body: ListView.builder(
+        padding: const EdgeInsets.all(16),
         itemCount: dummyTransaksi.length,
         itemBuilder: (context, index) {
           final trx = dummyTransaksi[index];
-          
-          String subtitleText = '';
-          Color subtitleColor = AppColors.white.withAlpha(153);
-          IconData iconData = Icons.shopping_cart;
 
-          String monetaryText = '';
-          if (trx.amount > 0) {
-            monetaryText = "Rp${NumberFormat.currency(locale: 'id_ID', symbol: '', decimalDigits: 0).format(trx.amount)}";
-          }
-
+          final IconData icon;
+          final Color color;
           String pointsText = '';
+
           if (trx.pointsChange != null) {
             if (trx.pointsChange! > 0) {
-              pointsText = "+${trx.pointsChange} Poin";
-              subtitleColor = Colors.greenAccent;
-              iconData = Icons.add_circle_outline;
-            } else if (trx.pointsChange! < 0) {
-              pointsText = "${trx.pointsChange} Poin";
-              subtitleColor = Colors.redAccent;
-              iconData = Icons.remove_circle_outline;
+              icon = Icons.add_circle;
+              color = AppColors.success;
+              pointsText = '+${trx.pointsChange} Poin';
+            } else {
+              icon = Icons.remove_circle;
+              color = AppColors.error;
+              pointsText = '${trx.pointsChange} Poin';
             }
-          }
-
-          if (monetaryText.isNotEmpty && pointsText.isNotEmpty) {
-            subtitleText = "$monetaryText  •  $pointsText";
-          } else if (monetaryText.isNotEmpty) {
-            subtitleText = monetaryText;
-          } else if (pointsText.isNotEmpty) {
-            subtitleText = pointsText;
           } else {
-            subtitleText = "No details";
+            icon = Icons.shopping_cart;
+            color = AppColors.primary;
           }
 
           return Card(
-            color: const Color(0xFF1E1E1E),
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            elevation: 2,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: subtitleColor.withAlpha(51),
-                child: Icon(iconData, color: subtitleColor, size: 24),
+            margin: const EdgeInsets.only(bottom: 12),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  Icon(icon, color: color, size: 24),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          trx.title,
+                          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.onSurface),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          DateFormat('d MMMM y, HH:mm').format(trx.date),
+                          style: GoogleFonts.poppins(color: AppColors.onSurface.withAlpha(179), fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      if (trx.amount > 0)
+                        Text(
+                          "Rp${NumberFormat.currency(locale: 'id_ID', symbol: '', decimalDigits: 0).format(trx.amount)}",
+                          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: AppColors.onSurface),
+                        ),
+                      if (pointsText.isNotEmpty)
+                        Text(
+                          pointsText,
+                          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: color),
+                        ),
+                    ],
+                  )
+                ],
               ),
-              title: Text(trx.title, style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: AppColors.white)),
-              subtitle: Text(subtitleText, style: GoogleFonts.poppins(color: subtitleColor)),
-              trailing: Text(DateFormat('d MMM y').format(trx.date), style: GoogleFonts.poppins(color: AppColors.white.withAlpha(153))),
             ),
-          ).animate().fade(duration: 500.ms).slideY(begin: 0.2, end: 0, delay: (100 * index).ms);
+          ).animate().fadeIn(duration: 400.ms).slideX(begin: 0.2, delay: (100 * index).ms);
         },
       ),
     );
