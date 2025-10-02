@@ -8,6 +8,7 @@ import '../widgets/points_card.dart'; // I will redesign this widget later
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:project_midterms/data/voucher_data.dart';
 import 'package:project_midterms/screens/voucher_detail_page.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class HomePageContent extends StatelessWidget {
   final UserModel user;
@@ -84,40 +85,68 @@ class HomePageContent extends StatelessWidget {
   }
 
   Widget _buildPromoBanner() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(20),
+  final promos = [
+    {
+      "title": "Diskon 10% di Coffee Shop",
+      "subtitle": "Hanya butuh 500 poin buat klaim sekarang!",
+      "bg": Colors.orange
+    },
+    {
+      "title": "Voucher Rp50.000",
+      "subtitle": "Tukar 1000 poin, langsung hemat belanja!",
+      "bg": Colors.blue
+    },
+    {
+      "title": "Free Parking 2 Jam",
+      "subtitle": "Parkir santai cukup 700 poin aja",
+      "bg": Colors.green
+    },
+  ];
+
+  return CarouselSlider.builder(
+    itemCount: promos.length,
+    itemBuilder: (context, index, realIndex) {
+      final promo = promos[index];
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          color: promo["bg"] as Color,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              promo["title"] as String,
+              style: GoogleFonts.poppins(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              promo["subtitle"] as String,
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                color: Colors.white70,
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+    options: CarouselOptions(
       height: 150,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        gradient: LinearGradient(
-          colors: [AppColors.primary, AppColors.primary.withAlpha(179)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        image: const DecorationImage(
-          image: AssetImage('assets/img/promo_bg.png'), // Placeholder
-          fit: BoxFit.cover,
-          opacity: 0.2,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "Special Offer For You!",
-            style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.onPrimary),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            "Get 20% off on your next purchase. Claim your voucher now!",
-            style: GoogleFonts.poppins(fontSize: 14, color: AppColors.onPrimary.withAlpha(230)),
-          ),
-        ],
-      ),
-    ).animate().scaleXY(delay: 200.ms, duration: 400.ms, curve: Curves.easeOut);
-  }
+      autoPlay: true,
+      enlargeCenterPage: true,
+      viewportFraction: 0.85,
+      autoPlayInterval: const Duration(seconds: 4),
+    ),
+  );
+}
 
   Widget _buildVoucherCarousel(BuildContext context, UserModel user) {
     final vouchers = dummyVouchers.take(2).toList();
