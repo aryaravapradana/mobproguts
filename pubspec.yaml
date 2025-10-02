@@ -73,6 +73,8 @@ flutter:
     - lib/assets/voucher_images/fnb/
     - lib/assets/voucher_images/fashion/
     - lib/assets/voucher_images/service/
+    - lib/assets/voucher_images/others/
+    - lib/assets/voucher_images/electronics/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
