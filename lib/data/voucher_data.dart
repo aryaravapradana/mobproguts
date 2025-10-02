@@ -28,20 +28,21 @@ List<Voucher> serviceVouchers = [
 ];
 
 List<Voucher> othersVouchers = [
-  Voucher(title: "Voucher Pulsa Rp10.000", cost: 200, image: 'lib/assets/voucher_images/komodo.jpg'),
-  Voucher(title: "Diskon Tiket Bioskop", cost: 800, image: 'lib/assets/voucher_images/komodo.jpg'),
-  Voucher(title: "Gratis 1 Jam Bermain di Game Center", cost: 1000, image: 'lib/assets/voucher_images/komodo.jpg'),
-  Voucher(title: "Voucher Pulsa Rp25.000", cost: 450, image: 'lib/assets/voucher_images/komodo.jpg'),
-  Voucher(title: "Diskon Tiket Konser", cost: 1500, image: 'lib/assets/voucher_images/komodo.jpg'),
-  Voucher(title: "Gratis 2 Jam Karaoke", cost: 1200, image: 'lib/assets/voucher_images/komodo.jpg'),
+  Voucher(title: "Voucher Pulsa MyXL Rp10.000", cost: 200, image: 'lib/assets/voucher_images/others/pulsa.jpg'),
+  Voucher(title: "Diskon Tiket Bioskop 20%", cost: 800, image: 'lib/assets/voucher_images/others/tiket.jpg'),
+  Voucher(title: "Gratis 1 Jam Bermain di Game Center", cost: 1000, image: 'lib/assets/voucher_images/others/game.jpg'),
+  Voucher(title: "Buy 1 get 1 tiket Dufan ", cost: 1250, image: 'lib/assets/voucher_images/others/dufan.jpg'),
+  Voucher(title: "Diskon Tiket Konser 15%", cost: 300, image: 'lib/assets/voucher_images/others/konser.jpg'),
+  Voucher(title: "Gratis 2 Jam Karaoke", cost: 600, image: 'lib/assets/voucher_images/others/karaoke.jpg'),
 ];
 
 List<Voucher> electronicAndAppliancesVouchers = [
-  Voucher(title: "Diskon 10% untuk TV", cost: 2500, image: 'lib/assets/voucher_images/komodo.jpg'),
-  Voucher(title: "Potongan Rp200.000 untuk Kulkas", cost: 3000, image: 'lib/assets/voucher_images/komodo.jpg'),
-  Voucher(title: "Cashback 5% untuk Mesin Cuci", cost: 2000, image: 'lib/assets/voucher_images/komodo.jpg'),
-  Voucher(title: "Gratis Ongkir untuk Pembelian AC", cost: 1000, image: 'lib/assets/voucher_images/komodo.jpg'),
-  Voucher(title: "Voucher Belanja Elektronik Rp150.000", cost: 1800, image: 'lib/assets/voucher_images/komodo.jpg'),
+  Voucher(title: "Diskon 15% untuk TV", cost: 2500, image: 'lib/assets/voucher_images/electronics/tv.jpg'),
+  Voucher(title: "Potongan Rp200.000 untuk Kulkas", cost: 3000, image: 'lib/assets/voucher_images/electronics/kulkas.jpg'),
+  Voucher(title: "Cashback 13% untuk Mesin Cuci", cost: 2000, image: 'lib/assets/voucher_images/electronics/mesincuci.jpg'),
+  Voucher(title: "Gratis Ongkir untuk Pembelian AC", cost: 1000, image: 'lib/assets/voucher_images/electronics/acgratis.jpg'),
+  Voucher(title: "Voucher Belanja Rp150.000 untuk pembelian Headset", cost: 1800, image: 'lib/assets/voucher_images/electronics/headset.jpg'),
+  Voucher(title: "Diskon 1% iPhone 300 PRO Max+++++", cost: 10000000, image: 'lib/assets/voucher_images/electronics/iphone.jpg'),
 ];
 
 Map<String, List<Voucher>> categorizedVouchers = {
