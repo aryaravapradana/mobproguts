@@ -28,7 +28,7 @@ final List<MembershipTier> tiers = [
     name: 'Gold',
     minXp: 800,
     icon: Icons.star,
-    color: AppColors.goldTier,
+    color: AppColors.gold,
     perks: [
       Perk(name: "Poin Reguler", icon: Icons.monetization_on),
       Perk(name: "Promo Personal", icon: Icons.local_offer),

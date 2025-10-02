@@ -29,153 +29,139 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.black,
       appBar: AppBar(
         title: Text('Account', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
-        backgroundColor: AppColors.black,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: _logout,
-          )
-        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MembershipDetailPage(user: widget.user)),
-                );
-              },
-              child: Card(
-                color: const Color(0xFF1E1E1E),
-                elevation: 4,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Row(
-                    children: [
-                      const CircleAvatar(
-                        radius: 35,
-                        backgroundColor: AppColors.gold,
-                        child: Icon(
-                          Icons.person,
-                          color: AppColors.black,
-                          size: 40,
-                        ),
+            _buildProfileHeader(),
+            const SizedBox(height: 24),
+            _buildMenuList(),
+          ],
+        ).animate().fadeIn(duration: 500.ms),
+      ),
+    );
+  }
+
+  Widget _buildProfileHeader() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MembershipDetailPage(user: widget.user)),
+        );
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Row(
+            children: [
+              const CircleAvatar(
+                radius: 35,
+                backgroundColor: AppColors.primary,
+                child: Icon(Icons.person, color: AppColors.onPrimary, size: 30),
+              ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.user.name,
+                      style: GoogleFonts.poppins(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.onSurface,
                       ),
-                      const SizedBox(width: 20),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.user.name,
-                            style: GoogleFonts.poppins(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.white,
-                            ),
-                          ),
-                          Text(
-                            widget.user.email,
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              color: AppColors.white.withAlpha(153),
-                            ),
-                          ),
-                        ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      widget.user.level,
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w600,
                       ),
-                      const Spacer(),
-                      Icon(Icons.chevron_right, color: AppColors.white.withAlpha(153)),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ).animate().fade(duration: 500.ms).slideX(begin: -0.2, end: 0),
-            const SizedBox(height: 20),
-            ...[
-              buildListTile(
-                Icons.person_outline,
-                'Info Member',
-                'Lihat info member anda',
-                () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MemberPage(user: widget.user)),
-                  );
-                },
-              ),
-              buildListTile(
-                Icons.star_outline,
-                'My Points',
-                'Lihat poin anda',
-                () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PointPage(user: widget.user)),
-                  );
-                },
-              ),
-              buildListTile(
-                Icons.receipt_long_outlined,
-                'Riwayat Redeem',
-                'Lihat riwayat redeem voucher anda',
-                () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const RedeemHistoryPage()),
-                  );
-                },
-              ),
-              buildListTile(
-                Icons.settings_outlined,
-                'Pengaturan Akun',
-                'Ganti Password, Ganti PIN & Daftar Alamat',
-                () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SettingsPage(user: widget.user)),
-                  );
-                },
-              ),
-              buildListTile(Icons.logout, 'Logout', '', _logout),
-            ].map((widget) => Animate(
-              effects: [FadeEffect(duration: 500.ms), SlideEffect(begin: const Offset(0, 0.2), end: Offset.zero)],
-              child: widget,
-            )),
-          ],
+              const Icon(Icons.chevron_right, color: AppColors.onSurface, size: 28),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  
-
-  Widget buildListTile(
-    IconData icon,
-    String title,
-    String subtitle,
-    VoidCallback onTap,
-  ) {
+  Widget _buildMenuList() {
     return Card(
-      color: const Color(0xFF1E1E1E),
-      margin: const EdgeInsets.only(bottom: 12),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: ListTile(
-        leading: Icon(icon, color: AppColors.gold),
-        title: Text(title, style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: AppColors.white)),
-        subtitle: subtitle.isNotEmpty
-            ? Text(subtitle, style: GoogleFonts.poppins(fontSize: 12, color: AppColors.white.withAlpha(153)))
-            : null,
-        trailing: Icon(Icons.chevron_right, color: AppColors.white.withAlpha(153)),
-        onTap: onTap,
+      child: Column(
+        children: [
+          _buildListTile(
+            icon: Icons.badge,
+            title: 'Info Member',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MemberPage(user: widget.user)),
+              );
+            },
+          ),
+          _buildListTile(
+            icon: Icons.star,
+            title: 'My Points',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PointPage(user: widget.user)),
+              );
+            },
+          ),
+          _buildListTile(
+            icon: Icons.receipt,
+            title: 'Riwayat Redeem',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const RedeemHistoryPage()),
+              );
+            },
+          ),
+          _buildListTile(
+            icon: Icons.settings,
+            title: 'Pengaturan Akun',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsPage(user: widget.user)),
+              );
+            },
+          ),
+          _buildListTile(
+            icon: Icons.logout,
+            title: 'Logout',
+            onTap: _logout,
+            hasTrailing: false,
+          ),
+        ],
       ),
+    );
+  }
+
+  Widget _buildListTile({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    bool hasTrailing = true,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: AppColors.primary, size: 22),
+      title: Text(title, style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 16, color: AppColors.onSurface)),
+      trailing: hasTrailing ? const Icon(Icons.chevron_right, color: AppColors.onSurface) : null,
+      onTap: onTap,
     );
   }
 }

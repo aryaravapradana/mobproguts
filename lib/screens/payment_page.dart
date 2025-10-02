@@ -4,7 +4,8 @@ import 'package:project_midterms/colors.dart';
 import 'package:project_midterms/data/transaction_data.dart';
 import '../models/user.dart';
 import '../models/transaksi.dart';
-import 'scan_qr_page.dart';
+
+import 'package:google_fonts/google_fonts.dart';
 
 class PaymentPage extends StatefulWidget {
   final UserModel user;
@@ -18,34 +19,34 @@ class _PaymentPageState extends State<PaymentPage> {
   final amountController = TextEditingController();
   final f = NumberFormat.decimalPattern('id');
 
-  int _ambilNominal() {
+  int _getAmount() {
     final raw = amountController.text.replaceAll(RegExp(r'[^0-9]'), '');
     return int.tryParse(raw) ?? 0;
   }
 
-  void makePayment() {
-    final amount = _ambilNominal();
+  void _makePayment() {
+    final amount = _getAmount();
 
     if (amount <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Nominal harus lebih dari 0')),
+        const SnackBar(content: Text('Amount must be greater than 0'), backgroundColor: AppColors.error),
       );
       return;
     }
 
-    final poinBaru = amount ~/ 1000;
-    final double xpBaru = amount / 10000;
+    final pointsEarned = amount ~/ 1000;
+    final double xpEarned = amount / 10000;
 
     setState(() {
-      widget.user.poin += poinBaru;
-      widget.user.xp += xpBaru;
+      widget.user.poin += pointsEarned;
+      widget.user.xp += xpEarned;
       widget.user.spending += amount;
       dummyTransaksi.insert(
         0,
         Transaksi(
-          title: "Belanja di Merchant",
+          title: "In-Store Purchase",
           amount: amount,
-          pointsChange: poinBaru,
+          pointsChange: pointsEarned,
           date: DateTime.now(),
         ),
       );
@@ -57,16 +58,52 @@ class _PaymentPageState extends State<PaymentPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: AppColors.gold,
-        content: Row(
+        backgroundColor: AppColors.success,
+        content: Text('Transaction successful! +$pointsEarned points, +${xpEarned.toStringAsFixed(1)} XP'),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('New Transaction')),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Icon(Icons.check_circle, color: AppColors.black),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                'Transaksi berhasil! +$poinBaru poin, +${xpBaru.toStringAsFixed(1)} XP',
-                style: const TextStyle(color: AppColors.black),
-              ),
+            _buildCurrentPointsCard(),
+            const SizedBox(height: 24),
+            _buildAmountInput(),
+            const SizedBox(height: 24),
+            _buildSaveButton(),
+            const SizedBox(height: 12),
+            _buildScanQrButton(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCurrentPointsCard() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Current Points', style: GoogleFonts.poppins(color: AppColors.primary, fontWeight: FontWeight.w600)),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Text(
+                  f.format(widget.user.poin),
+                  style: GoogleFonts.poppins(fontSize: 32, fontWeight: FontWeight.bold, color: AppColors.onSurface),
+                ),
+                const SizedBox(width: 8),
+                Text('points', style: GoogleFonts.poppins(color: AppColors.onSurface.withAlpha(179)))
+              ],
             ),
           ],
         ),
@@ -74,175 +111,49 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
-  Future<void> _scanQris() async {
-    if (!mounted) return;
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => ScanQrPage(user: widget.user)),
-    );
-
-    if (result != null && result is String) {
-      final raw = result.replaceAll(RegExp(r'[^0-9]'), '');
-      final amount = int.tryParse(raw) ?? 0;
-
-      if (amount > 0) {
-        final poinBaru = amount ~/ 1000;
-        final double xpBaru = amount / 10000;
-
-        if (!mounted) return;
-        final confirm = await showDialog<bool>(
-          context: context,
-          builder: (_) => AlertDialog(
-            backgroundColor: const Color(0xFF1E1E1E),
-            title: const Text("Konfirmasi Pembayaran", style: TextStyle(color: AppColors.white)),
-            content: Text(
-              "Bayar Rp${f.format(amount)} dan dapatkan $poinBaru poin & ${xpBaru.toStringAsFixed(1)} XP?",
-              style: TextStyle(color: AppColors.white),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text("Batal", style: TextStyle(color: AppColors.white)),
-              ),
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context, true),
-                style: ElevatedButton.styleFrom(backgroundColor: AppColors.gold),
-                child: const Text("Bayar", style: TextStyle(color: AppColors.black)),
-              ),
-            ],
-          ),
-        );
-
-        if (confirm == true) {
-          setState(() {
-            widget.user.poin += poinBaru;
-            widget.user.xp += xpBaru;
-            widget.user.spending += amount;
-            dummyTransaksi.insert(
-              0,
-              Transaksi(
-                title: "Pembayaran via QR",
-                amount: amount,
-                pointsChange: poinBaru,
-                date: DateTime.now(),
-              ),
-            );
-          });
-
-          if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: AppColors.gold,
-              content: Text(
-                "Transaksi berhasil! (+$poinBaru poin, +${xpBaru.toStringAsFixed(1)} XP)",
-                style: TextStyle(color: AppColors.black),
-              ),
-            ),
-          );
+  Widget _buildAmountInput() {
+    return TextField(
+      controller: amountController,
+      keyboardType: TextInputType.number,
+      style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold),
+      decoration: InputDecoration(
+        labelText: 'Purchase Amount',
+        prefixText: 'Rp ',
+        border: const OutlineInputBorder(),
+      ),
+      onChanged: (value) {
+        final digits = value.replaceAll(RegExp(r'[^0-9]'), '');
+        if (digits.isEmpty) {
+          amountController.clear();
+          return;
         }
-      } else {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("QR tidak mengandung nominal valid")),
+        final n = int.parse(digits);
+        final formatted = f.format(n);
+        amountController.value = TextEditingValue(
+          text: formatted,
+          selection: TextSelection.collapsed(offset: formatted.length),
         );
-      }
-    }
+      },
+    );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Tambah Transaksi')),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Card(
-              elevation: 1.5,
-              color: const Color(0xFF1E1E1E),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 14,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Poin Saat Ini',
-                      style: TextStyle(
-                        color: AppColors.gold,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${f.format(widget.user.poin)} poin',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      'Level: ${widget.user.level}',
-                      style: TextStyle(color: AppColors.white.withAlpha(153)),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: amountController,
-              keyboardType: TextInputType.number,
-              style: TextStyle(color: AppColors.white),
-              decoration: const InputDecoration(
-                labelText: 'Nominal Belanja',
-                hintText: 'contoh: 250.000',
-                prefixText: 'Rp ',
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (value) {
-                final digits = value.replaceAll(RegExp(r'[^0-9]'), '');
-                if (digits.isEmpty) {
-                  amountController.value = const TextEditingValue(text: '');
-                  return;
-                }
-                final n = int.parse(digits);
-                final pretty = f.format(n);
-                amountController.value = TextEditingValue(
-                  text: pretty,
-                  selection: TextSelection.collapsed(offset: pretty.length),
-                );
-              },
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              height: 48,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: AppColors.gold, shape: const StadiumBorder()),
-                onPressed: makePayment,
-                child: const Text('Simpan Transaksi', style: TextStyle(color: AppColors.black)),
-              ),
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              height: 48,
-              child: OutlinedButton.icon(
-                icon: const Icon(Icons.qr_code_scanner, color: AppColors.gold),
-                label: const Text("Scan QR", style: TextStyle(color: AppColors.gold)),
-                onPressed: _scanQris,
-              ),
-            ),
-          ],
-        ),
+  Widget _buildSaveButton() {
+    return ElevatedButton.icon(
+      onPressed: _makePayment,
+      icon: const Icon(Icons.check, size: 20),
+      label: const Text('Save Transaction'),
+    );
+  }
+
+  Widget _buildScanQrButton() {
+    return OutlinedButton.icon(
+      onPressed: () { /* QR Scan Logic Here */ },
+      icon: const Icon(Icons.qr_code_scanner, size: 20),
+      label: const Text("Scan QR to Pay"),
+      style: OutlinedButton.styleFrom(
+        foregroundColor: AppColors.primary,
+        side: const BorderSide(color: AppColors.primary, width: 2),
+        padding: const EdgeInsets.symmetric(vertical: 16),
       ),
     );
   }

@@ -14,166 +14,197 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _phoneController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
 
   void _handleRegister() {
+    if (!mounted) return;
+
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
     final confirmPassword = _confirmPasswordController.text.trim();
     final phone = _phoneController.text.trim();
 
-    if (password != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Passwords do not match')),
-      );
+    if (name.isEmpty || email.isEmpty || password.isEmpty || phone.isEmpty) {
+      _showErrorDialog('Please fill in all fields.');
       return;
     }
 
-    if (name.isNotEmpty && email.isNotEmpty && password.isNotEmpty && phone.isNotEmpty) {
-      final newUser = UserModel(
-        id: DateTime.now().millisecondsSinceEpoch.toString(), // Generate a unique ID
-        name: name,
-        email: email,
-        password: password,
-        phone: phone,
-        poin: 0,
-        spending: 0,
-        xp: 0,
-        qrCode: "qr_$email", // Generate QR code based on email
-      );
-      dummyUsers.add(newUser);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => HomePage(user: newUser)),
-      );
-    } else {
-      // Show an error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all fields')),
-      );
+    if (password != confirmPassword) {
+      _showErrorDialog('Passwords do not match. Please try again.');
+      return;
     }
+
+    final newUser = UserModel(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      name: name,
+      email: email,
+      password: password,
+      phone: phone,
+      poin: 0,
+      spending: 0,
+      xp: 0,
+      qrCode: "qr_$email",
+    );
+    dummyUsers.add(newUser);
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => HomePage(user: newUser)),
+      (route) => false,
+    );
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        title: const Text('Registration Error', style: TextStyle(color: AppColors.onSurface)),
+        content: Text(message, style: const TextStyle(color: AppColors.onSurface)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK', style: TextStyle(color: AppColors.primary)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.black,
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Icon(Icons.person_add, color: AppColors.gold, size: 80),
-
-                const SizedBox(height: 16),
-                Text(
-                  "Create Account",
-                  style: GoogleFonts.poppins(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.white,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  "Sign up to get started",
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: AppColors.white.withAlpha(153),
-                  ),
-                ),
-                const SizedBox(height: 32),
-
-                _buildTextField(Icons.person, "Full Name", _nameController),
-                const SizedBox(height: 16),
-                _buildTextField(Icons.email, "Email", _emailController),
-                const SizedBox(height: 16),
-                _buildTextField(Icons.lock, "Password", _passwordController, isPassword: true),
-                const SizedBox(height: 16),
-                _buildTextField(Icons.lock, "Confirm Password", _confirmPasswordController, isPassword: true),
-                const SizedBox(height: 16),
-                _buildTextField(Icons.phone, "Phone", _phoneController),
-
+                _buildHeader(),
+                const SizedBox(height: 48),
+                _buildRegisterForm(),
                 const SizedBox(height: 24),
-
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.gold,
-                    foregroundColor: AppColors.black,
-                    minimumSize: const Size(double.infinity, 55),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    elevation: 8,
-                    shadowColor: AppColors.gold.withAlpha(128),
-                  ),
-                  onPressed: _handleRegister,
-                  child: Text(
-                    "Register",
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Already have an account?",
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        color: AppColors.white.withAlpha(153),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text(
-                        "Login",
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.gold,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                _buildRegisterButton(),
+                const SizedBox(height: 24),
+                _buildLoginPrompt(context),
               ],
-            ).animate().fade(duration: 500.ms).slideY(begin: 0.2, end: 0),
+            ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.2, end: 0, curve: Curves.easeOut),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTextField(IconData icon, String hint, TextEditingController controller,
-      {bool isPassword = false}) {
+  Widget _buildHeader() {
+    return Column(
+      children: [
+        const Icon(Icons.person_add, color: AppColors.primary, size: 60),
+        const SizedBox(height: 24),
+        Text(
+          "Create Account",
+          style: GoogleFonts.poppins(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+            color: AppColors.onBackground,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          "Join our loyalty program and start earning!",
+          textAlign: TextAlign.center,
+          style: GoogleFonts.poppins(
+            fontSize: 16,
+            color: AppColors.onSurface,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRegisterForm() {
+    return Column(
+      children: [
+        _buildTextField(controller: _nameController, hint: "Full Name", icon: Icons.person),
+        const SizedBox(height: 16),
+        _buildTextField(controller: _emailController, hint: "Email", icon: Icons.email),
+        const SizedBox(height: 16),
+        _buildTextField(controller: _phoneController, hint: "Phone Number", icon: Icons.phone),
+        const SizedBox(height: 16),
+        _buildTextField(controller: _passwordController, hint: "Password", icon: Icons.lock, isPassword: true),
+        const SizedBox(height: 16),
+        _buildTextField(controller: _confirmPasswordController, hint: "Confirm Password", icon: Icons.lock, isPassword: true),
+      ],
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hint,
+    required IconData icon,
+    bool isPassword = false,
+  }) {
     return TextField(
       controller: controller,
       obscureText: isPassword,
-      style: const TextStyle(color: AppColors.white),
       decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: AppColors.gold),
         hintText: hint,
-        hintStyle: TextStyle(color: AppColors.white.withAlpha(102)),
-        filled: true,
-        fillColor: const Color(0xFF1E1E1E),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide.none,
+        prefixIcon: Padding(
+          padding: const EdgeInsets.only(left: 16, right: 12),
+          child: Icon(icon, size: 20),
         ),
       ),
+    );
+  }
+
+  Widget _buildRegisterButton() {
+    return ElevatedButton(
+      onPressed: _handleRegister,
+      child: const Text("Register"),
+    );
+  }
+
+  Widget _buildLoginPrompt(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Already have an account?",
+          style: TextStyle(color: AppColors.onSurface),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(
+            "Login",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.primary,
+            ),
+          ),
+        )
+      ],
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project_midterms/colors.dart';
 import 'package:project_midterms/models/membership_tier.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class TierInfoPage extends StatelessWidget {
   final MembershipTier tier;
@@ -11,11 +12,8 @@ class TierInfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.black,
       appBar: AppBar(
         title: Text(tier.name, style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
-        backgroundColor: AppColors.black,
-        elevation: 0,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -24,13 +22,34 @@ class TierInfoPage extends StatelessWidget {
           children: [
             _buildHeader(),
             const SizedBox(height: 24),
-            _buildDescription(),
-            const SizedBox(height: 24),
-            _buildBenefits(),
-            const SizedBox(height: 24),
-            _buildRequirements(),
+            _buildSectionCard(
+              title: 'Description',
+              child: Text(
+                tier.description,
+                style: GoogleFonts.poppins(fontSize: 14, color: AppColors.onSurface.withAlpha(204), height: 1.5),
+              ),
+            ),
+            const SizedBox(height: 16),
+            _buildSectionCard(
+              title: 'Benefits',
+              child: Column(
+                children: tier.perks.map((perk) => ListTile(
+                  leading: Icon(perk.icon, color: AppColors.primary),
+                  title: Text(perk.name, style: GoogleFonts.poppins(fontWeight: FontWeight.w500)),
+                  contentPadding: EdgeInsets.zero,
+                )).toList(),
+              ),
+            ),
+            const SizedBox(height: 16),
+            _buildSectionCard(
+              title: 'How to Achieve',
+              child: Text(
+                'You need to earn a minimum of ${tier.minXp} XP.',
+                style: GoogleFonts.poppins(fontSize: 14, color: AppColors.onSurface.withAlpha(204), height: 1.5),
+              ),
+            ),
           ],
-        ),
+        ).animate().fadeIn(duration: 500.ms),
       ),
     );
   }
@@ -44,9 +63,9 @@ class TierInfoPage extends StatelessWidget {
           Text(
             tier.name,
             style: GoogleFonts.poppins(
-              fontSize: 28,
+              fontSize: 32,
               fontWeight: FontWeight.bold,
-              color: AppColors.white,
+              color: tier.color,
             ),
           ),
         ],
@@ -54,93 +73,19 @@ class TierInfoPage extends StatelessWidget {
     );
   }
 
-  Widget _buildDescription() {
+  Widget _buildSectionCard({required String title, required Widget child}) {
     return Card(
-      color: const Color(0xFF1E1E1E),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Deskripsi',
-              style: GoogleFonts.poppins(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: AppColors.white,
-              ),
+              title,
+              style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.onBackground),
             ),
-            const SizedBox(height: 8),
-            Text(
-              tier.description,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: AppColors.white.withAlpha(204),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBenefits() {
-    return Card(
-      color: const Color(0xFF1E1E1E),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Keuntungan',
-              style: GoogleFonts.poppins(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: AppColors.white,
-              ),
-            ),
-            const SizedBox(height: 16),
-            ...tier.perks.map((perk) => ListTile(
-                  leading: Icon(perk.icon, color: AppColors.gold),
-                  title: Text(
-                    perk.name,
-                    style: GoogleFonts.poppins(color: AppColors.white),
-                  ),
-                )),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRequirements() {
-    return Card(
-      color: const Color(0xFF1E1E1E),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Cara Mencapai Level Ini',
-              style: GoogleFonts.poppins(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: AppColors.white,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Anda perlu mencapai minimal ${tier.minXp} XP.',
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: AppColors.white.withAlpha(204),
-              ),
-            ),
+            const SizedBox(height: 12),
+            child,
           ],
         ),
       ),

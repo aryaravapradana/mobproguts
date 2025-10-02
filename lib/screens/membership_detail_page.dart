@@ -4,14 +4,14 @@ import 'package:intl/intl.dart';
 import 'package:project_midterms/colors.dart';
 import 'package:project_midterms/data/membership_data.dart';
 import 'package:project_midterms/screens/tier_info_page.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../models/user.dart';
 import '../models/membership_tier.dart';
 
 class MembershipDetailPage extends StatefulWidget {
   final UserModel user;
-  final MembershipTier? selectedTier;
-  const MembershipDetailPage({super.key, required this.user, this.selectedTier});
+  const MembershipDetailPage({super.key, required this.user});
 
   @override
   State<MembershipDetailPage> createState() => _MembershipDetailPageState();
@@ -19,13 +19,10 @@ class MembershipDetailPage extends StatefulWidget {
 
 class _MembershipDetailPageState extends State<MembershipDetailPage> {
   late double _currentUserXp;
-
   late MembershipTier _currentTier;
   MembershipTier? _nextTier;
   double _progress = 0.0;
   double _xpNeeded = 0.0;
-
-  final NumberFormat f = NumberFormat.decimalPattern('id');
 
   @override
   void initState() {
@@ -35,9 +32,7 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
   }
 
   void _calculateTierProgress() {
-    _currentTier = tiers
-        .lastWhere((tier) => _currentUserXp >= tier.minXp, orElse: () => tiers.first);
-
+    _currentTier = tiers.lastWhere((tier) => _currentUserXp >= tier.minXp, orElse: () => tiers.first);
     int currentTierIndex = tiers.indexOf(_currentTier);
 
     if (currentTierIndex < tiers.length - 1) {
@@ -53,57 +48,11 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
     }
   }
 
-  void _showTermsAndConditions(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: const Color(0xFF1E1E1E),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Syarat & Ketentuan',
-                style: GoogleFonts.poppins(
-                    fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.white),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                  '1. XP dihitung dari total belanja Anda selama 3 bulan terakhir.\n\n' 
-                  '2. Setiap pembelanjaan Rp 1.000,- akan mendapatkan 1 Poin Voucher dan 0.1 XP, poin digunakan untuk ditukarkan ke voucher, sedangkan xp untuk naik level.\n\n' 
-                  '3. Kenaikan Grade terjadi secara otomatis ketika XP Anda mencapai ambang batas minimal Grade berikutnya.\n\n' 
-                  '4. Penurunan Grade akan dievaluasi setiap 3 bulan. Jika total XP Anda tidak memenuhi syarat minimal Grade saat ini, maka Grade Anda akan diturunkan ke level yang sesuai.\n\n' 
-                  '5. Ingat kata Timothy Ronald, Orang yang hemat hemat terus terusan itu tidak mungkin sepintar itu, dikarenakan itu merupakan aktivitas paling GOBL*K, ya paling GOBL*K karena duit ga dibawah mati apalagi, ini duit fiktif jadi teruslah berbelanja', style: TextStyle(color: AppColors.white)),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.gold,
-                      foregroundColor: AppColors.black),
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Mengerti'),
-                ),
-              )
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.black,
       appBar: AppBar(
-        title: const Text('Membership Detail'),
-        backgroundColor: AppColors.black,
-        elevation: 1,
+        title: const Text('Membership Details'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -116,38 +65,32 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
             const SizedBox(height: 24),
             _buildTermsSection(),
           ],
-        ),
+        ).animate().fadeIn(duration: 500.ms),
       ),
     );
   }
 
   Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        children: [
-          Icon(_currentTier.icon, color: _currentTier.color, size: 50),
-          const SizedBox(height: 8),
-          Text(
-            _currentTier.name,
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            Icon(_currentTier.icon, color: _currentTier.color, size: 50),
+            const SizedBox(height: 12),
+            Text(
+              _currentTier.name,
+              style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold, color: _currentTier.color),
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Total XP: ${_currentUserXp.toStringAsFixed(1)} XP',
-            style: GoogleFonts.poppins(color: Colors.white.withAlpha(204)),
-          ),
-          const SizedBox(height: 20),
-          _buildProgressBar(),
-        ],
+            const SizedBox(height: 4),
+            Text(
+              'Total XP: ${_currentUserXp.toStringAsFixed(1)} XP',
+              style: GoogleFonts.poppins(color: AppColors.onSurface, fontSize: 16),
+            ),
+            const SizedBox(height: 20),
+            _buildProgressBar(),
+          ],
+        ),
       ),
     );
   }
@@ -157,85 +100,99 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
       children: [
         if (_nextTier != null)
           Text(
-            'Tambah ${_xpNeeded.toStringAsFixed(1)} XP lagi jadi ${_nextTier!.name}',
-            style: GoogleFonts.poppins(
-                color: Colors.white, fontWeight: FontWeight.w600),
+            'Add ${_xpNeeded.toStringAsFixed(1)} more XP to reach ${_nextTier!.name}',
+            style: GoogleFonts.poppins(color: AppColors.onSurface, fontWeight: FontWeight.w600),
           )
         else
           Text(
-            'Kamu berada di level tertinggi!',
-            style: GoogleFonts.poppins(
-                color: Colors.white, fontWeight: FontWeight.w600),
+            'You have reached the highest tier!',
+            style: GoogleFonts.poppins(color: AppColors.onSurface, fontWeight: FontWeight.w600),
           ),
-        const SizedBox(height: 8),
-        Stack(
-          children: [
-            Container(
-              height: 12,
-              decoration: BoxDecoration(
-                color: Colors.white.withAlpha(77),
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            FractionallySizedBox(
-              widthFactor: _progress,
-              child: Container(
-                height: 12,
-                decoration: BoxDecoration(
-                  color: _currentTier.color,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-          ],
+        const SizedBox(height: 12),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: LinearProgressIndicator(
+            value: _progress,
+            minHeight: 12,
+            valueColor: AlwaysStoppedAnimation<Color>(_currentTier.color),
+            backgroundColor: AppColors.darkGrey,
+          ),
         ),
       ],
     );
   }
 
   Widget _buildTierCards() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: tiers.map((tier) {
-        bool isCurrent = tier.name == _currentTier.name;
-
-        return Expanded(
-          child: GestureDetector(
+    return SizedBox(
+      height: 120,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: tiers.length,
+        separatorBuilder: (context, index) => const SizedBox(width: 12),
+        itemBuilder: (context, index) {
+          final tier = tiers[index];
+          bool isCurrent = tier.name == _currentTier.name;
+          return GestureDetector(
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => TierInfoPage(tier: tier),
-                ),
+                MaterialPageRoute(builder: (context) => TierInfoPage(tier: tier)),
               );
             },
-            child: _TierCard(
-                tier: tier, isCurrent: isCurrent, isSelected: false), // isSelected is always false now
-          ),
-        );
-      }).toList(),
+            child: _TierCard(tier: tier, isCurrent: isCurrent),
+          );
+        },
+      ),
     );
   }
 
   Widget _buildTermsSection() {
     return Card(
-      elevation: 2,
-      color: const Color(0xFF1E1E1E),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
-        title: Text('Baca Syarat & Ketentuan',
-            style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: AppColors.white)),
-        subtitle: const Text(
-            'Ketahui metode perhitungan XP & cara naik/turun Grade.', style: TextStyle(color: AppColors.white)),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.white),
-        onTap: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Opening terms and conditions...')),
-          );
-          _showTermsAndConditions(context);
-        },
+        title: Text('Terms & Conditions', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+        subtitle: const Text('Learn about XP calculation and tier changes.'),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        onTap: () => _showTermsAndConditions(context),
       ),
+    );
+  }
+
+  void _showTermsAndConditions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return DraggableScrollableSheet(
+          expand: false,
+          initialChildSize: 0.6,
+          maxChildSize: 0.9,
+          builder: (BuildContext context, ScrollController scrollController) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Terms & Conditions', style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 16),
+                  const Text(
+                      '1. XP is calculated from your total spending over the last 3 months.\n\n' 
+                      '2. Every purchase of IDR 1,000 will earn you 1 Voucher Point and 0.1 XP. Points are for redeeming vouchers, while XP is for leveling up your tier.\n\n' 
+                      '3. Tier upgrades happen automatically when your XP reaches the minimum threshold for the next tier.\n\n' 
+                      '4. Tier downgrades are evaluated every 3 months. If your total XP does not meet the minimum requirement for your current tier, your tier will be adjusted accordingly.\n\n' 
+                      '5. Remember what Timothy Ronald said, "People who are constantly frugal cannot be that smart, because it is the most IDIOTIC activity, yes the most IDIOTIC because you can\'t take money to the grave, especially this fictitious money, so keep shopping.'
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
@@ -243,57 +200,34 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
 class _TierCard extends StatelessWidget {
   final MembershipTier tier;
   final bool isCurrent;
-  final bool isSelected;
 
-  const _TierCard(
-      {required this.tier, required this.isCurrent, required this.isSelected});
+  const _TierCard({required this.tier, required this.isCurrent});
 
   @override
   Widget build(BuildContext context) {
     final f = NumberFormat.decimalPattern('id');
-    return Column(
-      children: [
-        Stack(
-          clipBehavior: Clip.none,
-          alignment: Alignment.center,
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: isCurrent ? tier.color.withAlpha(51) : AppColors.surface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isCurrent ? tier.color : AppColors.darkGrey,
+            width: 2,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: isSelected ? tier.color.withAlpha(51) : const Color(0xFF1E1E1E),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: isSelected ? tier.color : AppColors.white.withAlpha(102),
-                  width: 2,
-                ),
-              ),
-              child: Icon(tier.icon, color: tier.color, size: 30),
-            ),
-            if (isCurrent)
-              Positioned(
-                top: -10,
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: AppColors.gold,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Text('Grade kamu',
-                      style: TextStyle(color: AppColors.black, fontSize: 8)),
-                ),
-              ),
+            Icon(tier.icon, color: tier.color, size: 30),
+            const SizedBox(height: 8),
+            Text(tier.name, style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.bold)),
+            Text('${f.format(tier.minXp)} XP', style: TextStyle(fontSize: 12, color: AppColors.onSurface.withAlpha(179))),
           ],
         ),
-        const SizedBox(height: 8),
-        Text(tier.name,
-            style:
-                GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.white)),
-        Text(
-          '${f.format(tier.minXp)} XP',
-          style: TextStyle(fontSize: 12, color: AppColors.white.withAlpha(153)),
-        ),
-      ],
+      ),
     );
   }
 }
