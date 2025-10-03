@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:project_midterms/colors.dart';
 import 'package:project_midterms/data/membership_data.dart';
+import 'package:project_midterms/helpers/tier_style.dart';
 import 'package:project_midterms/screens/tier_info_page.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -72,51 +74,113 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
 
   Widget _buildHeader() {
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            Icon(_currentTier.icon, color: _currentTier.color, size: 50),
-            const SizedBox(height: 12),
-            Text(
-              _currentTier.name,
-              style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold, color: _currentTier.color),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'Total XP: ${_currentUserXp.toStringAsFixed(1)} XP',
-              style: GoogleFonts.poppins(color: AppColors.onSurface, fontSize: 16),
-            ),
-            const SizedBox(height: 20),
-            _buildProgressBar(),
-          ],
+      elevation: 8,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      clipBehavior: Clip.antiAlias,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: getGradientForTier(_currentTier.name),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              FaIcon(getFaIconForTier(_currentTier.name), color: getTextColorForTier(_currentTier.name), size: 50),
+              const SizedBox(height: 12),
+              Text(
+                _currentTier.name,
+                style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold, color: getTextColorForTier(_currentTier.name)),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Total XP: ${_currentUserXp.toStringAsFixed(1)} XP',
+                style: GoogleFonts.poppins(color: getTextColorForTier(_currentTier.name).withOpacity(0.8), fontSize: 16),
+              ),
+              const SizedBox(height: 20),
+              _buildProgressBar(),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildProgressBar() {
+    final textColor = getTextColorForTier(_currentTier.name);
+    final glowColor = getGlowColorForTier(_currentTier.name);
+    final isHighestTier = _nextTier == null;
+
     return Column(
       children: [
-        if (_nextTier != null)
+        if (!isHighestTier)
           Text(
             'Add ${_xpNeeded.toStringAsFixed(1)} more XP to reach ${_nextTier!.name}',
-            style: GoogleFonts.poppins(color: AppColors.onSurface, fontWeight: FontWeight.w600),
+            style: GoogleFonts.poppins(color: textColor.withOpacity(0.9), fontWeight: FontWeight.w600),
           )
         else
           Text(
             'You have reached the highest tier!',
-            style: GoogleFonts.poppins(color: AppColors.onSurface, fontWeight: FontWeight.w600),
+            style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w600),
           ),
-        const SizedBox(height: 12),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: LinearProgressIndicator(
-            value: _progress,
-            minHeight: 12,
-            valueColor: AlwaysStoppedAnimation<Color>(_currentTier.color),
-            backgroundColor: AppColors.darkGrey,
-          ),
+        const SizedBox(height: 20),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final double barWidth = constraints.maxWidth;
+            final double indicatorDiameter = 28; // Made bigger
+            // Calculate position, ensuring it doesn't go out of bounds
+            final double indicatorPosition = (barWidth * _progress).clamp(indicatorDiameter / 2, barWidth - indicatorDiameter / 2) - (indicatorDiameter / 2);
+
+            return Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.centerLeft,
+              children: [
+                // The progress bar background
+                Container(
+                  height: 14,
+                  width: barWidth,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.black.withOpacity(0.2),
+                    border: Border.all(color: Colors.white.withOpacity(0.25)),
+                  ),
+                ),
+                // The progress bar value
+                Container(
+                  height: 14,
+                  width: barWidth * _progress,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: isHighestTier ? glowColor : Colors.white.withOpacity(0.8),
+                  ),
+                ),
+                // The glowing indicator
+                Positioned(
+                  left: indicatorPosition,
+                  child: Container(
+                    height: indicatorDiameter,
+                    width: indicatorDiameter,
+                    alignment: Alignment.center, // Centered the icon
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: glowColor,
+                      border: Border.all(color: Colors.white.withOpacity(0.8), width: 1.5),
+                      boxShadow: [
+                        BoxShadow(
+                          color: glowColor.withOpacity(0.9),
+                          blurRadius: 12,
+                          spreadRadius: 3,
+                        ),
+                      ],
+                    ),
+                    child: FaIcon(isHighestTier ? FontAwesomeIcons.gem : FontAwesomeIcons.star, color: Colors.white, size: 14), // Made icon bigger
+                  ).animate(onPlay: (controller) => controller.repeat(reverse: true))
+                   .scale(duration: 1500.ms, end: const Offset(1.2, 1.2), curve: Curves.easeOut)
+                   .then(delay: 200.ms)
+                   .scale(duration: 1500.ms, end: const Offset(1, 1), curve: Curves.easeIn),
+                ),
+              ],
+            );
+          },
         ),
       ],
     );
@@ -229,5 +293,22 @@ class _TierCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+IconData getFaIconForTier(String level) {
+  switch (level) {
+    case 'Bronze':
+      return FontAwesomeIcons.shieldHalved;
+    case 'Silver':
+      return FontAwesomeIcons.starHalfAlt;
+    case 'Gold':
+      return FontAwesomeIcons.star;
+    case 'Platinum':
+      return FontAwesomeIcons.solidCheckCircle;
+    case 'Diamond':
+      return FontAwesomeIcons.gem;
+    default:
+      return FontAwesomeIcons.questionCircle;
   }
 }

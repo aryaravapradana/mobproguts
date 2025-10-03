@@ -57,7 +57,7 @@ final List<UserModel> dummyUsers = [
     qrCode: "qr_user5",
   ),
 
-    UserModel(
+  UserModel(
     id: "test_user",
     name: "Test Account",
     email: "a",
@@ -65,7 +65,7 @@ final List<UserModel> dummyUsers = [
     phone: "081234567894",
     poin: 1200,
     spending: 3000000,
-    xp: 2000.0,
+    xp: 900.0,
     qrCode: "qr_test_user",
   ),
 ];

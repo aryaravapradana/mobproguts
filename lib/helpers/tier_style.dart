@@ -17,7 +17,13 @@ LinearGradient getGradientForTier(String level) {
       );
     case 'Gold':
       return const LinearGradient(
-        colors: [Color(0xFFffd700), Color(0xFFf0c040)],
+        colors: [Color(0xFFffd700), Color(0xFFc5753a)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      );
+    case 'Platinum':
+      return const LinearGradient(
+        colors: [Color(0xFFe5e4e2), Color(0xFFb0c4de)],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       );
