@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_midterms/colors.dart';
+import 'package:project_midterms/data/membership_data.dart';
 import 'package:project_midterms/data/voucher_data.dart';
 import 'package:project_midterms/models/voucher.dart';
 import 'package:project_midterms/screens/my_vouchers_page.dart';
@@ -19,6 +20,11 @@ class VoucherPage extends StatefulWidget {
 class _VoucherPageState extends State<VoucherPage> {
   String _searchQuery = '';
   String _selectedCategory = 'All';
+
+  // Helper to get the rank of a tier
+  int _getTierRank(String tierName) {
+    return tiers.indexWhere((tier) => tier.name == tierName);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,13 +104,25 @@ class _VoucherPageState extends State<VoucherPage> {
   }
 
   Widget _buildVoucherGrid() {
+    final userTierRank = _getTierRank(widget.user.level);
+
     List<Voucher> filteredVouchers = dummyVouchers.where((voucher) {
+      // Tier check
+      final requiredTierRank = voucher.requiredTier != null ? _getTierRank(voucher.requiredTier!) : -1;
+      final isTierSufficient = voucher.requiredTier == null || userTierRank >= requiredTierRank;
+
+      if (!isTierSufficient) {
+        return false;
+      }
+
+      // Search and category check
       final titleMatches = voucher.title.toLowerCase().contains(_searchQuery.toLowerCase());
       final categoryMatches = _selectedCategory == 'All' ||
           categorizedVouchers.entries
               .firstWhere((entry) => entry.key == _selectedCategory)
               .value
               .contains(voucher);
+      
       return titleMatches && categoryMatches;
     }).toList();
 
@@ -141,6 +159,9 @@ class _VoucherPageState extends State<VoucherPage> {
   }
 
   Widget _buildVoucherCard(Voucher voucher, int index) {
+    final bool isExclusive = voucher.requiredTier != null;
+    final tierColor = isExclusive ? tiers.firstWhere((t) => t.name == voucher.requiredTier).color : Colors.transparent;
+
     return GestureDetector(
       onTap: () async {
         final result = await Navigator.push(
@@ -154,67 +175,100 @@ class _VoucherPageState extends State<VoucherPage> {
           setState(() {});
         }
       },
-      child: Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                child: voucher.image != null
-                    ? Image.asset(
-                        voucher.image!,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Center(
-                            child: Icon(
-                              Icons.image_not_supported,
-                              color: AppColors.lightGrey,
-                              size: 40,
-                            ),
-                          );
-                        },
-                      )
-                    : const Center(
-                        child: Icon(
-                          Icons.image_not_supported,
-                          color: AppColors.lightGrey,
-                          size: 40,
+      child: Stack(
+        children: [
+          Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            clipBehavior: Clip.antiAlias, // Ensures the banner clips to the card shape
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: voucher.image != null
+                      ? Image.asset(
+                          voucher.image!,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Center(
+                              child: Icon(
+                                Icons.image_not_supported,
+                                color: AppColors.lightGrey,
+                                size: 40,
+                              ),
+                            );
+                          },
+                        )
+                      : const Center(
+                          child: Icon(
+                            Icons.image_not_supported,
+                            color: AppColors.lightGrey,
+                            size: 40,
+                          ),
+                        ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        voucher.title,
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        "${voucher.cost} points",
+                        style: GoogleFonts.poppins(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (isExclusive)
+            Positioned(
+              top: 8,
+              left: 0,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: tierColor,
+                  borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(8),
+                    bottomRight: Radius.circular(8),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 4,
+                      offset: const Offset(2, 2),
+                    )
+                  ],
+                ),
+                child: Text(
+                  '${voucher.requiredTier} Tier',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10,
+                  ),
+                ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    voucher.title,
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    "${voucher.cost} points",
-                    style: GoogleFonts.poppins(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+        ],
       ),
     ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.2, delay: (100 * index).ms);
   }
 }
+

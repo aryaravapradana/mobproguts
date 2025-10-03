@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:project_midterms/data/redeem_history_data.dart';
 import 'package:project_midterms/models/voucher.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -88,6 +89,22 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
   Widget build(BuildContext context) {
     final bool alreadyRedeemed = redeemedVouchers.any((v) => v.title == widget.voucher.title);
 
+    // --- Create dynamic T&Cs ---
+    final List<String> tncItems = [
+      "Voucher is valid for one-time use only.",
+      "Cannot be combined with other promotions.",
+    ];
+
+    if (widget.voucher.expiryDate != null) {
+      final formattedDate = DateFormat('d MMMM yyyy').format(widget.voucher.expiryDate!);
+      tncItems.add("Valid until $formattedDate.");
+    }
+
+    if (widget.voucher.requiredTier != null) {
+      tncItems.add("Minimum tier required: ${widget.voucher.requiredTier}.");
+    }
+    // ---------------------------
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Voucher Detail', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
@@ -101,11 +118,7 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
             const SizedBox(height: 32),
             _buildSection(
               title: "Terms and Conditions",
-              items: [
-                "Voucher is valid for one-time use only.",
-                "Cannot be combined with other promotions.",
-                "Valid until 31 December 2025.",
-              ],
+              items: tncItems, // Use the dynamic list
             ),
             const SizedBox(height: 24),
             _buildSection(
