@@ -59,9 +59,9 @@ class RedeemHistoryPage extends StatelessWidget {
                         style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.onSurface),
                       ),
                       const SizedBox(height: 4),
-                      if (voucher.date != null)
+                      if (voucher.expiryDate != null)
                         Text(
-                          DateFormat('d MMMM y').format(voucher.date!),
+                          "Redeemed on ${DateFormat('d MMM yyyy').format(voucher.expiryDate!)}", // Assuming expiryDate is the redemption date for now
                           style: GoogleFonts.poppins(color: AppColors.onSurface.withAlpha(179), fontSize: 12),
                         ),
                     ],

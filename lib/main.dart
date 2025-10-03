@@ -4,6 +4,7 @@ import 'package:project_midterms/colors.dart';
 import 'auth/login_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const LoyaltyApp());
 }
 
