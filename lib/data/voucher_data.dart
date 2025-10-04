@@ -207,15 +207,6 @@ List<Voucher> othersVouchers = [
 
 List<Voucher> electronicAndAppliancesVouchers = [
   Voucher(
-    title: "Tiket Liburan ke Bali",
-    cost: 5000,
-    image: 'lib/assets/voucher_images/others/dufan.jpg',
-    requiredTier: 'Diamond',
-    expiryDate: DateTime.now().add(const Duration(days: 180)),
-    description:
-        "Wujudkan liburan impianmu ke Bali! Eksklusif untuk member Diamond.",
-  ),
-  Voucher(
     title: "Diskon 15% untuk TV",
     cost: 2500,
     image: 'lib/assets/voucher_images/electronics/tv.jpg',
