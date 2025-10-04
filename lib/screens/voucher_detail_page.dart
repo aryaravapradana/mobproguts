@@ -44,7 +44,8 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
             onPressed: () {
               setState(() {
                 widget.user.poin -= widget.voucher.cost;
-                redeemedVouchers.add(widget.voucher);
+                final redeemedVoucher = widget.voucher.copyWith(redemptionDate: DateTime.now());
+                redeemedVouchers.add(redeemedVoucher);
               });
               Navigator.pop(context); // Close confirmation dialog
               _showFeedbackDialog(
