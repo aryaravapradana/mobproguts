@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:project_midterms/colors.dart';
 import 'package:project_midterms/models/user.dart';
 import 'package:project_midterms/screens/account_page.dart';
-import 'package:project_midterms/screens/home_page_content.dart'; // Will create this next
+import 'package:project_midterms/screens/home_page_content.dart';
 import 'package:project_midterms/screens/member_page.dart';
-import 'package:project_midterms/screens/notification_page.dart';
 import 'package:project_midterms/screens/scan_qr_page.dart';
 import 'package:project_midterms/screens/voucher_page.dart';
 
