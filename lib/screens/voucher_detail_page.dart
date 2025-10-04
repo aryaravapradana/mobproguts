@@ -135,34 +135,63 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
   Widget _buildVoucherHeader() {
     return Card(
       elevation: 8,
+      clipBehavior: Clip.antiAlias, // To clip the child to the card's rounded corners
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.black, Colors.amber.shade800],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              widget.voucher.title,
-              style: GoogleFonts.poppins(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: AppColors.onSurface,
-              ),
+            Image.asset(
+              widget.voucher.image,
+              width: double.infinity,
+              height: 180,
+              fit: BoxFit.cover,
             ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                const Icon(Icons.monetization_on, color: AppColors.primary, size: 20),
-                const SizedBox(width: 12),
-                Text(
-                  "${widget.voucher.cost} points",
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.primary,
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.voucher.title,
+                    style: GoogleFonts.poppins(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  Text(
+                    widget.voucher.description ?? "No description available.",
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: Colors.white.withOpacity(0.8),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      const Icon(Icons.monetization_on, color: AppColors.primary, size: 20),
+                      const SizedBox(width: 12),
+                      Text(
+                        "${widget.voucher.cost} points",
+                        style: GoogleFonts.poppins(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
