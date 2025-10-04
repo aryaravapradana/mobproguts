@@ -2,6 +2,13 @@ import 'package:project_midterms/models/voucher.dart';
 
 List<Voucher> fnbVouchers = [
   Voucher(
+    title: "Diskon 50% untuk Minuman Boba",
+    cost: 250,
+    image: 'lib/assets/voucher_images/fnb/boba.jpg',
+    expiryDate: DateTime.now().add(const Duration(days: 5)),
+    description: "Nikmati kesegaran boba dengan diskon 50%.",
+  ),
+  Voucher(
     title: "Diskon 20% di Restoran Padang",
     cost: 600,
     image: 'lib/assets/voucher_images/fnb/Padang.jpg',
@@ -52,6 +59,15 @@ List<Voucher> fnbVouchers = [
 ];
 
 List<Voucher> fashionVouchers = [
+  Voucher(
+    title: "Voucher Eksklusif Jam Tangan Mewah",
+    cost: 5000,
+    image: 'lib/assets/voucher_images/fashion/jam.jpg',
+    requiredTier: 'Diamond',
+    expiryDate: DateTime.now().add(const Duration(days: 120)),
+    description:
+        "Voucher eksklusif untuk pembelian jam tangan mewah. Hanya untuk member Diamond.",
+  ),
   Voucher(
     title: "Diskon 15% untuk pembelian Dress",
     cost: 700,

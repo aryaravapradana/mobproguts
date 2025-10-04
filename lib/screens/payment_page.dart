@@ -34,7 +34,7 @@ class _PaymentPageState extends State<PaymentPage> {
       return;
     }
 
-    final pointsEarned = amount ~/ 1000;
+    final pointsEarned = amount ~/ 100;
     final double xpEarned = amount / 10000;
 
     setState(() {

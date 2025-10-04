@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:project_midterms/colors.dart';
 import 'package:project_midterms/data/membership_data.dart';
 import 'package:project_midterms/data/voucher_data.dart';
@@ -110,6 +111,7 @@ class _VoucherPageState extends State<VoucherPage> {
 
   Widget _buildVoucherGrid() {
     final userTierRank = _getTierRank(widget.user.level);
+    final f = NumberFormat.decimalPattern('id');
 
     List<Voucher> filteredVouchers = dummyVouchers.where((voucher) {
       // Tier check
@@ -190,6 +192,7 @@ class _VoucherPageState extends State<VoucherPage> {
                 elevation: 2,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
+                  side: isExclusive ? BorderSide(color: tierColor, width: 2) : BorderSide.none,
                 ),
                 clipBehavior: Clip.antiAlias,
                 child: Column(
@@ -227,7 +230,7 @@ class _VoucherPageState extends State<VoucherPage> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            "${voucher.cost} points",
+                            "${f.format(voucher.cost)} points",
                             style: GoogleFonts.poppins(
                               color: AppColors.primary,
                               fontWeight: FontWeight.w600,
@@ -256,7 +259,7 @@ class _VoucherPageState extends State<VoucherPage> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                                                    color: Colors.black.withAlpha((255 * 0.3).round()),
+                          color: Colors.black.withAlpha((255 * 0.3).round()),
                           blurRadius: 4,
                           spreadRadius: 2,
                         ),

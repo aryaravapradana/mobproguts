@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:project_midterms/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -23,6 +24,7 @@ class PointsCard extends StatelessWidget {
       (t) => t.name == level,
       orElse: () => tiers.first,
     );
+    final f = NumberFormat.decimalPattern('id');
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -46,7 +48,7 @@ class PointsCard extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                                    color: currentTier.color.withAlpha((255 * 0.15).round()),
+                  color: currentTier.color.withAlpha((255 * 0.15).round()),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
@@ -90,7 +92,7 @@ class PointsCard extends StatelessWidget {
                 Text(
                   "klik untuk melihat total poin yang kamu miliki",
                   style: GoogleFonts.poppins(
-                    color: AppColors.onSurface.withOpacity(0.7),
+                    color: AppColors.onSurface.withAlpha((255 * 0.7).round()),
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -99,7 +101,7 @@ class PointsCard extends StatelessWidget {
             )
           else
             Text(
-              points.toString(),
+              f.format(points),
               style: GoogleFonts.poppins(
                 color: AppColors.primary,
                 fontSize: 52,

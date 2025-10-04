@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:project_midterms/models/user.dart';
 import 'package:project_midterms/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -73,6 +74,7 @@ class _PointPageState extends State<PointPage> {
   }
 
   Widget _buildPointsCard() {
+    final f = NumberFormat.decimalPattern('id');
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -86,7 +88,7 @@ class _PointPageState extends State<PointPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Your Points', style: GoogleFonts.inter(color: Colors.black, fontSize: 16)),
-              Text('${widget.user.poin}', style: GoogleFonts.inter(color: Colors.black, fontSize: 40, fontWeight: FontWeight.bold)),
+              Text(f.format(widget.user.poin), style: GoogleFonts.inter(color: Colors.black, fontSize: 40, fontWeight: FontWeight.bold)),
             ],
           ),
           const Icon(Icons.star, color: Colors.white, size: 50),
@@ -104,6 +106,7 @@ class _PointPageState extends State<PointPage> {
       AppColors.primary,
       AppColors.accentGold,
     ];
+    final f = NumberFormat.decimalPattern('id');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,7 +187,7 @@ class _PointPageState extends State<PointPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text('Total Spent', style: GoogleFonts.inter(color: AppColors.textMediumGrey, fontSize: 12)),
-                                                            Text('${totalSpent.toInt()} pts', style: GoogleFonts.inter(color: AppColors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+                              Text('${f.format(totalSpent.toInt())} pts', style: GoogleFonts.inter(color: AppColors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
                             ],
                           ),
                         )
@@ -200,6 +203,7 @@ class _PointPageState extends State<PointPage> {
   }
 
   Widget _buildLegend(List<Color> chartColors, double totalSpent) {
+    final f = NumberFormat.decimalPattern('id');
     return Column(
       children: List.generate(spendingByCategory.length, (i) {
         final entry = spendingByCategory.entries.elementAt(i);
@@ -237,7 +241,7 @@ class _PointPageState extends State<PointPage> {
                 ),
               ),
               const SizedBox(width: 8),
-              Text('${entry.key} - ${entry.value.toInt()} pts ($percentage%)', style: const TextStyle(color: AppColors.textPrimary)),
+              Text('${entry.key} - ${f.format(entry.value.toInt())} pts ($percentage%)', style: const TextStyle(color: AppColors.textPrimary)),
             ],
           ),
         );
