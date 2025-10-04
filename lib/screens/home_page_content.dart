@@ -364,26 +364,18 @@ class _HomePageContentState extends State<HomePageContent> {
                     SizedBox(
                       height: 100,
                       width: double.infinity,
-                      child: voucher.image != null
-                          ? Image.asset(
-                              voucher.image!,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  const Center(
-                                    child: Icon(
-                                      Icons.image_not_supported,
-                                      color: AppColors.lightGrey,
-                                      size: 40,
-                                    ),
-                                  ),
-                            )
-                          : const Center(
+                      child: Image.asset(
+                        voucher.image,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Center(
                               child: Icon(
                                 Icons.image_not_supported,
                                 color: AppColors.lightGrey,
                                 size: 40,
                               ),
                             ),
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(12.0),

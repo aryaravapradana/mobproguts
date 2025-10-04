@@ -150,7 +150,7 @@ class _RedeemedVoucherDetailPageState extends State<RedeemedVoucherDetailPage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
+        color: color.withAlpha((255 * 0.15).round()),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(

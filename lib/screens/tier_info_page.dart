@@ -32,7 +32,7 @@ class TierInfoPage extends StatelessWidget {
                     gradient: getGradientForTier(tier.name),
                     boxShadow: [
                       BoxShadow(
-                        color: tier.color.withOpacity(0.4),
+                        color: tier.color.withAlpha((255 * 0.4).round()),
                         blurRadius: 10,
                         offset: const Offset(0, 5),
                       )
@@ -104,7 +104,7 @@ class TierInfoPage extends StatelessWidget {
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: tier.color.withOpacity(0.3), width: 1),
+        side: BorderSide(color: tier.color.withAlpha((255 * 0.3).round()), width: 1),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20.0),

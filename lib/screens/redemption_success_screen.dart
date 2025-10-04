@@ -104,7 +104,7 @@ class RedemptionSuccessScreen extends StatelessWidget {
                 const SizedBox(height: 12),
                 _buildInfoRow('Remaining Points:', '${user.poin} Points'),
                 const SizedBox(height: 12),
-                _buildInfoRow('Date:', formattedDate + ' (GMT+7)'),
+                _buildInfoRow('Date:', '$formattedDate (GMT+7)'),
               ],
             ),
           ),
