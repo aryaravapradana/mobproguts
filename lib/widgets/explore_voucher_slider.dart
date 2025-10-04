@@ -8,7 +8,7 @@ class PromoItem {
   final String subtitle;
   final String imageUrl;
 
-  PromoItem({
+  const PromoItem({
     required this.title,
     required this.subtitle,
     required this.imageUrl,
@@ -28,17 +28,17 @@ class _ExploreVoucherSliderState extends State<ExploreVoucherSlider> {
   
 
   final List<PromoItem> promos = [
-    PromoItem(
+    const PromoItem(
       title: "Special Offer For You!",
       subtitle: "Get 20% off on your next purchase.",
       imageUrl: "assets/images/promo_fashion.png",
     ),
-    PromoItem(
+    const PromoItem(
       title: "Weekend Promo!",
       subtitle: "Free parking 2 jam di mall pilihan.",
       imageUrl: "assets/images/promo_movie.png",
     ),
-    PromoItem(
+    const PromoItem(
       title: "Cashback Bonus!",
       subtitle: "Top up dapat cashback 10%.",
       imageUrl: "assets/images/promo_coffee.png",

@@ -179,7 +179,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             );
           },
-          child: Text(
+          child: const Text(
             "Register Now",
             style: TextStyle(
               fontWeight: FontWeight.bold,
