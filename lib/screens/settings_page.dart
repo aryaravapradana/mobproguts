@@ -45,7 +45,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Changes saved successfully!'),
+        content: Text('Perubahan berhasil, silahkan log out untuk melihat perubahan!'),
         backgroundColor: AppColors.success,
       ),
     );
