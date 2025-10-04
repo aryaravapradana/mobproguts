@@ -17,7 +17,7 @@ class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: AppColors.darkBase,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -25,16 +25,16 @@ class _NotificationPageState extends State<NotificationPage> {
             pinned: true,
             expandedHeight: 100.0,
             flexibleSpace: FlexibleSpaceBar(
-              title: const Text('Notifikasi', style: TextStyle(color: AppColors.textDark)),
+              title: const Text('Notifikasi', style: TextStyle(color: AppColors.textPrimary)),
               centerTitle: true,
             ),
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios, color: AppColors.textDark),
+              icon: const Icon(Icons.arrow_back_ios, color: AppColors.textPrimary),
               onPressed: () => Navigator.of(context).pop(),
             ),
             actions: [
               IconButton(
-                icon: const Icon(Icons.more_vert, color: AppColors.textDark),
+                icon: const Icon(Icons.more_vert, color: AppColors.textPrimary),
                 onPressed: () {},
               ),
             ],
@@ -44,7 +44,7 @@ class _NotificationPageState extends State<NotificationPage> {
                 height: 1.0,
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [AppColors.primary, AppColors.primaryDark, AppColors.danger],
+                    colors: [AppColors.fnbGoldNeon, AppColors.fnborange, AppColors.danger],
                   ),
                 ),
               ),
