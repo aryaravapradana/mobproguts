@@ -14,6 +14,7 @@ import 'package:project_midterms/widgets/daily_reward_card.dart';
 import '../widgets/points_card.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:project_midterms/data/voucher_data.dart';
+import 'package:project_midterms/screens/notification_page.dart';
 import 'package:project_midterms/screens/voucher_detail_page.dart';
 
 class HomePageContent extends StatefulWidget {
@@ -32,6 +33,23 @@ class _HomePageContentState extends State<HomePageContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Hey, ${widget.user.name}!",
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationPage()),
+              );
+            },
+            icon: const Icon(Icons.notifications_none_rounded),
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0),

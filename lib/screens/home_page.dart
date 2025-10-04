@@ -49,23 +49,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          _selectedIndex == 0 ? "Hey, ${widget.user.name}!" : ["Home", "Vouchers", "Member", "Account"][_selectedIndex],
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NotificationPage()),
-              );
-            },
-            icon: const Icon(Icons.notifications_none_rounded),
-          ),
-        ],
-      ),
       body: IndexedStack( // Use IndexedStack to preserve state of pages
         index: _selectedIndex,
         children: _pages,
