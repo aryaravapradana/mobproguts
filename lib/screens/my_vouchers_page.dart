@@ -6,6 +6,8 @@ import 'package:project_midterms/models/voucher.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
+import 'package:project_midterms/screens/redeemed_voucher_detail_page.dart';
+
 class MyVouchersPage extends StatelessWidget {
   const MyVouchersPage({super.key});
 
@@ -18,11 +20,11 @@ class MyVouchersPage extends StatelessWidget {
           style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
         ),
       ),
-      body: _buildVoucherList(redeemedVouchers),
+      body: _buildVoucherList(context, redeemedVouchers),
     );
   }
 
-  Widget _buildVoucherList(List<Voucher> vouchers) {
+  Widget _buildVoucherList(BuildContext context, List<Voucher> vouchers) {
     if (vouchers.isEmpty) {
       return Center(
         child: Column(
@@ -55,9 +57,19 @@ class MyVouchersPage extends StatelessWidget {
       itemCount: vouchers.length,
       itemBuilder: (context, index) {
         final voucher = vouchers[index];
-        return _buildVoucherCard(
-          voucher,
-        ).animate().fadeIn(duration: 300.ms, delay: (50 * index).ms);
+        return InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RedeemedVoucherDetailPage(voucher: voucher),
+              ),
+            );
+          },
+          child: _buildVoucherCard(
+            voucher,
+          ).animate().fadeIn(duration: 300.ms, delay: (50 * index).ms),
+        );
       },
     );
   }

@@ -3,6 +3,7 @@ import 'package:project_midterms/auth/login_page.dart';
 import 'package:project_midterms/models/user.dart';
 import 'package:project_midterms/screens/member_page.dart';
 import 'package:project_midterms/screens/membership_detail_page.dart';
+import 'package:project_midterms/screens/my_vouchers_page.dart';
 import 'package:project_midterms/screens/settings_page.dart';
 import 'package:project_midterms/screens/redeem_history_page.dart';
 import 'package:project_midterms/screens/point_page.dart';
@@ -130,6 +131,16 @@ class _AccountPageState extends State<AccountPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => PointPage(user: widget.user)),
+              );
+            },
+          ),
+          _buildListTile(
+            icon: Icons.local_activity,
+            title: 'My Vouchers',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MyVouchersPage()),
               );
             },
           ),
