@@ -11,17 +11,19 @@ void main() {
 class LoyaltyApp extends StatelessWidget {
   const LoyaltyApp({super.key});
 
+  static final ThemeData _theme = _buildTheme();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Loyalty Points Mall',
-      theme: _buildTheme(context),
+      theme: _theme,
       home: const LoginPage(),
     );
   }
 
-  ThemeData _buildTheme(BuildContext context) {
+  static ThemeData _buildTheme() {
     final baseTheme = ThemeData.dark();
     final textTheme = GoogleFonts.poppinsTextTheme(baseTheme.textTheme).apply(
       bodyColor: AppColors.onBackground,
@@ -38,7 +40,6 @@ class LoyaltyApp extends StatelessWidget {
         surface: AppColors.surface,
         onPrimary: AppColors.onPrimary,
         onSurface: AppColors.onSurface,
-
         error: AppColors.error,
         brightness: Brightness.dark,
       ),

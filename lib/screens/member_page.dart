@@ -228,11 +228,11 @@ class _MemberPageState extends State<MemberPage>
             version: QrVersions.auto,
             size: 200.0,
             backgroundColor: Colors.white,
-            eyeStyle: QrEyeStyle(
+            eyeStyle: const QrEyeStyle(
               color: AppColors.onPrimary,
               eyeShape: QrEyeShape.square,
             ),
-            dataModuleStyle: QrDataModuleStyle(
+            dataModuleStyle: const QrDataModuleStyle(
               color: AppColors.onPrimary,
               dataModuleShape: QrDataModuleShape.circle,
             ),

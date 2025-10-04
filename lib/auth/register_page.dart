@@ -190,13 +190,13 @@ class _RegisterPageState extends State<RegisterPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
+        const Text(
           "Already have an account?",
           style: TextStyle(color: AppColors.onSurface),
         ),
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text(
+          child: const Text(
             "Login",
             style: TextStyle(
               fontWeight: FontWeight.bold,
