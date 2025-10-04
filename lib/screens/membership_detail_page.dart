@@ -85,7 +85,7 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              FaIcon(getFaIconForTier(_currentTier.name), color: getTextColorForTier(_currentTier.name), size: 50),
+              Image.asset(_currentTier.imagePath!, width: 50, height: 50),
               const SizedBox(height: 12),
               Text(
                 _currentTier.name,
@@ -150,7 +150,7 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
                   width: barWidth * _progress,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                                        color: isHighestTier ? glowColor : Colors.white.withAlpha((255 * 0.8).round()),
+                                        color: isHighestTier ? Colors.white : Colors.white.withAlpha((255 * 0.8).round()),
                   ),
                 ),
                 // The glowing indicator
@@ -285,7 +285,7 @@ class _TierCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(tier.icon, color: tier.color, size: 30),
+            Image.asset(tier.imagePath!, width: 30, height: 30),
             const SizedBox(height: 8),
             Text(tier.name, style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.bold)),
             Text('${f.format(tier.minXp)} XP', style: TextStyle(fontSize: 12, color: AppColors.onSurface.withAlpha(179))),

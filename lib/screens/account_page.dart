@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_midterms/auth/login_page.dart';
+import 'package:project_midterms/data/membership_data.dart';
 import 'package:project_midterms/models/user.dart';
 import 'package:project_midterms/screens/member_page.dart';
 import 'package:project_midterms/screens/membership_detail_page.dart';
@@ -48,6 +49,7 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   Widget _buildProfileHeader() {
+    final tier = tiers.firstWhere((t) => t.name == widget.user.level);
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -102,7 +104,13 @@ class _AccountPageState extends State<AccountPage> {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right, color: Colors.white, size: 28),
+              Row(
+                children: [
+                  Image.asset(tier.imagePath!, width: 40, height: 40),
+                  const SizedBox(width: 12),
+                  const Icon(Icons.chevron_right, color: Colors.white, size: 28),
+                ],
+              ),
             ],
           ),
         ),

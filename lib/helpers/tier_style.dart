@@ -45,11 +45,13 @@ LinearGradient getGradientForTier(String level) {
 Color getTextColorForTier(String level) {
   switch (level) {
     case 'Bronze':
-      return const Color(0xFFffe998);
+      return Colors.white;
     case 'Silver':
       return AppColors.darkGrey;
     case 'Gold':
       return const Color(0xFF57370d);
+    case 'Platinum':
+      return AppColors.darkGrey;
     case 'Diamond':
       return Colors.white;
     default:
@@ -65,6 +67,8 @@ Color getGlowColorForTier(String level) {
       return const Color(0xFFd6d6d6);
     case 'Gold':
       return const Color(0xFFffd700);
+    case 'Platinum':
+      return AppColors.platinum;
     case 'Diamond':
       return const Color(0xFF81d4fa);
     default:
