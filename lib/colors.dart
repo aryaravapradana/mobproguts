@@ -27,4 +27,18 @@ class AppColors {
   static const Color grey = Color(0xFF9E9E9E);
   static const Color lightGrey = Color(0xFFBDBDBD);
   static const Color darkGrey = Color(0xFF424242);
+
+  // New UI Colors
+  static const Color primaryDark = Color(0xFFFFA500);
+  static const Color danger = Color(0xFFFF4500);
+  static const Color backgroundLight = Color(0xFFF8F6F6);
+  static const Color backgroundDark = Color(0xFF121212);
+  static const Color backgroundHeader = Color(0xFF000000);
+  static const Color cardDark = Color.fromRGBO(28, 28, 30, 0.7);
+  static const Color textLight = Color(0xFF1C1C1E);
+  static const Color textDark = Color(0xFFFFFFFF);
+  static const Color textMutedLight = Color(0xFF8A8A8E);
+  static const Color textMutedDark = Color(0xFFA9A9A9);
+  static const Color iconBgDark = Color.fromRGBO(44, 44, 46, 0.7);
+  static const Color borderDark = Color(0xFF3A3A3C);
 }

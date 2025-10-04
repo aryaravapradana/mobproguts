@@ -45,6 +45,8 @@ dependencies:
   font_awesome_flutter: ^10.7.0
   shared_preferences: ^2.5.3
   fl_chart: ^0.68.0
+  glass_kit: ^4.0.2
+  simple_gradient_text: ^1.3.0
 
 
 dev_dependencies:
