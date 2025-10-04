@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:project_midterms/colors.dart';
 import 'package:project_midterms/models/user.dart';
 import 'package:project_midterms/models/voucher.dart';
-import 'package:project_midterms/screens/membership_detail_page.dart';
 import 'package:project_midterms/screens/missions_page.dart';
 import 'package:project_midterms/screens/my_vouchers_page.dart';
 import 'package:project_midterms/screens/settings_page.dart';
@@ -309,7 +309,7 @@ class _HomePageContentState extends State<HomePageContent> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            "${voucher.cost} points",
+                            "${NumberFormat.decimalPattern('id').format(voucher.cost)} points",
                             style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w600,
                               fontSize: 12,
@@ -332,7 +332,7 @@ class _HomePageContentState extends State<HomePageContent> {
 
 class _InteractivePointsDisplay extends StatefulWidget {
   final UserModel user;
-  const _InteractivePointsDisplay({super.key, required this.user});
+  const _InteractivePointsDisplay({required this.user});
 
   @override
   State<_InteractivePointsDisplay> createState() => _InteractivePointsDisplayState();

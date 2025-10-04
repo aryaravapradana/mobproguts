@@ -1,5 +1,3 @@
-
-
 class Voucher {
   final String title;
   final int cost;
@@ -24,16 +22,28 @@ class Voucher {
   Voucher copyWith({
     DateTime? redemptionDate,
     bool? isUsed,
+    DateTime? expiryDate,
   }) {
     return Voucher(
       title: title,
       cost: cost,
       image: image,
-      expiryDate: expiryDate,
+      expiryDate: expiryDate ?? this.expiryDate,
       requiredTier: requiredTier,
       description: description,
       redemptionDate: redemptionDate ?? this.redemptionDate,
       isUsed: isUsed ?? this.isUsed,
     );
   }
+}
+
+
+class VoucherCategory {
+  final String name;
+  final List<Voucher> vouchers;
+
+  VoucherCategory({
+    required this.name,
+    required this.vouchers,
+  });
 }

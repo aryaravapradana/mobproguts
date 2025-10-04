@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:project_midterms/colors.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:project_midterms/models/user.dart';
+import 'package:project_midterms/data/membership_data.dart';
 
 import 'package:project_midterms/screens/redemption_success_screen.dart';
 
@@ -19,6 +20,25 @@ class VoucherDetailPage extends StatefulWidget {
 }
 
 class _VoucherDetailPageState extends State<VoucherDetailPage> {
+  int _getTierRank(String tierName) {
+    return tiers.indexWhere((tier) => tier.name == tierName);
+  }
+
+  DateTime _calculateExpiryDate(DateTime baseDate, String tier) {
+    switch (tier) {
+      case 'Silver':
+        return baseDate.add(const Duration(days: 15));
+      case 'Gold':
+        return baseDate.add(const Duration(days: 30));
+      case 'Platinum':
+        return baseDate.add(const Duration(days: 60));
+      case 'Diamond':
+        return baseDate.add(const Duration(days: 90));
+      default: // Bronze and others
+        return baseDate;
+    }
+  }
+
   void _redeemVoucher() {
     if (widget.user.poin < widget.voucher.cost) {
       _showFeedbackDialog(
@@ -29,12 +49,28 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
       return;
     }
 
+    if (widget.voucher.requiredTier != null) {
+      final userTierRank = _getTierRank(widget.user.level);
+      final requiredTierRank = _getTierRank(widget.voucher.requiredTier!);
+
+      if (userTierRank < requiredTierRank) {
+        _showFeedbackDialog(
+          title: "Peringatan Tier",
+          content: "Tier Anda belum bisa redeem voucher ini. Anda harus menjadi member tier ${widget.voucher.requiredTier} untuk redeem voucher ini.",
+          isSuccess: false,
+        );
+        return;
+      }
+    }
+
+    final f = NumberFormat.decimalPattern('id');
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surface,
         title: const Text('Confirm Redemption'),
-        content: Text('Are you sure you want to spend ${widget.voucher.cost} points to get this voucher?'),
+        content: Text('Are you sure you want to spend ${f.format(widget.voucher.cost)} points to get this voucher?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -44,7 +80,15 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
             onPressed: () {
               setState(() {
                 widget.user.poin -= widget.voucher.cost;
-                final redeemedVoucher = widget.voucher.copyWith(redemptionDate: DateTime.now());
+                
+                final redemptionDate = DateTime.now();
+                final baseExpiryDate = widget.voucher.expiryDate ?? redemptionDate.add(const Duration(days: 30));
+                final newExpiryDate = _calculateExpiryDate(baseExpiryDate, widget.user.level);
+
+                final redeemedVoucher = widget.voucher.copyWith(
+                  redemptionDate: redemptionDate,
+                  expiryDate: newExpiryDate,
+                );
                 redeemedVouchers.add(redeemedVoucher);
               });
               Navigator.pop(context); // Close confirmation dialog
@@ -194,7 +238,7 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
                       const Icon(Icons.monetization_on, color: AppColors.primary, size: 20),
                       const SizedBox(width: 12),
                       Text(
-                        "${widget.voucher.cost} points",
+                        "${NumberFormat.decimalPattern('id').format(widget.voucher.cost)} points",
                         style: GoogleFonts.poppins(
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
