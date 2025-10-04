@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_midterms/data/membership_data.dart';
 import 'package:project_midterms/models/user.dart';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -119,7 +120,7 @@ class _MemberPageState extends State<MemberPage>
   }
 
   Widget _buildFrontContent() {
-    final tierColor = getTextColorForTier(widget.user.level);
+    final tier = tiers.firstWhere((t) => t.name == widget.user.level);
     final cardGradient = getGradientForTier(widget.user.level);
 
     return ClipRRect(
@@ -141,26 +142,25 @@ class _MemberPageState extends State<MemberPage>
               ),
             ),
           ),
-          // Layer 3: The actual content
+          // Layer 3: The tier logo in the center
+          Align(
+            alignment: const Alignment(0.0, -0.2),
+            child: Image.asset(tier.imagePath!, width: 200, height: 200),
+          ),
+          // Layer 4: The actual content
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      widget.user.level.toUpperCase(),
-                      style: GoogleFonts.poppins(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: tierColor,
-                        letterSpacing: 2,
-                      ),
-                    ),
-                    Icon(Icons.star, color: tierColor, size: 28),
-                  ],
+                Text(
+                  widget.user.level.toUpperCase(),
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    letterSpacing: 2,
+                  ),
                 ),
                 const Spacer(),
                 Text(

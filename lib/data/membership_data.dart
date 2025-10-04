@@ -8,6 +8,7 @@ final List<MembershipTier> tiers = [
     name: 'Bronze',
     minXp: 0,
     icon: Icons.shield_outlined,
+    imagePath: 'lib/assets/tier_logos/bronze.png',
     color: AppColors.bronze,
     perks: [
       Perk(name: "Welcome Bonus 100 Poin", icon: Icons.card_giftcard),
@@ -19,6 +20,7 @@ final List<MembershipTier> tiers = [
     name: 'Silver',
     minXp: 300,
     icon: Icons.star_border,
+    imagePath: 'lib/assets/tier_logos/silver.png',
     color: AppColors.silver,
     perks: [
       Perk(name: "Cashback 3% per transaksi", icon: Icons.replay_circle_filled_outlined),
@@ -31,6 +33,7 @@ final List<MembershipTier> tiers = [
     name: 'Gold',
     minXp: 800,
     icon: Icons.star,
+    imagePath: 'lib/assets/tier_logos/gold.png',
     color: AppColors.gold,
     perks: [
       Perk(name: "Cashback 5% per transaksi", icon: Icons.replay_circle_filled_outlined),
@@ -44,6 +47,7 @@ final List<MembershipTier> tiers = [
     name: 'Platinum',
     minXp: 1100,
     icon: Icons.verified_outlined,
+    imagePath: 'lib/assets/tier_logos/platinum.png',
     color: AppColors.platinum,
     perks: [
       Perk(name: "Cashback 7% per transaksi", icon: Icons.replay_circle_filled_outlined),
@@ -57,6 +61,7 @@ final List<MembershipTier> tiers = [
     name: 'Diamond',
     minXp: 1500,
     icon: Icons.diamond_outlined,
+    imagePath: 'lib/assets/tier_logos/diamond.png',
     color: AppColors.diamond,
     perks: [
       Perk(name: "Cashback 10% per transaksi", icon: Icons.replay_circle_filled_outlined),
