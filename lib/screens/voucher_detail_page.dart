@@ -7,6 +7,8 @@ import 'package:project_midterms/colors.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:project_midterms/models/user.dart';
 
+import 'package:project_midterms/screens/redemption_success_screen.dart';
+
 class VoucherDetailPage extends StatefulWidget {
   final Voucher voucher;
   final UserModel user;
@@ -59,30 +61,40 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
   }
 
   void _showFeedbackDialog({required String title, required String content, required bool isSuccess}) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.surface,
-        title: Row(
-          children: [Icon(isSuccess ? Icons.check_circle : Icons.cancel, color: isSuccess ? AppColors.success : AppColors.error),
-            const SizedBox(width: 10),
-            Expanded(child: Text(title)),
+    if (isSuccess) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RedemptionSuccessScreen(
+            voucher: widget.voucher,
+            user: widget.user,
+            redemptionDate: DateTime.now(),
+          ),
+        ),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          backgroundColor: AppColors.surface,
+          title: Row(
+            children: [Icon(isSuccess ? Icons.check_circle : Icons.cancel, color: isSuccess ? AppColors.success : AppColors.error),
+              const SizedBox(width: 10),
+              Expanded(child: Text(title)),
+            ],
+          ),
+          content: Text(content),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text('OK', style: TextStyle(color: AppColors.primary)),
+            ),
           ],
         ),
-        content: Text(content),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context); // Close the dialog
-              if (isSuccess) {
-                Navigator.pop(context, true); // Pop the detail page with a `true` result
-              }
-            },
-            child: const Text('OK', style: TextStyle(color: AppColors.primary)),
-          ),
-        ],
-      ),
-    );
+      );
+    }
   }
 
   @override
