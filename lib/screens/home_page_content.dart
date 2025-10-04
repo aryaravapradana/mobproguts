@@ -5,6 +5,9 @@ import 'package:project_midterms/models/user.dart';
 import 'package:project_midterms/models/voucher.dart';
 import 'package:project_midterms/screens/membership_detail_page.dart';
 import 'package:project_midterms/screens/missions_page.dart';
+import 'package:project_midterms/screens/my_vouchers_page.dart';
+import 'package:project_midterms/screens/settings_page.dart';
+import 'package:project_midterms/screens/transaksi_page.dart';
 import 'package:project_midterms/screens/voucher_page.dart';
 import 'package:project_midterms/widgets/animated_hover_card.dart';
 import 'package:project_midterms/widgets/daily_reward_card.dart';
@@ -12,20 +15,6 @@ import '../widgets/points_card.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:project_midterms/data/voucher_data.dart';
 import 'package:project_midterms/screens/voucher_detail_page.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-
-class PromoBanner {
-  final String title;
-  final String subtitle;
-  final String imageUrl;
-
-  PromoBanner({
-    required this.title,
-    required this.subtitle,
-    required this.imageUrl,
-  });
-}
-// -----------------------------------------
 
 class HomePageContent extends StatefulWidget {
   final UserModel user;
@@ -100,6 +89,8 @@ class _HomePageContentState extends State<HomePageContent> {
                 ).animate().fadeIn(duration: 300.ms, delay: 200.ms),
               ),
               const SizedBox(height: 24),
+              _buildActionButtons(context).animate().fadeIn(duration: 300.ms, delay: 300.ms),
+              const SizedBox(height: 24),
               _buildSectionHeader(
                 context,
                 title: "Explore Vouchers",
@@ -111,25 +102,56 @@ class _HomePageContentState extends State<HomePageContent> {
                     ),
                   );
                 },
-              ).animate().fadeIn(duration: 300.ms, delay: 300.ms),
-              const SizedBox(height: 16),
-              _buildPromoBanner().animate().fadeIn(
-                duration: 300.ms,
-                delay: 400.ms,
-              ),
-              const SizedBox(height: 24),
-              _buildSectionHeader(
-                context,
-                title: "Hot Vouchers",
-              ).animate().fadeIn(duration: 300.ms, delay: 500.ms),
+              ).animate().fadeIn(duration: 300.ms, delay: 400.ms),
               const SizedBox(height: 16),
               _buildVoucherCarousel(
                 context,
                 widget.user,
-              ).animate().fadeIn(duration: 300.ms, delay: 600.ms),
+              ).animate().fadeIn(duration: 300.ms, delay: 500.ms),
               const SizedBox(height: 24),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButtons(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildActionButton(context, Icons.local_activity, "Vouchers", () {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const MyVouchersPage()));
+          }),
+          _buildActionButton(context, Icons.explore, "Missions", () {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => MissionsPage(user: widget.user)));
+          }),
+          _buildActionButton(context, Icons.history, "History", () {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const TransaksiPage()));
+          }),
+          _buildActionButton(context, Icons.settings, "Settings", () {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsPage(user: widget.user)));
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton(BuildContext context, IconData icon, String label, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: AppColors.primary, size: 30),
+            const SizedBox(height: 8),
+            Text(label, style: GoogleFonts.poppins(fontSize: 12, color: AppColors.onSurface)),
+          ],
         ),
       ),
     );
@@ -206,116 +228,6 @@ class _HomePageContentState extends State<HomePageContent> {
               ),
             ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildPromoBanner() {
-    final promos = [
-      PromoBanner(
-        title: "Diskon 50% Kopi Pilihan",
-        subtitle: "Tukar 800 poin buat ngopi hemat!",
-        imageUrl: "assets/images/promo_coffee.png",
-      ),
-      PromoBanner(
-        title: "Voucher Belanja Rp50.000",
-        subtitle: "Hanya 1000 poin, belanja jadi lebih irit!",
-        imageUrl: "assets/images/promo_fashion.png",
-      ),
-      PromoBanner(
-        title: "Gratis Tiket Nonton",
-        subtitle: "Ajak temanmu nonton dengan 1200 poin!",
-        imageUrl: "assets/images/promo_movie.png",
-      ),
-    ];
-
-    return CarouselSlider.builder(
-      itemCount: promos.length,
-      itemBuilder: (context, index, realIndex) {
-        final promo = promos[index];
-        return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 5),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Image.asset(
-                  promo.imageUrl,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    color: AppColors.surface,
-                    child: const Center(
-                      child: Icon(
-                        Icons.image_not_supported_outlined,
-                        color: AppColors.lightGrey,
-                        size: 40,
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.black.withAlpha((255 * 0.6).round()),
-                        Colors.transparent,
-                      ],
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.center,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 20,
-                  left: 20,
-                  right: 20,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        promo.title,
-                        style: GoogleFonts.poppins(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          shadows: [
-                            Shadow(
-                              blurRadius: 2.0,
-                              color: Colors.black.withAlpha((255 * 0.5).round()),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        promo.subtitle,
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          color: Colors.white.withAlpha((255 * 0.9).round()),
-                          shadows: [
-                            Shadow(
-                              blurRadius: 2.0,
-                              color: Colors.black.withAlpha((255 * 0.5).round()),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-      options: CarouselOptions(
-        height: 160,
-        autoPlay: true,
-        enlargeCenterPage: true,
-        viewportFraction: 0.88,
-        autoPlayInterval: const Duration(seconds: 5),
-        enlargeStrategy: CenterPageEnlargeStrategy.zoom,
       ),
     );
   }
