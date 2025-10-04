@@ -4,6 +4,7 @@ import 'package:project_midterms/colors.dart';
 import 'package:project_midterms/data/redeem_history_data.dart';
 import 'package:project_midterms/models/voucher.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class MyVouchersPage extends StatelessWidget {
   const MyVouchersPage({super.key});
@@ -12,7 +13,10 @@ class MyVouchersPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Vouchers', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+        title: Text(
+          'My Vouchers',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        ),
       ),
       body: _buildVoucherList(redeemedVouchers),
     );
@@ -28,17 +32,21 @@ class MyVouchersPage extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               "You haven't redeemed any vouchers yet.",
-              style: GoogleFonts.poppins(fontSize: 16, color: AppColors.onSurface),
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                color: AppColors.onSurface,
+              ),
             ),
           ],
         ),
       );
     }
 
-    // Sort vouchers: expiring soon first, then by redemption date
     vouchers.sort((a, b) {
-      final aDate = a.expiryDate ?? DateTime.now().add(const Duration(days: 999));
-      final bDate = b.expiryDate ?? DateTime.now().add(const Duration(days: 999));
+      final aDate =
+          a.expiryDate ?? DateTime.now().add(const Duration(days: 999));
+      final bDate =
+          b.expiryDate ?? DateTime.now().add(const Duration(days: 999));
       return aDate.compareTo(bDate);
     });
 
@@ -47,7 +55,9 @@ class MyVouchersPage extends StatelessWidget {
       itemCount: vouchers.length,
       itemBuilder: (context, index) {
         final voucher = vouchers[index];
-        return _buildVoucherCard(voucher);
+        return _buildVoucherCard(
+          voucher,
+        ).animate().fadeIn(duration: 300.ms, delay: (50 * index).ms);
       },
     );
   }
@@ -63,13 +73,15 @@ class MyVouchersPage extends StatelessWidget {
       final daysLeft = expiryDate.difference(now).inDays;
       if (now.isAfter(expiryDate)) {
         isExpired = true;
-        expiryText = 'Expired on ${DateFormat('d MMM yyyy').format(expiryDate)}';
+        expiryText =
+            'Expired on ${DateFormat('d MMM yyyy').format(expiryDate)}';
         expiryColor = AppColors.error;
       } else if (daysLeft < 7) {
         expiryText = 'Expires in $daysLeft day(s)';
         expiryColor = Colors.orange.shade700;
       } else {
-        expiryText = 'Expires on ${DateFormat('d MMM yyyy').format(expiryDate)}';
+        expiryText =
+            'Expires on ${DateFormat('d MMM yyyy').format(expiryDate)}';
       }
     }
 
@@ -84,11 +96,17 @@ class MyVouchersPage extends StatelessWidget {
               width: 60,
               height: 60,
               decoration: BoxDecoration(
-                color: isExpired ? AppColors.darkGrey : AppColors.primary.withAlpha(26),
+                color: isExpired
+                    ? AppColors.darkGrey
+                    : AppColors.primary.withAlpha(26),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
-                child: Icon(isExpired ? Icons.cancel_outlined : Icons.local_activity, color: isExpired ? AppColors.lightGrey : AppColors.primary, size: 30),
+                child: Icon(
+                  isExpired ? Icons.cancel_outlined : Icons.local_activity,
+                  color: isExpired ? AppColors.lightGrey : AppColors.primary,
+                  size: 30,
+                ),
               ),
             ),
             const SizedBox(width: 16),
@@ -101,8 +119,12 @@ class MyVouchersPage extends StatelessWidget {
                     style: GoogleFonts.poppins(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
-                      color: isExpired ? AppColors.onSurface.withAlpha(100) : AppColors.onSurface,
-                      decoration: isExpired ? TextDecoration.lineThrough : TextDecoration.none,
+                      color: isExpired
+                          ? AppColors.onSurface.withAlpha(100)
+                          : AppColors.onSurface,
+                      decoration: isExpired
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none,
                     ),
                   ),
                   const SizedBox(height: 8),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_midterms/models/user.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project_midterms/colors.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -15,7 +15,8 @@ class MemberPage extends StatefulWidget {
   State<MemberPage> createState() => _MemberPageState();
 }
 
-class _MemberPageState extends State<MemberPage> with SingleTickerProviderStateMixin {
+class _MemberPageState extends State<MemberPage>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   bool _isFlipped = false;
   bool _isHovering = false;
@@ -51,7 +52,10 @@ class _MemberPageState extends State<MemberPage> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Member Card', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+        title: Text(
+          'Member Card',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Center(
         child: MouseRegion(
@@ -85,7 +89,7 @@ class _MemberPageState extends State<MemberPage> with SingleTickerProviderStateM
     final Matrix4 transform = isFront
         ? Matrix4.identity()
         : (Matrix4.identity()..rotateY(math.pi));
-    
+
     final glowColor = getGlowColorForTier(level);
     final isHovering = _isHovering;
 
@@ -103,7 +107,7 @@ class _MemberPageState extends State<MemberPage> with SingleTickerProviderStateM
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: glowColor.withOpacity(isHovering ? 0.85 : 0.6),
+              color: glowColor.withAlpha((255 * (isHovering ? 0.85 : 0.6)).round()),
               blurRadius: isHovering ? 35 : 20,
               spreadRadius: isHovering ? 4 : 2,
             ),
@@ -123,18 +127,14 @@ class _MemberPageState extends State<MemberPage> with SingleTickerProviderStateM
       child: Stack(
         children: [
           // Layer 1: The new tier-specific color gradient
-          Container(
-            decoration: BoxDecoration(
-              gradient: cardGradient,
-            ),
-          ),
+          Container(decoration: BoxDecoration(gradient: cardGradient)),
           // Layer 2: The subtle "pattern" overlay
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.white.withOpacity(0.1),
-                  Colors.black.withOpacity(0.2)
+                  Colors.white.withAlpha((255 * 0.1).round()),
+                  Colors.black.withAlpha((255 * 0.2).round()),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -168,7 +168,7 @@ class _MemberPageState extends State<MemberPage> with SingleTickerProviderStateM
                   style: GoogleFonts.poppins(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white.withOpacity(0.95),
+                    color: Colors.white.withAlpha((255 * 0.95).round()),
                     shadows: [
                       const Shadow(
                         blurRadius: 4.0,
@@ -183,7 +183,7 @@ class _MemberPageState extends State<MemberPage> with SingleTickerProviderStateM
                   "MEMBER ID: ${widget.user.id}",
                   style: GoogleFonts.poppins(
                     fontSize: 14,
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withAlpha((255 * 0.8).round()),
                     letterSpacing: 1.5,
                   ),
                 ),
@@ -193,12 +193,19 @@ class _MemberPageState extends State<MemberPage> with SingleTickerProviderStateM
                   children: [
                     Text(
                       "Tap to scan QR",
-                      style: GoogleFonts.poppins(color: Colors.white.withOpacity(0.7), fontSize: 12),
+                      style: GoogleFonts.poppins(
+                        color: Colors.white.withAlpha((255 * 0.7).round()),
+                        fontSize: 12,
+                      ),
                     ),
                     const SizedBox(width: 8),
-                    Icon(Icons.touch_app, color: Colors.white.withOpacity(0.7), size: 16),
+                    Icon(
+                      Icons.touch_app,
+                      color: Colors.white.withAlpha((255 * 0.7).round()),
+                      size: 16,
+                    ),
                   ],
-                )
+                ),
               ],
             ),
           ),
@@ -221,13 +228,22 @@ class _MemberPageState extends State<MemberPage> with SingleTickerProviderStateM
             version: QrVersions.auto,
             size: 200.0,
             backgroundColor: Colors.white,
-            eyeStyle: QrEyeStyle(color: AppColors.onPrimary, eyeShape: QrEyeShape.square),
-            dataModuleStyle: QrDataModuleStyle(color: AppColors.onPrimary, dataModuleShape: QrDataModuleShape.circle),
+            eyeStyle: QrEyeStyle(
+              color: AppColors.onPrimary,
+              eyeShape: QrEyeShape.square,
+            ),
+            dataModuleStyle: QrDataModuleStyle(
+              color: AppColors.onPrimary,
+              dataModuleShape: QrDataModuleShape.circle,
+            ),
           ),
           const SizedBox(height: 24),
           Text(
             "Scan this code for transactions",
-            style: GoogleFonts.poppins(color: AppColors.onSurface, fontSize: 14),
+            style: GoogleFonts.poppins(
+              color: AppColors.onSurface,
+              fontSize: 14,
+            ),
           ),
         ],
       ),

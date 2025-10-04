@@ -94,7 +94,7 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
               const SizedBox(height: 4),
               Text(
                 'Total XP: ${_currentUserXp.toStringAsFixed(1)} XP',
-                style: GoogleFonts.poppins(color: getTextColorForTier(_currentTier.name).withOpacity(0.8), fontSize: 16),
+                                style: GoogleFonts.poppins(color: getTextColorForTier(_currentTier.name).withAlpha((255 * 0.8).round()), fontSize: 16),
               ),
               const SizedBox(height: 20),
               _buildProgressBar(),
@@ -115,7 +115,7 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
         if (!isHighestTier)
           Text(
             'Add ${_xpNeeded.toStringAsFixed(1)} more XP to reach ${_nextTier!.name}',
-            style: GoogleFonts.poppins(color: textColor.withOpacity(0.9), fontWeight: FontWeight.w600),
+                        style: GoogleFonts.poppins(color: textColor.withAlpha((255 * 0.9).round()), fontWeight: FontWeight.w600),
           )
         else
           Text(
@@ -140,8 +140,8 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
                   width: barWidth,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.black.withOpacity(0.2),
-                    border: Border.all(color: Colors.white.withOpacity(0.25)),
+                    color: Colors.black.withAlpha((255 * 0.2).round()),
+                                        border: Border.all(color: Colors.white.withAlpha((255 * 0.25).round())),
                   ),
                 ),
                 // The progress bar value
@@ -150,7 +150,7 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
                   width: barWidth * _progress,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: isHighestTier ? glowColor : Colors.white.withOpacity(0.8),
+                                        color: isHighestTier ? glowColor : Colors.white.withAlpha((255 * 0.8).round()),
                   ),
                 ),
                 // The glowing indicator
@@ -163,10 +163,10 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: glowColor,
-                      border: Border.all(color: Colors.white.withOpacity(0.8), width: 1.5),
+                                            border: Border.all(color: Colors.white.withAlpha((255 * 0.8).round()), width: 1.5),
                       boxShadow: [
                         BoxShadow(
-                          color: glowColor.withOpacity(0.9),
+                                                    color: glowColor.withAlpha((255 * 0.9).round()),
                           blurRadius: 12,
                           spreadRadius: 3,
                         ),
@@ -301,14 +301,14 @@ IconData getFaIconForTier(String level) {
     case 'Bronze':
       return FontAwesomeIcons.shieldHalved;
     case 'Silver':
-      return FontAwesomeIcons.starHalfAlt;
+      return FontAwesomeIcons.starHalfStroke;
     case 'Gold':
       return FontAwesomeIcons.star;
     case 'Platinum':
-      return FontAwesomeIcons.solidCheckCircle;
+      return FontAwesomeIcons.solidCircleCheck;
     case 'Diamond':
       return FontAwesomeIcons.gem;
     default:
-      return FontAwesomeIcons.questionCircle;
+      return FontAwesomeIcons.circleQuestion;
   }
 }
