@@ -16,6 +16,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:project_midterms/data/voucher_data.dart';
 import 'package:project_midterms/screens/notification_page.dart';
 import 'package:project_midterms/screens/voucher_detail_page.dart';
+import 'package:project_midterms/screens/point_page.dart'; // Add this import
 
 class HomePageContent extends StatefulWidget {
   final UserModel user;
@@ -64,15 +65,11 @@ class _HomePageContentState extends State<HomePageContent> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            MembershipDetailPage(user: widget.user),
+                            PointPage(user: widget.user), // Navigate to PointPage
                       ),
                     );
                   },
-                  child: PointsCard(
-                    points: widget.user.poin,
-                    level: widget.user.level,
-                    xp: widget.user.xp,
-                  ),
+                  child: _InteractivePointsDisplay(user: widget.user), // New widget for display
                 ).animate().fadeIn(duration: 300.ms, delay: 100.ms),
               ),
               const SizedBox(height: 16),
@@ -329,6 +326,25 @@ class _HomePageContentState extends State<HomePageContent> {
           );
         },
       ),
+    );
+  }
+}
+
+class _InteractivePointsDisplay extends StatefulWidget {
+  final UserModel user;
+  const _InteractivePointsDisplay({super.key, required this.user});
+
+  @override
+  State<_InteractivePointsDisplay> createState() => _InteractivePointsDisplayState();
+}
+
+class _InteractivePointsDisplayState extends State<_InteractivePointsDisplay> {
+  @override
+  Widget build(BuildContext context) {
+    return PointsCard(
+      points: -1, // Always pass -1 to indicate hidden points
+      level: widget.user.level,
+      xp: widget.user.xp,
     );
   }
 }

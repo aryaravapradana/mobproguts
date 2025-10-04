@@ -67,15 +67,46 @@ class PointsCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          Text(
-            points.toString(),
-            style: GoogleFonts.poppins(
-              color: AppColors.primary,
-              fontSize: 52,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.5,
+          if (points == -1) // Special case for hidden points
+            Column( // Use Column to stack the hidden points and the click text
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row( // Hidden points with icon
+                  children: [
+                    Icon(Icons.visibility_off, color: AppColors.primary, size: 20),
+                    const SizedBox(width: 8),
+                    Text(
+                      "••••", // Placeholder for hidden points
+                      style: GoogleFonts.poppins(
+                        color: AppColors.primary,
+                        fontSize: 52,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.5,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4), // Small space between points and text
+                Text(
+                  "klik untuk melihat total poin yang kamu miliki",
+                  style: GoogleFonts.poppins(
+                    color: AppColors.onSurface.withOpacity(0.7),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            )
+          else
+            Text(
+              points.toString(),
+              style: GoogleFonts.poppins(
+                color: AppColors.primary,
+                fontSize: 52,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.5,
+              ),
             ),
-          ),
         ],
       ),
     ).animate().fadeIn(duration: 500.ms);
