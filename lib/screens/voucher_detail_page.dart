@@ -185,7 +185,7 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
                     widget.voucher.description ?? "No description available.",
                     style: GoogleFonts.poppins(
                       fontSize: 14,
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withAlpha((255 * 0.8).round()),
                     ),
                   ),
                   const SizedBox(height: 16),

@@ -196,28 +196,20 @@ class _VoucherPageState extends State<VoucherPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: voucher.image != null
-                          ? Image.asset(
-                              voucher.image!,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Center(
-                                  child: Icon(
-                                    Icons.image_not_supported,
-                                    color: AppColors.lightGrey,
-                                    size: 40,
-                                  ),
-                                );
-                              },
-                            )
-                          : const Center(
-                              child: Icon(
-                                Icons.image_not_supported,
-                                color: AppColors.lightGrey,
-                                size: 40,
-                              ),
+                      child: Image.asset(
+                        voucher.image,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Center(
+                            child: Icon(
+                              Icons.image_not_supported,
+                              color: AppColors.lightGrey,
+                              size: 40,
                             ),
+                          );
+                        },
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
