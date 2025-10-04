@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:project_midterms/colors.dart';
 import 'package:project_midterms/models/user.dart';
 import 'package:project_midterms/screens/account_page.dart';
 import 'package:project_midterms/screens/home_page_content.dart'; // Will create this next
 import 'package:project_midterms/screens/member_page.dart';
+import 'package:project_midterms/screens/notification_page.dart';
 import 'package:project_midterms/screens/scan_qr_page.dart';
 import 'package:project_midterms/screens/voucher_page.dart';
 
@@ -47,6 +49,23 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          _selectedIndex == 0 ? "Hey, ${widget.user.name}!" : ["Home", "Vouchers", "Member", "Account"][_selectedIndex],
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationPage()),
+              );
+            },
+            icon: const Icon(Icons.notifications_none_rounded),
+          ),
+        ],
+      ),
       body: IndexedStack( // Use IndexedStack to preserve state of pages
         index: _selectedIndex,
         children: _pages,
