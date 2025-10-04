@@ -48,7 +48,15 @@ class RedeemHistoryPage extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
-                const Icon(Icons.card_giftcard, color: AppColors.primary, size: 24),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.asset(
+                    voucher.image,
+                    width: 40,
+                    height: 40,
+                    fit: BoxFit.cover,
+                  ),
+                ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
@@ -59,9 +67,9 @@ class RedeemHistoryPage extends StatelessWidget {
                         style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.onSurface),
                       ),
                       const SizedBox(height: 4),
-                      if (voucher.date != null)
+                      if (voucher.redemptionDate != null)
                         Text(
-                          DateFormat('d MMMM y').format(voucher.date!),
+                          "Redeemed on ${DateFormat('d MMM yyyy').format(voucher.redemptionDate!)}",
                           style: GoogleFonts.poppins(color: AppColors.onSurface.withAlpha(179), fontSize: 12),
                         ),
                     ],
@@ -74,7 +82,7 @@ class RedeemHistoryPage extends StatelessWidget {
               ],
             ),
           ),
-        ).animate().fadeIn(duration: 400.ms).slideX(begin: 0.2, delay: (100 * index).ms);
+        ).animate().fadeIn(duration: 300.ms, delay: (50 * index).ms);
       },
     );
   }

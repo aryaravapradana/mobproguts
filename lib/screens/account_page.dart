@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:project_midterms/auth/login_page.dart';
+import 'package:project_midterms/data/membership_data.dart';
 import 'package:project_midterms/models/user.dart';
 import 'package:project_midterms/screens/member_page.dart';
 import 'package:project_midterms/screens/membership_detail_page.dart';
+import 'package:project_midterms/screens/my_vouchers_page.dart';
 import 'package:project_midterms/screens/settings_page.dart';
 import 'package:project_midterms/screens/redeem_history_page.dart';
 import 'package:project_midterms/screens/point_page.dart';
 import '../colors.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:project_midterms/helpers/tier_style.dart';
 
 class AccountPage extends StatefulWidget {
   final UserModel user;
@@ -46,6 +49,7 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   Widget _buildProfileHeader() {
+    final tier = tiers.firstWhere((t) => t.name == widget.user.level);
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -53,15 +57,27 @@ class _AccountPageState extends State<AccountPage> {
           MaterialPageRoute(builder: (context) => MembershipDetailPage(user: widget.user)),
         );
       },
-      child: Card(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: getGradientForTier(widget.user.level),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+                            color: getGlowColorForTier(widget.user.level).withAlpha((255 * 0.5).round()),
+              blurRadius: 15,
+              spreadRadius: 1,
+              offset: const Offset(0, 4),
+            )
+          ],
+        ),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Row(
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 35,
-                backgroundColor: AppColors.primary,
-                child: Icon(Icons.person, color: AppColors.onPrimary, size: 30),
+                                backgroundColor: Colors.white.withAlpha((255 * 0.2).round()),
+                child: const Icon(Icons.person, color: Colors.white, size: 30),
               ),
               const SizedBox(width: 20),
               Expanded(
@@ -73,7 +89,7 @@ class _AccountPageState extends State<AccountPage> {
                       style: GoogleFonts.poppins(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.onSurface,
+                        color: Colors.white,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -81,14 +97,20 @@ class _AccountPageState extends State<AccountPage> {
                       widget.user.level,
                       style: GoogleFonts.poppins(
                         fontSize: 16,
-                        color: AppColors.primary,
+                        color: getTextColorForTier(widget.user.level),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right, color: AppColors.onSurface, size: 28),
+              Row(
+                children: [
+                  Image.asset(tier.imagePath!, width: 40, height: 40),
+                  const SizedBox(width: 12),
+                  const Icon(Icons.chevron_right, color: Colors.white, size: 28),
+                ],
+              ),
             ],
           ),
         ),
@@ -117,6 +139,16 @@ class _AccountPageState extends State<AccountPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => PointPage(user: widget.user)),
+              );
+            },
+          ),
+          _buildListTile(
+            icon: Icons.local_activity,
+            title: 'My Vouchers',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MyVouchersPage()),
               );
             },
           ),

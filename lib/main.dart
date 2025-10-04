@@ -4,6 +4,7 @@ import 'package:project_midterms/colors.dart';
 import 'auth/login_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const LoyaltyApp());
 }
 
@@ -37,7 +38,7 @@ class LoyaltyApp extends StatelessWidget {
         surface: AppColors.surface,
         onPrimary: AppColors.onPrimary,
         onSurface: AppColors.onSurface,
-        
+
         error: AppColors.error,
         brightness: Brightness.dark,
       ),
@@ -50,14 +51,15 @@ class LoyaltyApp extends StatelessWidget {
       cardTheme: CardThemeData(
         color: AppColors.surface,
         elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.surface,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -73,7 +75,9 @@ class LoyaltyApp extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-          textStyle: textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold),
+          textStyle: textTheme.labelLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(

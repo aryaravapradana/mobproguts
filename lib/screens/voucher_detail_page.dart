@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:project_midterms/data/redeem_history_data.dart';
 import 'package:project_midterms/models/voucher.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project_midterms/colors.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:project_midterms/models/user.dart';
+
+import 'package:project_midterms/screens/redemption_success_screen.dart';
 
 class VoucherDetailPage extends StatefulWidget {
   final Voucher voucher;
@@ -41,7 +44,8 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
             onPressed: () {
               setState(() {
                 widget.user.poin -= widget.voucher.cost;
-                redeemedVouchers.add(widget.voucher);
+                final redeemedVoucher = widget.voucher.copyWith(redemptionDate: DateTime.now());
+                redeemedVouchers.add(redeemedVoucher);
               });
               Navigator.pop(context); // Close confirmation dialog
               _showFeedbackDialog(
@@ -58,35 +62,61 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
   }
 
   void _showFeedbackDialog({required String title, required String content, required bool isSuccess}) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.surface,
-        title: Row(
-          children: [Icon(isSuccess ? Icons.check_circle : Icons.cancel, color: isSuccess ? AppColors.success : AppColors.error),
-            const SizedBox(width: 10),
-            Expanded(child: Text(title)),
+    if (isSuccess) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RedemptionSuccessScreen(
+            voucher: widget.voucher,
+            user: widget.user,
+            redemptionDate: DateTime.now(),
+          ),
+        ),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          backgroundColor: AppColors.surface,
+          title: Row(
+            children: [Icon(isSuccess ? Icons.check_circle : Icons.cancel, color: isSuccess ? AppColors.success : AppColors.error),
+              const SizedBox(width: 10),
+              Expanded(child: Text(title)),
+            ],
+          ),
+          content: Text(content),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text('OK', style: TextStyle(color: AppColors.primary)),
+            ),
           ],
         ),
-        content: Text(content),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context); // Close the dialog
-              if (isSuccess) {
-                Navigator.pop(context, true); // Pop the detail page with a `true` result
-              }
-            },
-            child: const Text('OK', style: TextStyle(color: AppColors.primary)),
-          ),
-        ],
-      ),
-    );
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final bool alreadyRedeemed = redeemedVouchers.any((v) => v.title == widget.voucher.title);
+
+    // --- Create dynamic T&Cs ---
+    final List<String> tncItems = [
+      "Voucher is valid for one-time use only.",
+      "Cannot be combined with other promotions.",
+    ];
+
+    if (widget.voucher.expiryDate != null) {
+      final formattedDate = DateFormat('d MMMM yyyy').format(widget.voucher.expiryDate!);
+      tncItems.add("Valid until $formattedDate.");
+    }
+
+    if (widget.voucher.requiredTier != null) {
+      tncItems.add("Minimum tier required: ${widget.voucher.requiredTier}.");
+    }
+    // ---------------------------
 
     return Scaffold(
       appBar: AppBar(
@@ -101,11 +131,7 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
             const SizedBox(height: 32),
             _buildSection(
               title: "Terms and Conditions",
-              items: [
-                "Voucher is valid for one-time use only.",
-                "Cannot be combined with other promotions.",
-                "Valid until 31 December 2025.",
-              ],
+              items: tncItems, // Use the dynamic list
             ),
             const SizedBox(height: 24),
             _buildSection(
@@ -122,34 +148,63 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
   Widget _buildVoucherHeader() {
     return Card(
       elevation: 8,
+      clipBehavior: Clip.antiAlias, // To clip the child to the card's rounded corners
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.black, Colors.amber.shade800],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              widget.voucher.title,
-              style: GoogleFonts.poppins(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: AppColors.onSurface,
-              ),
+            Image.asset(
+              widget.voucher.image,
+              width: double.infinity,
+              height: 180,
+              fit: BoxFit.cover,
             ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                const Icon(Icons.monetization_on, color: AppColors.primary, size: 20),
-                const SizedBox(width: 12),
-                Text(
-                  "${widget.voucher.cost} points",
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.primary,
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.voucher.title,
+                    style: GoogleFonts.poppins(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  Text(
+                    widget.voucher.description ?? "No description available.",
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: Colors.white.withOpacity(0.8),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      const Icon(Icons.monetization_on, color: AppColors.primary, size: 20),
+                      const SizedBox(width: 12),
+                      Text(
+                        "${widget.voucher.cost} points",
+                        style: GoogleFonts.poppins(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
