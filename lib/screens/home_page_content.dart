@@ -2,15 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project_midterms/colors.dart';
 import 'package:project_midterms/models/user.dart';
+import 'package:project_midterms/models/voucher.dart';
 import 'package:project_midterms/screens/membership_detail_page.dart';
 import 'package:project_midterms/screens/missions_page.dart';
 import 'package:project_midterms/screens/voucher_page.dart';
+import 'package:project_midterms/widgets/animated_hover_card.dart';
 import 'package:project_midterms/widgets/daily_reward_card.dart';
 import '../widgets/points_card.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:project_midterms/data/voucher_data.dart';
 import 'package:project_midterms/screens/voucher_detail_page.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+
+class PromoBanner {
+  final String title;
+  final String subtitle;
+  final String imageUrl;
+
+  PromoBanner({
+    required this.title,
+    required this.subtitle,
+    required this.imageUrl,
+  });
+}
+// -----------------------------------------
 
 class HomePageContent extends StatefulWidget {
   final UserModel user;
@@ -22,16 +37,17 @@ class HomePageContent extends StatefulWidget {
 
 class _HomePageContentState extends State<HomePageContent> {
   void _onRewardClaimed() {
-    setState(() {
-      // This will force the widget to rebuild and show the updated points
-    });
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Hey, ${widget.user.name}!", style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
+        title: Text(
+          "Hey, ${widget.user.name}!",
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        ),
         actions: [
           IconButton(
             onPressed: () {},
@@ -40,92 +56,134 @@ class _HomePageContentState extends State<HomePageContent> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 16),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MembershipDetailPage(user: widget.user)),
-                );
-              },
-              child: Padding(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: PointsCard(
-                  points: widget.user.poin,
-                  level: widget.user.level,
-                  xp: widget.user.xp,
-                ),
+                child: AnimatedHoverCard(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            MembershipDetailPage(user: widget.user),
+                      ),
+                    );
+                  },
+                  child: PointsCard(
+                    points: widget.user.poin,
+                    level: widget.user.level,
+                    xp: widget.user.xp,
+                  ),
+                ).animate().fadeIn(duration: 300.ms, delay: 100.ms),
               ),
-            ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: DailyRewardCard(
-                user: widget.user,
-                onClaim: _onRewardClaimed,
-              ),
-            ),
-            const SizedBox(height: 16),
-            _buildMissionsCard(context),
-            const SizedBox(height: 24),
-            _buildSectionHeader(context, title: "Explore Vouchers", onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => VoucherPage(user: widget.user)));
-            }),
-            const SizedBox(height: 16),
-            _buildPromoBanner(),
-            const SizedBox(height: 24),
-            _buildSectionHeader(context, title: "Hot Vouchers"),
-            const SizedBox(height: 16),
-            _buildVoucherCarousel(context, widget.user),
-            const SizedBox(height: 24),
-          ],
-        ).animate().fadeIn(duration: 500.ms),
-      ),
-    );
-  }
-
-  Widget _buildMissionsCard(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Card(
-        elevation: 2,
-        child: InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MissionsPage(user: widget.user)),
-            );
-          },
-          borderRadius: BorderRadius.circular(16),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                const Icon(Icons.flag, color: AppColors.accent, size: 32),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text("Missions", style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18)),
-                      const SizedBox(height: 4),
-                      Text("Complete tasks and earn more points!", style: GoogleFonts.poppins(color: AppColors.onSurface.withAlpha(180))),
+                      Expanded(
+                        child: DailyRewardCard(
+                          user: widget.user,
+                          onClaim: _onRewardClaimed,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(child: _buildMissionsCard(context)),
                     ],
                   ),
-                ),
-                const Icon(Icons.arrow_forward_ios, color: AppColors.lightGrey),
-              ],
-            ),
+                ).animate().fadeIn(duration: 300.ms, delay: 200.ms),
+              ),
+              const SizedBox(height: 24),
+              _buildSectionHeader(
+                context,
+                title: "Explore Vouchers",
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => VoucherPage(user: widget.user),
+                    ),
+                  );
+                },
+              ).animate().fadeIn(duration: 300.ms, delay: 300.ms),
+              const SizedBox(height: 16),
+              _buildPromoBanner().animate().fadeIn(
+                duration: 300.ms,
+                delay: 400.ms,
+              ),
+              const SizedBox(height: 24),
+              _buildSectionHeader(
+                context,
+                title: "Hot Vouchers",
+              ).animate().fadeIn(duration: 300.ms, delay: 500.ms),
+              const SizedBox(height: 16),
+              _buildVoucherCarousel(
+                context,
+                widget.user,
+              ).animate().fadeIn(duration: 300.ms, delay: 600.ms),
+              const SizedBox(height: 24),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildSectionHeader(BuildContext context, {required String title, VoidCallback? onTap}) {
+  Widget _buildMissionsCard(BuildContext context) {
+    return AnimatedHoverCard(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MissionsPage(user: widget.user),
+          ),
+        );
+      },
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 10,
+        ),
+        leading: const Icon(
+          Icons.rocket_launch_outlined,
+          color: AppColors.accent,
+          size: 40,
+        ),
+        title: Text(
+          'Missions',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.bold,
+            color: AppColors.onSurface,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Text(
+          'Earn more points!',
+          style: GoogleFonts.poppins(color: AppColors.onSurface.withAlpha(180)),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        trailing: const Icon(
+          Icons.arrow_forward_ios,
+          color: AppColors.lightGrey,
+          size: 18,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(
+    BuildContext context, {
+    required String title,
+    VoidCallback? onTap,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(
@@ -133,12 +191,19 @@ class _HomePageContentState extends State<HomePageContent> {
         children: [
           Text(
             title,
-            style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.onBackground),
+            style: GoogleFonts.poppins(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: AppColors.onBackground,
+            ),
           ),
           if (onTap != null)
             TextButton(
               onPressed: onTap,
-              child: const Text("View All", style: TextStyle(color: AppColors.primary)),
+              child: const Text(
+                "View All",
+                style: TextStyle(color: AppColors.primary),
+              ),
             ),
         ],
       ),
@@ -147,21 +212,21 @@ class _HomePageContentState extends State<HomePageContent> {
 
   Widget _buildPromoBanner() {
     final promos = [
-      {
-        "title": "Diskon 10% di Coffee Shop",
-        "subtitle": "Hanya butuh 500 poin buat klaim sekarang!",
-        "bg": Colors.orange
-      },
-      {
-        "title": "Voucher Rp50.000",
-        "subtitle": "Tukar 1000 poin, langsung hemat belanja!",
-        "bg": Colors.blue
-      },
-      {
-        "title": "Free Parking 2 Jam",
-        "subtitle": "Parkir santai cukup 700 poin aja",
-        "bg": Colors.green
-      },
+      PromoBanner(
+        title: "Diskon 50% Kopi Pilihan",
+        subtitle: "Tukar 800 poin buat ngopi hemat!",
+        imageUrl: "assets/images/promo_coffee.png",
+      ),
+      PromoBanner(
+        title: "Voucher Belanja Rp50.000",
+        subtitle: "Hanya 1000 poin, belanja jadi lebih irit!",
+        imageUrl: "assets/images/promo_fashion.png",
+      ),
+      PromoBanner(
+        title: "Gratis Tiket Nonton",
+        subtitle: "Ajak temanmu nonton dengan 1200 poin!",
+        imageUrl: "assets/images/promo_movie.png",
+      ),
     ];
 
     return CarouselSlider.builder(
@@ -169,69 +234,126 @@ class _HomePageContentState extends State<HomePageContent> {
       itemBuilder: (context, index, realIndex) {
         final promo = promos[index];
         return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 8),
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
+          margin: const EdgeInsets.symmetric(horizontal: 5),
+          child: ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            color: promo["bg"] as Color,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                promo["title"] as String,
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.asset(
+                  promo.imageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: AppColors.surface,
+                    child: const Center(
+                      child: Icon(
+                        Icons.image_not_supported_outlined,
+                        color: AppColors.lightGrey,
+                        size: 40,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                promo["subtitle"] as String,
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Colors.white70,
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.black.withAlpha((255 * 0.6).round()),
+                        Colors.transparent,
+                      ],
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.center,
+                    ),
+                  ),
                 ),
-              ),
-            ],
+                Positioned(
+                  bottom: 20,
+                  left: 20,
+                  right: 20,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        promo.title,
+                        style: GoogleFonts.poppins(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(
+                              blurRadius: 2.0,
+                              color: Colors.black.withAlpha((255 * 0.5).round()),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        promo.subtitle,
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          color: Colors.white.withAlpha((255 * 0.9).round()),
+                          shadows: [
+                            Shadow(
+                              blurRadius: 2.0,
+                              color: Colors.black.withAlpha((255 * 0.5).round()),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
       options: CarouselOptions(
-        height: 150,
+        height: 160,
         autoPlay: true,
         enlargeCenterPage: true,
-        viewportFraction: 0.85,
-        autoPlayInterval: const Duration(seconds: 4),
+        viewportFraction: 0.88,
+        autoPlayInterval: const Duration(seconds: 5),
+        enlargeStrategy: CenterPageEnlargeStrategy.zoom,
       ),
     );
   }
 
   Widget _buildVoucherCarousel(BuildContext context, UserModel user) {
-    final vouchers = dummyVouchers.take(2).toList();
+    final sortedVouchers = List<Voucher>.from(dummyVouchers);
+    sortedVouchers.sort((a, b) => b.cost.compareTo(a.cost));
+    final vouchers = sortedVouchers.take(5).toList();
 
     return SizedBox(
       height: 220,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: vouchers.length,
-        padding: const EdgeInsets.only(left: 16),
+        padding: const EdgeInsets.only(
+          left: 16,
+          right: 16,
+        ), // Padding di kedua sisi
         itemBuilder: (context, index) {
           final voucher = vouchers[index];
           return Container(
             width: 180,
-            margin: const EdgeInsets.only(right: 16),
+            margin: EdgeInsets.only(
+              right: index == vouchers.length - 1 ? 0 : 16,
+            ), // Hilangkan margin di item terakhir
             child: Card(
               elevation: 4,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              clipBehavior: Clip.antiAlias,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
               child: InkWell(
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => VoucherDetailPage(voucher: voucher, user: user),
+                      builder: (context) =>
+                          VoucherDetailPage(voucher: voucher, user: user),
                     ),
                   );
                 },
@@ -239,20 +361,29 @@ class _HomePageContentState extends State<HomePageContent> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ClipRRect(
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                      child: Container(
-                        height: 100,
-                        width: 180,
-                        color: AppColors.darkGrey,
-                        child: Center(
-                          child: Icon(
-                            Icons.image,
-                            color: AppColors.lightGrey,
-                            size: 40,
-                          ),
-                        ),
-                      ),
+                    SizedBox(
+                      height: 100,
+                      width: double.infinity,
+                      child: voucher.image != null
+                          ? Image.asset(
+                              voucher.image!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Center(
+                                    child: Icon(
+                                      Icons.image_not_supported,
+                                      color: AppColors.lightGrey,
+                                      size: 40,
+                                    ),
+                                  ),
+                            )
+                          : const Center(
+                              child: Icon(
+                                Icons.image_not_supported,
+                                color: AppColors.lightGrey,
+                                size: 40,
+                              ),
+                            ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(12.0),

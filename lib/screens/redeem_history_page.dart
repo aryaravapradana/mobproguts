@@ -74,7 +74,7 @@ class RedeemHistoryPage extends StatelessWidget {
               ],
             ),
           ),
-        ).animate().fadeIn(duration: 400.ms).slideX(begin: 0.2, delay: (100 * index).ms);
+        ).animate().fadeIn(duration: 300.ms, delay: (50 * index).ms);
       },
     );
   }

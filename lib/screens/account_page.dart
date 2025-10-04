@@ -60,7 +60,7 @@ class _AccountPageState extends State<AccountPage> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: getGlowColorForTier(widget.user.level).withOpacity(0.5),
+                            color: getGlowColorForTier(widget.user.level).withAlpha((255 * 0.5).round()),
               blurRadius: 15,
               spreadRadius: 1,
               offset: const Offset(0, 4),
@@ -73,7 +73,7 @@ class _AccountPageState extends State<AccountPage> {
             children: [
               CircleAvatar(
                 radius: 35,
-                backgroundColor: Colors.white.withOpacity(0.2),
+                                backgroundColor: Colors.white.withAlpha((255 * 0.2).round()),
                 child: const Icon(Icons.person, color: Colors.white, size: 30),
               ),
               const SizedBox(width: 20),
