@@ -104,21 +104,13 @@ class MyVouchersPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Row(
           children: [
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: isExpired
-                    ? AppColors.darkGrey
-                    : AppColors.primary.withAlpha(26),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                child: Icon(
-                  isExpired ? Icons.cancel_outlined : Icons.local_activity,
-                  color: isExpired ? AppColors.lightGrey : AppColors.primary,
-                  size: 30,
-                ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                voucher.image,
+                width: 60,
+                height: 60,
+                fit: BoxFit.cover,
               ),
             ),
             const SizedBox(width: 16),
@@ -152,6 +144,15 @@ class MyVouchersPage extends StatelessWidget {
                         ),
                       ),
                     ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'klik, untuk melihat informasi lebih lanjut',
+                    style: GoogleFonts.poppins(
+                      fontSize: 12,
+                      color: AppColors.lightGrey,
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
                 ],
               ),
