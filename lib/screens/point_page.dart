@@ -152,7 +152,7 @@ class _PointPageState extends State<PointPage> {
                               Color color;
                               switch (entry.key) {
                                 case 'Fashion':
-                                  color = AppColors.fashionBlueLight;
+                                  color = AppColors.fnbrede;
                                   break;
                                 case 'Electronics':
                                   color = AppColors.electronicPurple;
@@ -210,7 +210,7 @@ class _PointPageState extends State<PointPage> {
         Color color;
         switch (entry.key) {
           case 'Fashion':
-            color = AppColors.fashionBlueLight;
+            color = AppColors.fnbrede;
             break;
           case 'Electronics':
             color = AppColors.electronicPurple;

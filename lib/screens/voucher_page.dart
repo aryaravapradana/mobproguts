@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:project_midterms/colors.dart';
 import 'package:project_midterms/data/membership_data.dart';
 import 'package:project_midterms/data/voucher_data.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project_midterms/screens/voucher_detail_page.dart';
 import 'package:project_midterms/widgets/animated_hover_card.dart';
+import 'package:project_midterms/widgets/voucher_cost_display.dart';
 
 class VoucherPage extends StatefulWidget {
   final UserModel user;
@@ -111,8 +111,6 @@ class _VoucherPageState extends State<VoucherPage> {
 
   Widget _buildVoucherGrid() {
     final userTierRank = _getTierRank(widget.user.level);
-    final f = NumberFormat.decimalPattern('id');
-
     List<Voucher> filteredVouchers = dummyVouchers.where((voucher) {
       // Tier check
       final requiredTierRank = voucher.requiredTier != null
@@ -229,13 +227,7 @@ class _VoucherPageState extends State<VoucherPage> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 4),
-                          Text(
-                            "${f.format(voucher.cost)} points",
-                            style: GoogleFonts.poppins(
-                              color: AppColors.primary,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                          VoucherCostDisplay(voucher: voucher, user: widget.user, fontSize: 12),
                         ],
                       ),
                     ),

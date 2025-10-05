@@ -7,6 +7,7 @@ import 'package:project_midterms/colors.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:project_midterms/models/user.dart';
 import 'package:project_midterms/data/membership_data.dart';
+import 'package:project_midterms/widgets/voucher_cost_display.dart';
 
 import 'package:project_midterms/screens/redemption_success_screen.dart';
 
@@ -237,14 +238,7 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
                     children: [
                       const Icon(Icons.monetization_on, color: AppColors.primary, size: 20),
                       const SizedBox(width: 12),
-                      Text(
-                        "${NumberFormat.decimalPattern('id').format(widget.voucher.cost)} points",
-                        style: GoogleFonts.poppins(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primary,
-                        ),
-                      ),
+                      VoucherCostDisplay(voucher: widget.voucher, user: widget.user, fontSize: 20),
                     ],
                   ),
                 ],
