@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:project_midterms/colors.dart';
 import 'package:project_midterms/models/user.dart';
 import 'package:project_midterms/models/voucher.dart';
@@ -17,6 +16,7 @@ import 'package:project_midterms/data/voucher_data.dart';
 import 'package:project_midterms/screens/notification_page.dart';
 import 'package:project_midterms/screens/voucher_detail_page.dart';
 import 'package:project_midterms/screens/point_page.dart'; // Add this import
+import 'package:project_midterms/widgets/voucher_cost_display.dart';
 
 class HomePageContent extends StatefulWidget {
   final UserModel user;
@@ -308,14 +308,7 @@ class _HomePageContentState extends State<HomePageContent> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 8),
-                          Text(
-                            "${NumberFormat.decimalPattern('id').format(voucher.cost)} points",
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12,
-                              color: AppColors.primary,
-                            ),
-                          ),
+                          VoucherCostDisplay(voucher: voucher, user: user, fontSize: 12),
                         ],
                       ),
                     ),
