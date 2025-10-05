@@ -100,7 +100,7 @@ class RedemptionSuccessScreen extends StatelessWidget {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
-                _buildInfoRow('Price:', '${voucher.cost} Points'),
+                _buildInfoRow('Price (Sebelum Diskon):', '${voucher.cost} Points'),
                 const SizedBox(height: 12),
                 _buildInfoRow('Remaining Points:', '${user.poin} Points'),
                 const SizedBox(height: 12),
