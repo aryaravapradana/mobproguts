@@ -22,24 +22,22 @@ class VoucherCostDisplay extends StatelessWidget {
     final int originalCost = voucher.cost;
     double discountPercentage = 0.0;
 
-    if (voucher.requiredTier != null) {
-      switch (user.level) {
-        case "Bronze":
-          discountPercentage = 5.0;
-          break;
-        case "Silver":
-          discountPercentage = 10.0;
-          break;
-        case "Gold":
-          discountPercentage = 15.0;
-          break;
-        case "Platinum":
-          discountPercentage = 20.0; // Assuming 20% for Platinum
-          break;
-        case "Diamond":
-          discountPercentage = 25.0; // Assuming 25% for Diamond
-          break;
-      }
+    switch (user.level) {
+      case "Bronze":
+        discountPercentage = 5.0;
+        break;
+      case "Silver":
+        discountPercentage = 10.0;
+        break;
+      case "Gold":
+        discountPercentage = 15.0;
+        break;
+      case "Platinum":
+        discountPercentage = 20.0; // Assuming 20% for Platinum
+        break;
+      case "Diamond":
+        discountPercentage = 25.0; // Assuming 25% for Diamond
+        break;
     }
 
     if (discountPercentage > 0) {

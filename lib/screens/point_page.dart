@@ -27,11 +27,31 @@ class _PointPageState extends State<PointPage> {
     spendingByCategory = _calculateSpending();
   }
 
+  double _getDiscountPercentage(String tier) {
+    switch (tier) {
+      case "Bronze":
+        return 5.0;
+      case "Silver":
+        return 10.0;
+      case "Gold":
+        return 15.0;
+      case "Platinum":
+        return 20.0;
+      case "Diamond":
+        return 25.0;
+      default:
+        return 0.0;
+    }
+  }
+
   Map<String, double> _calculateSpending() {
     final spending = <String, double>{};
+    final discountPercentage = _getDiscountPercentage(widget.user.level);
+
     for (var redeemed in redeemedVouchers) {
       final category = _getCategoryForVoucher(redeemed);
-      spending.update(category, (value) => value + redeemed.cost, ifAbsent: () => redeemed.cost.toDouble());
+      final discountedCost = redeemed.cost * (1 - (discountPercentage / 100));
+      spending.update(category, (value) => value + discountedCost, ifAbsent: () => discountedCost);
     }
     return spending;
   }
@@ -154,11 +174,11 @@ class _PointPageState extends State<PointPage> {
                                 case 'Fashion':
                                   color = AppColors.fnbrede;
                                   break;
-                                case 'Electronics':
+                                case 'Electronic & Appliances':
                                   color = AppColors.electronicPurple;
                                   break;
-                                case 'F&B':
-                                  color = AppColors.fnbrede;
+                                case 'FnB':
+                                  color = AppColors.fnborange;
                                   break;
                                 case 'Others':
                                   color = AppColors.othersBlue;
@@ -187,7 +207,7 @@ class _PointPageState extends State<PointPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text('Total Spent', style: GoogleFonts.inter(color: AppColors.textMediumGrey, fontSize: 12)),
-                              Text('${f.format(totalSpent.toInt())} pts', style: GoogleFonts.inter(color: AppColors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+                              Text('${f.format(totalSpent.toInt())} pts', style: GoogleFonts.inter(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
                             ],
                           ),
                         )
@@ -212,11 +232,11 @@ class _PointPageState extends State<PointPage> {
           case 'Fashion':
             color = AppColors.fnbrede;
             break;
-          case 'Electronics':
+          case 'Electronic & Appliances':
             color = AppColors.electronicPurple;
             break;
-          case 'F&B':
-            color = AppColors.fnbrede;
+          case 'FnB':
+            color = AppColors.fnborange;
             break;
           case 'Others':
             color = AppColors.othersBlue;
@@ -241,7 +261,15 @@ class _PointPageState extends State<PointPage> {
                 ),
               ),
               const SizedBox(width: 8),
-              Text('${entry.key} - ${f.format(entry.value.toInt())} pts ($percentage%)', style: const TextStyle(color: AppColors.textPrimary)),
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Text(
+                      '${entry.key} - ${f.format(entry.value.toInt())} pts ($percentage%)',
+                      style: const TextStyle(
+                          color: AppColors.textPrimary, fontSize: 14)),
+                ),
+              ),
             ],
           ),
         );

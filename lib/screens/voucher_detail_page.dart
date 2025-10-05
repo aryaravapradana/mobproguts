@@ -41,7 +41,29 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
   }
 
   void _redeemVoucher() {
-    if (widget.user.poin < widget.voucher.cost) {
+    double discountPercentage = 0.0;
+    switch (widget.user.level) {
+      case "Bronze":
+        discountPercentage = 5.0;
+        break;
+      case "Silver":
+        discountPercentage = 10.0;
+        break;
+      case "Gold":
+        discountPercentage = 15.0;
+        break;
+      case "Platinum":
+        discountPercentage = 20.0;
+        break;
+      case "Diamond":
+        discountPercentage = 25.0;
+        break;
+    }
+
+    final int originalCost = widget.voucher.cost;
+    final int discountedCost = (originalCost * (1 - (discountPercentage / 100))).round();
+
+    if (widget.user.poin < discountedCost) {
       _showFeedbackDialog(
         title: "Redemption Failed",
         content: "You don't have enough points to redeem this voucher.",
@@ -57,7 +79,8 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
       if (userTierRank < requiredTierRank) {
         _showFeedbackDialog(
           title: "Peringatan Tier",
-          content: "Tier Anda belum bisa redeem voucher ini. Anda harus menjadi member tier ${widget.voucher.requiredTier} untuk redeem voucher ini.",
+          content:
+              "Tier Anda belum bisa redeem voucher ini. Anda harus menjadi member tier ${widget.voucher.requiredTier} untuk redeem voucher ini.",
           isSuccess: false,
         );
         return;
@@ -71,7 +94,8 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surface,
         title: const Text('Confirm Redemption'),
-        content: Text('Are you sure you want to spend ${f.format(widget.voucher.cost)} points to get this voucher?'),
+        content: Text(
+            'Are you sure you want to spend ${f.format(discountedCost)} points to get this voucher?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -80,11 +104,13 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
           ElevatedButton(
             onPressed: () {
               setState(() {
-                widget.user.poin -= widget.voucher.cost;
-                
+                widget.user.poin -= discountedCost;
+
                 final redemptionDate = DateTime.now();
-                final baseExpiryDate = widget.voucher.expiryDate ?? redemptionDate.add(const Duration(days: 30));
-                final newExpiryDate = _calculateExpiryDate(baseExpiryDate, widget.user.level);
+                final baseExpiryDate = widget.voucher.expiryDate ??
+                    redemptionDate.add(const Duration(days: 30));
+                final newExpiryDate =
+                    _calculateExpiryDate(baseExpiryDate, widget.user.level);
 
                 final redeemedVoucher = widget.voucher.copyWith(
                   redemptionDate: redemptionDate,
@@ -95,7 +121,8 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
               Navigator.pop(context); // Close confirmation dialog
               _showFeedbackDialog(
                 title: "Redemption Successful!",
-                content: "You have successfully redeemed '${widget.voucher.title}'. It has been added to your vouchers.",
+                content:
+                    "You have successfully redeemed '${widget.voucher.title}'. It has been added to your vouchers.",
                 isSuccess: true,
               );
             },
