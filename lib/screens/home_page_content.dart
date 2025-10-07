@@ -15,7 +15,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:project_midterms/data/voucher_data.dart';
 import 'package:project_midterms/screens/notification_page.dart';
 import 'package:project_midterms/screens/voucher_detail_page.dart';
-import 'package:project_midterms/screens/point_page.dart'; // Add this import
+import 'package:project_midterms/screens/point_page.dart'; 
 import 'package:project_midterms/widgets/voucher_cost_display.dart';
 
 class HomePageContent extends StatefulWidget {
@@ -65,11 +65,11 @@ class _HomePageContentState extends State<HomePageContent> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            PointPage(user: widget.user), // Navigate to PointPage
+                            PointPage(user: widget.user), 
                       ),
                     );
                   },
-                  child: _InteractivePointsDisplay(user: widget.user), // New widget for display
+                  child: _InteractivePointsDisplay(user: widget.user), 
                 ).animate().fadeIn(duration: 300.ms, delay: 100.ms),
               ),
               const SizedBox(height: 16),
@@ -248,14 +248,14 @@ class _HomePageContentState extends State<HomePageContent> {
         padding: const EdgeInsets.only(
           left: 16,
           right: 16,
-        ), // Padding di kedua sisi
+        ), 
         itemBuilder: (context, index) {
           final voucher = vouchers[index];
           return Container(
             width: 180,
             margin: EdgeInsets.only(
               right: index == vouchers.length - 1 ? 0 : 16,
-            ), // Hilangkan margin di item terakhir
+            ), 
             child: Card(
               elevation: 4,
               clipBehavior: Clip.antiAlias,
@@ -335,7 +335,7 @@ class _InteractivePointsDisplayState extends State<_InteractivePointsDisplay> {
   @override
   Widget build(BuildContext context) {
     return PointsCard(
-      points: -1, // Always pass -1 to indicate hidden points
+      points: -1, 
       level: widget.user.level,
       xp: widget.user.xp,
     );

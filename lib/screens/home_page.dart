@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack( // Use IndexedStack to preserve state of pages
+      body: IndexedStack( 
         index: _selectedIndex,
         children: _pages,
       ),
@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             _buildNavItem(icon: Icons.home, label: "Home", index: 0),
             _buildNavItem(icon: Icons.card_giftcard, label: "Vouchers", index: 1),
-            const SizedBox(width: 40), // The space for the FAB
+            const SizedBox(width: 40), 
             _buildNavItem(icon: Icons.person, label: "Member", index: 2),
             _buildNavItem(icon: Icons.account_circle, label: "Account", index: 3),
           ],
