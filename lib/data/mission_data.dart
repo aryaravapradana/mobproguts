@@ -9,7 +9,7 @@ final List<Mission> dummyMissions = [
     basePointReward: 10,
     target: 1,
     progress: 1,
-    isClaimed: false, // Completed, ready to claim
+    isClaimed: false, 
   ),
   const Mission(
     title: "Pembelanjaan Pertama",
@@ -17,7 +17,7 @@ final List<Mission> dummyMissions = [
     icon: Icons.shopping_cart,
     basePointReward: 50,
     target: 1,
-    progress: 0, // Not started
+    progress: 0, 
   ),
   const Mission(
     title: "Jelajah Kuliner",
@@ -25,7 +25,7 @@ final List<Mission> dummyMissions = [
     icon: Icons.fastfood,
     basePointReward: 100,
     target: 5,
-    progress: 3, // In progress
+    progress: 3,
   ),
   const Mission(
     title: "Raja Belanja",
@@ -33,7 +33,7 @@ final List<Mission> dummyMissions = [
     icon: Icons.monetization_on,
     basePointReward: 250,
     target: 500000,
-    progress: 175000, // In progress
+    progress: 175000,
   ),
   const Mission(
     title: "Ajak Teman",
@@ -42,6 +42,6 @@ final List<Mission> dummyMissions = [
     basePointReward: 200,
     target: 1,
     progress: 1,
-    isClaimed: true, // Already claimed
+    isClaimed: true,
   ),
 ];
