@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Background & Surface
+  // Background
   static const Color darkBase = Color(0xFF121212);
   static const Color secondaryDark = Color(0xFF2a2a2a);
   static const Color containerDark = Color(0xFF1E1E1E);
 
-  // Primary Accent
+  // Primary Color
   static const Color primary = Color(0xFFFBBF24); // Gold
   static const Color accentGold = Color(0xFFD4AF37); // A darker gold for accents
 
-  // Fashion Slice (Gradien Biru)
+  // Fashion Slice (Gradien Biru) (VOUCHER PUNYA FRAN)
   static const Color fashionBlueLight = Color(0xFF0077FF);
   static const Color fashionBlueNeon = Color(0xFF00E5FF);
 
-  // F&B Slice (Gradien Orange–Gold)
+  // F&B Slice (Gradien Orange–Gold)(VOUCHER PUNYA FRAN)
   static const Color fnborange = Color(0xFFFF8C00);
   static const Color fnbGoldNeon = Color(0xFFFFD700);
 
-  // Travel Slice
+  // Travel Slice (VOUCHER PUNYA FRAN)
   static const Color travelGreenNeon = Color(0xFF39FF14);
 
-  // Accent & Icon
+  // Accent & Icon (VOUCHER PUNYA FRAN)
   static const Color goldAccent = Color(0xFFFFD700);
 
-  // Shadow effects (RGBA transparent)
+  // Shadow effects (RGBA transparent) (VOUCHER PUNYA FRAN)
   static const Color glowCyan = Color.fromRGBO(0, 229, 255, 0.6);
   static const Color glowGold = Color.fromRGBO(255, 215, 0, 0.5);
   static const Color glowGreen = Color.fromRGBO(57, 255, 20, 0.5);
@@ -73,7 +73,7 @@ class AppColors {
   static const Color iconBgDark = Color.fromRGBO(44, 44, 46, 0.7);
   static const Color borderDark = Color(0xFF3A3A3C);
 
-  // Pie Chart Colors
+  // Pie Chart Colors (PIE PUNYA FRAN)
   static const Color pieBlue = Color(0xFF3B82F6);
   static const Color pieOrange = Color(0xFFFB923C);
   static const Color pieGreen = Color(0xFF16A34A);

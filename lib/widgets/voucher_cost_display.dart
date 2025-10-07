@@ -14,7 +14,7 @@ class VoucherCostDisplay extends StatelessWidget {
     super.key,
     required this.voucher,
     required this.user,
-    this.fontSize = 12, // Default font size
+    this.fontSize = 12, 
   });
 
   @override
@@ -33,10 +33,10 @@ class VoucherCostDisplay extends StatelessWidget {
         discountPercentage = 15.0;
         break;
       case "Platinum":
-        discountPercentage = 20.0; // Assuming 20% for Platinum
+        discountPercentage = 20.0; 
         break;
       case "Diamond":
-        discountPercentage = 25.0; // Assuming 25% for Diamond
+        discountPercentage = 25.0; 
         break;
     }
 

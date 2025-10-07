@@ -76,7 +76,6 @@ class _ExploreVoucherSliderState extends State<ExploreVoucherSlider> {
                           ),
                         ),
                       ),
-                      // Lapis 3: Teks
                       Positioned(
                         bottom: 20,
                         left: 20,

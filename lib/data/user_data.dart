@@ -51,7 +51,7 @@ final List<UserModel> dummyUsers = [
     email: "frans@gmail.com",
     password: "frans",
     phone: "081234567894",
-    poin: 1200,
+    poin: 1000000,
     spending: 3000000,
     xp: 300.0,
     qrCode: "qr_user5",

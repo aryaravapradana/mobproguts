@@ -5,8 +5,8 @@ class Voucher {
   final DateTime? expiryDate;
   final String? requiredTier;
   final String? description;
-  final DateTime? redemptionDate; // New
-  final bool isUsed; // New
+  final DateTime? redemptionDate; 
+  final bool isUsed; 
 
   Voucher({
     required this.title,
@@ -15,8 +15,8 @@ class Voucher {
     this.expiryDate,
     this.requiredTier,
     this.description,
-    this.redemptionDate, // New
-    this.isUsed = false, // New
+    this.redemptionDate, 
+    this.isUsed = false, 
   });
 
   Voucher copyWith({

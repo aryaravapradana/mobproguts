@@ -11,7 +11,7 @@ class MembershipTier {
   final String name;
   final int minXp;
   final IconData icon;
-  final String? imagePath; // Added imagePath
+  final String? imagePath; 
   final Color color;
   final List<Perk> perks;
   final String description;
@@ -20,7 +20,7 @@ class MembershipTier {
     required this.name,
     required this.minXp,
     required this.icon,
-    this.imagePath, // Added imagePath
+    this.imagePath, 
     required this.color,
     required this.perks,
     required this.description,

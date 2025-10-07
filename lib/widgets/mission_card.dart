@@ -1,5 +1,3 @@
-// MissionCard.dart
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:project_midterms/colors.dart';
@@ -61,12 +59,10 @@ class MissionCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              // --- Tombol Claim  ---
               _buildClaimButton(canClaim),
             ],
           ),
           const SizedBox(height: 16),
-          // --- Progress Bar ---
           Row(
             children: [
               Expanded(

@@ -127,9 +127,7 @@ class _MemberPageState extends State<MemberPage>
       borderRadius: BorderRadius.circular(24),
       child: Stack(
         children: [
-          // Layer 1: The new tier-specific color gradient
           Container(decoration: BoxDecoration(gradient: cardGradient)),
-          // Layer 2: The subtle "pattern" overlay
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -142,12 +140,10 @@ class _MemberPageState extends State<MemberPage>
               ),
             ),
           ),
-          // Layer 3: The tier logo in the center
           Align(
             alignment: const Alignment(0.0, -0.2),
             child: Image.asset(tier.imagePath!, width: 200, height: 200),
           ),
-          // Layer 4: The actual content
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: Column(

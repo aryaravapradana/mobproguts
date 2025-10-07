@@ -79,8 +79,8 @@ class _ScanQrPageState extends State<ScanQrPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Dismiss dialog
-                Navigator.of(context).pop(); // Go back to previous screen
+                Navigator.of(context).pop(); 
+                Navigator.of(context).pop(); 
               },
               child: Text("OK", style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
             ),

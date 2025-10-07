@@ -8,7 +8,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:project_midterms/models/user.dart';
 import 'package:project_midterms/data/membership_data.dart';
 import 'package:project_midterms/widgets/voucher_cost_display.dart';
-
 import 'package:project_midterms/screens/redemption_success_screen.dart';
 
 class VoucherDetailPage extends StatefulWidget {
@@ -35,7 +34,7 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
         return baseDate.add(const Duration(days: 60));
       case 'Diamond':
         return baseDate.add(const Duration(days: 90));
-      default: // Bronze and others
+      default: 
         return baseDate;
     }
   }
@@ -118,7 +117,7 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
                 );
                 redeemedVouchers.add(redeemedVoucher);
               });
-              Navigator.pop(context); // Close confirmation dialog
+              Navigator.pop(context); 
               _showFeedbackDialog(
                 title: "Redemption Successful!",
                 content:
@@ -160,7 +159,7 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Close the dialog
+                Navigator.pop(context); 
               },
               child: const Text('OK', style: TextStyle(color: AppColors.primary)),
             ),
@@ -174,7 +173,6 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
   Widget build(BuildContext context) {
     final bool alreadyRedeemed = redeemedVouchers.any((v) => v.title == widget.voucher.title);
 
-    // --- Create dynamic T&Cs ---
     final List<String> tncItems = [
       "Voucher is valid for one-time use only.",
       "Cannot be combined with other promotions.",
@@ -188,7 +186,6 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
     if (widget.voucher.requiredTier != null) {
       tncItems.add("Minimum tier required: ${widget.voucher.requiredTier}.");
     }
-    // ---------------------------
 
     return Scaffold(
       appBar: AppBar(
@@ -203,7 +200,7 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
             const SizedBox(height: 32),
             _buildSection(
               title: "Terms and Conditions",
-              items: tncItems, // Use the dynamic list
+              items: tncItems, 
             ),
             const SizedBox(height: 24),
             _buildSection(
@@ -220,7 +217,7 @@ class _VoucherDetailPageState extends State<VoucherDetailPage> {
   Widget _buildVoucherHeader() {
     return Card(
       elevation: 8,
-      clipBehavior: Clip.antiAlias, // To clip the child to the card's rounded corners
+      clipBehavior: Clip.antiAlias, 
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(

@@ -126,15 +126,13 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
         LayoutBuilder(
           builder: (context, constraints) {
             final double barWidth = constraints.maxWidth;
-            final double indicatorDiameter = 28; // Made bigger
-            // Calculate position, ensuring it doesn't go out of bounds
+            final double indicatorDiameter = 28; 
             final double indicatorPosition = (barWidth * _progress).clamp(indicatorDiameter / 2, barWidth - indicatorDiameter / 2) - (indicatorDiameter / 2);
 
             return Stack(
               clipBehavior: Clip.none,
               alignment: Alignment.centerLeft,
               children: [
-                // The progress bar background
                 Container(
                   height: 14,
                   width: barWidth,
@@ -144,7 +142,6 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
                                         border: Border.all(color: Colors.white.withAlpha((255 * 0.25).round())),
                   ),
                 ),
-                // The progress bar value
                 Container(
                   height: 14,
                   width: barWidth * _progress,
@@ -153,13 +150,12 @@ class _MembershipDetailPageState extends State<MembershipDetailPage> {
                                         color: isHighestTier ? Colors.white : Colors.white.withAlpha((255 * 0.8).round()),
                   ),
                 ),
-                // The glowing indicator
                 Positioned(
                   left: indicatorPosition,
                   child: Container(
                     height: indicatorDiameter,
                     width: indicatorDiameter,
-                    alignment: Alignment.center, // Centered the icon
+                    alignment: Alignment.center, 
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: glowColor,

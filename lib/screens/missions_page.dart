@@ -5,7 +5,7 @@ import 'package:project_midterms/data/mission_data.dart';
 import 'package:project_midterms/models/mission.dart';
 import 'package:project_midterms/models/user.dart';
 import 'package:project_midterms/widgets/animated_hover_card.dart';
-import 'package:project_midterms/widgets/mission_card.dart'; // Re-added this import
+import 'package:project_midterms/widgets/mission_card.dart'; 
 
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -128,7 +128,7 @@ class _MissionsPageState extends State<MissionsPage> {
                               "Events",
                               "No events yet",
                             ),
-                          ), // Placeholder action
+                          ),
                           const SizedBox(width: 16),
                           Expanded(
                             child: _buildMissionActionCard(
@@ -137,7 +137,7 @@ class _MissionsPageState extends State<MissionsPage> {
                               "Refer a Friend",
                               "Share your code",
                             ),
-                          ), // Placeholder action
+                          ), 
                         ],
                       ),
                     )
